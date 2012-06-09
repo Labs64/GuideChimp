@@ -1,4 +1,4 @@
 lmBoxClient-csharp
 ==================
 
-lmBoxAPI RESTful wrapper for C#
+C# wrapper for RESTful lmBoxAPI
