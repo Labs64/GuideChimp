@@ -5,6 +5,10 @@ using System.Text;
 
 namespace lmBoxClient.Entities
 {
+    /// <summary>
+    /// Represents Licensee. See lmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
+    /// </summary>
     public class Licensee : BaseEntity
     {
         // Properties
@@ -21,6 +25,10 @@ namespace lmBoxClient.Entities
         // construct from item
         public Licensee(item source)
         {
+            if (!"Licensee".Equals(source.type))
+            {
+                throw new Exception(String.Format("Wrong object type '{0}', expected 'Licensee'", (source.type != null) ? source.type : "<null>"));
+            }
             licenseeProperties = new Dictionary<String, String>();
             foreach (property p in source.property)
             {

@@ -12,7 +12,13 @@ namespace lmBoxClient
     {
         public static Licensee create(Context ctx, String productNumber, Licensee newLicensee)
         {
-            // TODO: Stub
+            lmbox output = LmBoxAPI.request(ctx, LmBoxAPI.Method.POST, "/licensee", null);
+
+            List<Licensee> licensees = new List<Licensee>();
+            foreach (item i in output.items)
+            {
+                licensees.Add(new Licensee(i));
+            }
             return null;
         }
 
@@ -30,10 +36,6 @@ namespace lmBoxClient
             List<Licensee> licensees = new List<Licensee>();
             foreach (item i in output.items)
             {
-                if (!"Licensee".Equals(i.type))
-                {
-                    throw new Exception(String.Format("Wrong object type '{0}' returned, expected 'Licensee'", (i.type != null) ? i.type : "<null>"));
-                }
                 licensees.Add(new Licensee(i));
             }
             return licensees;

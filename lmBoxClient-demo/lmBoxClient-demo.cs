@@ -15,8 +15,8 @@ namespace lmBoxClient
             {
                 Context ctx = new Context();
                 ctx.baseUrl = "http://127.0.0.1:28080/core/rest";
-                ctx.username = "vendor";
-                ctx.password = "vendor";
+                ctx.username = "demo";
+                ctx.password = "demo";
 
                 List<Licensee> licensees = LicenseeService.list(ctx);
                 Console.WriteLine("Got the following licensees:");

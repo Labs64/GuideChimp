@@ -5,6 +5,10 @@ using System.Text;
 
 namespace lmBoxClient.Entities
 {
+    /// <summary>
+    /// Defines common entity fields. See lmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/BaseDBEntity.html
+    /// </summary>
     public abstract class BaseEntity
     {
         // Properties
