@@ -8,11 +8,19 @@ using System.Data;
 
 namespace lmBoxClient
 {
+    /// <summary>
+    /// C# representation of the Licensee Service. See lmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+    /// </summary>
     public class LicenseeService
     {
-        public static Licensee create(Context ctx, String productNumber, Licensee newLicensee)
+        /// <summary>
+        /// Creates new licensee object with given properties. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// </summary>
+        public static Licensee create(Context context, String productNumber, Licensee newLicensee)
         {
-            lmbox output = LmBoxAPI.request(ctx, LmBoxAPI.Method.POST, "/licensee", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee", null);
 
             List<Licensee> licensees = new List<Licensee>();
             foreach (item i in output.items)
@@ -22,15 +30,23 @@ namespace lmBoxClient
             return null;
         }
 
-        public static Licensee get(Context ctx, String number)
+        /// <summary>
+        /// Gets licensee by its number. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// </summary>
+        public static Licensee get(Context context, String number)
         {
             // TODO: Stub
             return null;
         }
 
-        public static List<Licensee> list(Context ctx)
+        /// <summary>
+        /// Returns all licensees of a vendor. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// </summary>
+        public static List<Licensee> list(Context context)
         {
-            lmbox output = LmBoxAPI.request(ctx, LmBoxAPI.Method.GET, "/licensee", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee", null);
 
             // TODO: process output.infos
             List<Licensee> licensees = new List<Licensee>();
@@ -41,19 +57,31 @@ namespace lmBoxClient
             return licensees;
         }
 
-        public static Licensee update(Context ctx, String number, Licensee updateLicensee)
+        /// <summary>
+        /// Updates licensee properties. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// </summary>
+        public static Licensee update(Context context, String number, Licensee updateLicensee)
         {
             // TODO: Stub
             return null;
         }
 
-        public static void delete(Context ctx, String number, bool forceCascade)
+        /// <summary>
+        /// Deletes licensee. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// </summary>
+        public static void delete(Context context, String number, bool forceCascade)
         {
             // TODO: Stub
             return;
         }
 
-        public static ValidationResult validate(Context ctx, String number)
+        /// <summary>
+        /// Validates active licenses of the licensee. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// </summary>
+        public static ValidationResult validate(Context context, String number)
         {
             // TODO: Stub
             return null;
