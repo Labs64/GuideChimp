@@ -13,7 +13,7 @@ namespace lmBoxClient.Entities
     {
         // Properties
         public String number { get; set; }
-        public bool active { get; set; }
+        public Boolean active { get; set; }
 
         // returns true if property was consumed.
         public bool setFromProperty(property p)
@@ -56,6 +56,14 @@ namespace lmBoxClient.Entities
             sb.Append(", active=");
             sb.Append(active);
             return sb.ToString();
+        }
+
+        internal Dictionary<String, String> ToDictionary()
+        {
+            Dictionary<String, String> dict = new Dictionary<String, String>();
+            if (number != null) dict.Add("number", number);
+            if (active != null) dict.Add("active", active.ToString());
+            return dict;
         }
     }
 }

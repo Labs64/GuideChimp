@@ -11,7 +11,10 @@ namespace lmBoxClient.Entities
     /// </summary>
     public class Licensee : BaseEntity
     {
-        // Properties
+        /// <summary>
+        /// The number of the product licensed to this licensee. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
+        /// </summary>
         public String productNumber { get; set; }
 
         Dictionary<String, String> licenseeProperties;
@@ -22,8 +25,8 @@ namespace lmBoxClient.Entities
             licenseeProperties = new Dictionary<String, String>();
         }
 
-        // construct from item
-        public Licensee(item source)
+        // construct from REST response item
+        internal Licensee(item source)
         {
             if (!"Licensee".Equals(source.type))
             {
@@ -65,6 +68,13 @@ namespace lmBoxClient.Entities
             }
             sb.Append("]");
             return sb.ToString();
+        }
+
+        internal Dictionary<String, String> ToDictionary()
+        {
+            Dictionary<String, String> dict = base.ToDictionary();
+            if (productNumber != null) dict.Add("productNumber", productNumber);
+            return dict;
         }
     }
 }

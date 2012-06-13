@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Xml.Serialization;
+using System.Text;
 
 namespace lmBoxClient.RestController
 {
@@ -24,20 +25,28 @@ namespace lmBoxClient.RestController
             request.Credentials = new NetworkCredential(context.username, context.password);
             if (parameters != null)
             {
+                StringBuilder requestPayload = new StringBuilder();
                 bool first = true;
-                request.ContentType = "application/x-www-form-urlencoded";
-                using (TextWriter writer = new StreamWriter(request.GetRequestStream()))
+                foreach (KeyValuePair<String, String> param in parameters)
                 {
-                    foreach (KeyValuePair<String, String> param in parameters)
+                    if (first)
                     {
-                        if (first)
-                        {
-                            first = false;
-                        } else { 
-                            writer.Write("&");
-                        }
-                        writer.Write(param.Key + "=" + param.Value); // TODO: UrlEncode
+                        first = false;
                     }
+                    else
+                    {
+                        requestPayload.Append("&");
+                    }
+                    // TODO: UrlEncode
+                    requestPayload.Append(param.Key);
+                    requestPayload.Append("=");
+                    requestPayload.Append(param.Value);
+                }
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = requestPayload.Length;
+                using (var writer = new StreamWriter(request.GetRequestStream()))
+                {
+                    writer.Write(requestPayload.ToString());
                 }
             }
 
@@ -46,30 +55,51 @@ namespace lmBoxClient.RestController
             {
                 using (HttpWebResponse response = (request as HttpWebRequest).GetResponse() as HttpWebResponse)
                 {
-                    switch (response.StatusCode)
+                    HttpStatusCode statusCode = response.StatusCode;
+                    responsePayload = deserialize(response.GetResponseStream());
+                    response.Close();
+
+                    switch (statusCode)
                     {
                         case HttpStatusCode.OK:
                         case HttpStatusCode.NoContent:
                             break;
                         default:
-                            throw new Exception(String.Format("Got bad rasponse result code {0}: '{1}'", response.StatusCode, response.StatusDescription));
+                            throw new Exception(String.Format("Got unsupported response result code {0}: '{1}'", response.StatusCode, response.StatusDescription));
                     }
-
-                    // Deserialize
-                    using (Stream input = response.GetResponseStream())
-                    {
-                        XmlSerializer lmBoxSerializer = new XmlSerializer(typeof(lmbox));
-                        responsePayload = lmBoxSerializer.Deserialize(input) as lmbox;
-                    }
-                    response.Close();
                 }
             }
             catch (WebException ex)
             {
-                // TODO: process WebException and recover if possible
-                throw new Exception(ex.Message);
+                using (HttpWebResponse response = ex.Response as HttpWebResponse)
+                {
+                    responsePayload = deserialize(response.GetResponseStream());
+                    HttpStatusCode statusCode = response.StatusCode;
+                    response.Close();
+
+                    switch (statusCode)
+                    {
+                        case HttpStatusCode.BadRequest:
+                            StringBuilder messages = new StringBuilder();
+                            messages.AppendLine("Bad request to the lmBoxAPI:");
+                            foreach (info i in responsePayload.infos)
+                            {
+                                messages.AppendLine(i.Value);
+                            }
+                            throw new Exception(messages.ToString());
+                        default:
+                            throw new Exception("Request to lmBoxAPI failed.", ex);
+                    }
+                }
             }
             return responsePayload;
         }
+
+        private static lmbox deserialize(Stream responseStream)
+        {
+            XmlSerializer lmBoxSerializer = new XmlSerializer(typeof(lmbox));
+            return lmBoxSerializer.Deserialize(responseStream) as lmbox;
+        }
+
     }
 }

@@ -20,7 +20,8 @@ namespace lmBoxClient
         /// </summary>
         public static Licensee create(Context context, String productNumber, Licensee newLicensee)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee", null);
+            newLicensee.productNumber = productNumber;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee", newLicensee.ToDictionary());
 
             List<Licensee> licensees = new List<Licensee>();
             foreach (item i in output.items)
