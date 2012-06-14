@@ -18,7 +18,7 @@ namespace lmBoxClient
                 context.username = "demo";
                 context.password = "demo";
 
-                String product = "P004";
+                String product = "P014";
 
                 List<Licensee> licensees = LicenseeService.list(context);
                 Console.WriteLine("Got the following licensees:");
@@ -32,6 +32,7 @@ namespace lmBoxClient
                 Licensee addedLicensee = LicenseeService.create(context, product, newLicensee);
                 Console.WriteLine("Added licensee:");
                 Console.WriteLine(addedLicensee.ToString());
+                Console.WriteLine("");
 
                 licensees = LicenseeService.list(context);
                 Console.WriteLine("Got the following licensees after add:");

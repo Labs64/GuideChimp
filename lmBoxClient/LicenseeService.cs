@@ -22,13 +22,7 @@ namespace lmBoxClient
         {
             newLicensee.productNumber = productNumber;
             lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee", newLicensee.ToDictionary());
-
-            List<Licensee> licensees = new List<Licensee>();
-            foreach (item i in output.items)
-            {
-                licensees.Add(new Licensee(i));
-            }
-            return null;
+            return new Licensee(output.items[0]);
         }
 
         /// <summary>
