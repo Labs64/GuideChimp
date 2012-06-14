@@ -61,8 +61,8 @@ namespace lmBoxClient.Entities
         internal Dictionary<String, String> ToDictionary()
         {
             Dictionary<String, String> dict = new Dictionary<String, String>();
-            if (number != null) dict.Add("number", number);
-            if (active != null) dict.Add("active", active.ToString());
+            if (number != null) dict["number"] = number;
+            if (active != null) dict["active"] = active.ToString();
             return dict;
         }
     }

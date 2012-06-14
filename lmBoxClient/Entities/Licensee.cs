@@ -17,7 +17,11 @@ namespace lmBoxClient.Entities
         /// </summary>
         public String productNumber { get; set; }
 
-        Dictionary<String, String> licenseeProperties;
+        /// <summary>
+        /// Custom properties of the licensee. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
+        /// </summary>
+        public Dictionary<String, String> licenseeProperties { get; private set; }
 
         // default constructor
         public Licensee()
@@ -73,7 +77,11 @@ namespace lmBoxClient.Entities
         internal Dictionary<String, String> ToDictionary()
         {
             Dictionary<String, String> dict = base.ToDictionary();
-            if (productNumber != null) dict.Add("productNumber", productNumber);
+            if (productNumber != null) dict["productNumber"] = productNumber;
+            foreach (KeyValuePair<String, String> prop in licenseeProperties)
+            {
+                dict[prop.Key] = prop.Value;
+            }
             return dict;
         }
     }

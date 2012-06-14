@@ -14,9 +14,11 @@ namespace lmBoxClient
             try
             {
                 Context context = new Context();
-                context.baseUrl = "http://127.0.0.1:28080/core/rest";
+                context.baseUrl = "http://lmbox.labs64.com/core/rest";
                 context.username = "demo";
                 context.password = "demo";
+
+                String product = "P004";
 
                 List<Licensee> licensees = LicenseeService.list(context);
                 Console.WriteLine("Got the following licensees:");
@@ -27,7 +29,7 @@ namespace lmBoxClient
                 Console.WriteLine("");
 
                 Licensee newLicensee = new Licensee();
-                Licensee addedLicensee = LicenseeService.create(context, "P004", newLicensee);
+                Licensee addedLicensee = LicenseeService.create(context, product, newLicensee);
                 Console.WriteLine("Added licensee:");
                 Console.WriteLine(addedLicensee.ToString());
 
@@ -43,6 +45,7 @@ namespace lmBoxClient
             {
                 Console.WriteLine("Got exception:");
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.InnerException);
             }
 
             Console.WriteLine("Press <Enter> to exit..."); 

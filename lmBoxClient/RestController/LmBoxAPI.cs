@@ -4,6 +4,7 @@ using System.Net;
 using System.IO;
 using System.Xml.Serialization;
 using System.Text;
+using System.Web;
 
 namespace lmBoxClient.RestController
 {
@@ -13,7 +14,18 @@ namespace lmBoxClient.RestController
 
         public static lmbox request(Context context, Method method, String path, Dictionary<String, String> parameters)
         {
+            // Workaround of the mod_proxy_ajp problem.
+            // mod_proxy_ajp has problem processing HTTP/1.1 POST request with delayed payload transmission (Expect: 100 Continue), causes 500 Server Error in AJP module.
+            // Resources on the topic:
+            // http://haacked.com/archive/2004/05/15/http-web-request-expect-100-continue.aspx
+            // http://stackoverflow.com/questions/3889574/apache-and-mod-proxy-not-handling-http-100-continue-from-client-http-417
+            // https://issues.apache.org/bugzilla/show_bug.cgi?id=46709
+            // https://issues.apache.org/bugzilla/show_bug.cgi?id=47087
+            ServicePointManager.Expect100Continue = false;
+
             HttpWebRequest request = WebRequest.Create(context.baseUrl + path) as HttpWebRequest;
+            request.UserAgent = "lmBox C# Client";
+            //request.ProtocolVersion = new System.Version(1, 0);
             switch (method)
             {
                 case Method.GET: request.Method = "GET"; break;
@@ -23,6 +35,8 @@ namespace lmBoxClient.RestController
                     break;
             }
             request.Credentials = new NetworkCredential(context.username, context.password);
+            request.Accept = "application/xml";
+            request.SendChunked = false;
             if (parameters != null)
             {
                 StringBuilder requestPayload = new StringBuilder();
@@ -38,16 +52,17 @@ namespace lmBoxClient.RestController
                         requestPayload.Append("&");
                     }
                     // TODO: UrlEncode
-                    requestPayload.Append(param.Key);
+                    requestPayload.Append(HttpUtility.UrlEncode(param.Key));
                     requestPayload.Append("=");
-                    requestPayload.Append(param.Value);
+                    requestPayload.Append(HttpUtility.UrlEncode(param.Value));
                 }
                 request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = requestPayload.Length;
-                using (var writer = new StreamWriter(request.GetRequestStream()))
-                {
-                    writer.Write(requestPayload.ToString());
-                }
+                byte[] byteArray = Encoding.UTF8.GetBytes(requestPayload.ToString());
+                request.ContentLength = byteArray.Length;
+
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
             }
 
             lmbox responsePayload = null;
@@ -71,26 +86,45 @@ namespace lmBoxClient.RestController
             }
             catch (WebException ex)
             {
+                String textResponse = null;
                 using (HttpWebResponse response = ex.Response as HttpWebResponse)
                 {
-                    responsePayload = deserialize(response.GetResponseStream());
-                    HttpStatusCode statusCode = response.StatusCode;
-                    response.Close();
-
-                    switch (statusCode)
+                    if (response != null)
                     {
-                        case HttpStatusCode.BadRequest:
-                            StringBuilder messages = new StringBuilder();
-                            messages.AppendLine("Bad request to the lmBoxAPI:");
-                            foreach (info i in responsePayload.infos)
+                        try
+                        {
+                            responsePayload = deserialize(response.GetResponseStream());
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            // Ignore deserialization errors - response is not necessarily formated as lmbox
+                            response.GetResponseStream().Seek(0, SeekOrigin.Begin);
+                            using (var reader = new StreamReader(response.GetResponseStream()))
                             {
-                                messages.AppendLine(i.Value);
+                                textResponse = reader.ReadToEnd();
                             }
-                            throw new Exception(messages.ToString());
-                        default:
-                            throw new Exception("Request to lmBoxAPI failed.", ex);
+                        }
+                        HttpStatusCode statusCode = response.StatusCode;
+                        response.Close();
+
+                        switch (statusCode)
+                        {
+                            case HttpStatusCode.BadRequest:
+                                StringBuilder messages = new StringBuilder();
+                                messages.AppendLine("Bad request to the lmBoxAPI:");
+                                if (responsePayload != null)
+                                {
+                                    foreach (info i in responsePayload.infos)
+                                    {
+                                        messages.AppendLine(i.Value);
+                                    }
+                                }
+                                throw new Exception(messages.ToString());
+                        }
                     }
                 }
+
+                throw new Exception("Request to lmBoxAPI failed.\n" + ((textResponse != null) ? textResponse : ""), ex);
             }
             return responsePayload;
         }
