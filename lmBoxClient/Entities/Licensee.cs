@@ -74,7 +74,7 @@ namespace lmBoxClient.Entities
             return sb.ToString();
         }
 
-        internal Dictionary<String, String> ToDictionary()
+        internal new Dictionary<String, String> ToDictionary()
         {
             Dictionary<String, String> dict = base.ToDictionary();
             if (productNumber != null) dict["productNumber"] = productNumber;

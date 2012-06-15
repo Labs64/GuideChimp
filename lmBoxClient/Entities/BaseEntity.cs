@@ -16,15 +16,15 @@ namespace lmBoxClient.Entities
         public Boolean active { get; set; }
 
         // returns true if property was consumed.
-        public bool setFromProperty(property p)
+        internal bool setFromProperty(property p)
         {
             switch (p.name)
             {
-                case "number":
+                case Constants.NUMBER:
                     verifyTypeIsString(p.Item);
                     number = p.Item as String;
                     return true;
-                case "active":
+                case Constants.ACTIVE:
                     verifyTypeIsString(p.Item);
                     bool tactive;
                     if (Boolean.TryParse(p.Item as String, out tactive))
@@ -33,14 +33,14 @@ namespace lmBoxClient.Entities
                     }
                     else
                     {
-                        throw new Exception(String.Format("Expected value representing boolean for property 'active', got '{0}'", p.Item as String));
+                        throw new Exception(String.Format("Expected value representing boolean for property '{0}', got '{1}'", Constants.ACTIVE, p.Item as String));
                     }
                     return true;
             }
             return false;
         }
 
-        protected void verifyTypeIsString(object o)
+        internal void verifyTypeIsString(object o)
         {
             if (!(o is String))
             {
@@ -48,12 +48,15 @@ namespace lmBoxClient.Entities
             }
         }
 
-        protected new String ToString()
+        internal new String ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("number=");
+            sb.Append(Constants.NUMBER);
+            sb.Append("=");
             sb.Append(number);
-            sb.Append(", active=");
+            sb.Append(", ");
+            sb.Append(Constants.ACTIVE);
+            sb.Append("=");
             sb.Append(active);
             return sb.ToString();
         }
@@ -61,8 +64,8 @@ namespace lmBoxClient.Entities
         internal Dictionary<String, String> ToDictionary()
         {
             Dictionary<String, String> dict = new Dictionary<String, String>();
-            if (number != null) dict["number"] = number;
-            if (active != null) dict["active"] = active.ToString();
+            if (number != null) dict[Constants.NUMBER] = number;
+            dict[Constants.ACTIVE] = active.ToString();
             return dict;
         }
     }

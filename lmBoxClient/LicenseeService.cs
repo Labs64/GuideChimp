@@ -43,7 +43,6 @@ namespace lmBoxClient
         {
             lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee", null);
 
-            // TODO: process output.infos
             List<Licensee> licensees = new List<Licensee>();
             foreach (item i in output.items)
             {

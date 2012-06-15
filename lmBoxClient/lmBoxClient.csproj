@@ -43,7 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LicenseService.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Entities\Constants.cs" />
+    <Compile Include="Entities\License.cs" />
     <Compile Include="Entities\Licensee.cs" />
     <Compile Include="Entities\lmbox-context.cs" />
     <Compile Include="Entities\ValidationResult.cs" />
