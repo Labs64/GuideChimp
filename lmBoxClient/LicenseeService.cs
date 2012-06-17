@@ -77,8 +77,8 @@ namespace lmBoxClient
         /// </summary>
         public static ValidationResult validate(Context context, String number)
         {
-            // TODO: Stub
-            return null;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee/" + number + "/validate", null);
+            return new ValidationResult(output);
         }
 
     }

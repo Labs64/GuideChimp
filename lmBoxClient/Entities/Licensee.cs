@@ -32,16 +32,16 @@ namespace lmBoxClient.Entities
         // construct from REST response item
         internal Licensee(item source)
         {
-            if (!"Licensee".Equals(source.type))
+            if (!Constants.Licensee.LICENSEE_TYPE.Equals(source.type))
             {
-                throw new Exception(String.Format("Wrong object type '{0}', expected 'Licensee'", (source.type != null) ? source.type : "<null>"));
+                throw new Exception(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.Licensee.LICENSEE_TYPE));
             }
             licenseeProperties = new Dictionary<String, String>();
             foreach (property p in source.property)
             {
                 switch (p.name)
                 {
-                    case "productNumber":
+                    case Constants.Product.PRODUCT_NUMBER:
                         verifyTypeIsString(p.Item);
                         productNumber = p.Item as String;
                         break;
@@ -59,9 +59,12 @@ namespace lmBoxClient.Entities
         public new String ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Licensee[");
+            sb.Append(Constants.Licensee.LICENSEE_TYPE);
+            sb.Append("[");
             sb.Append(base.ToString());
-            sb.Append(", productNumber=");
+            sb.Append(", ");
+            sb.Append(Constants.Product.PRODUCT_NUMBER);
+            sb.Append("=");
             sb.Append(productNumber);
             foreach (KeyValuePair<String, String> prop in licenseeProperties)
             {
@@ -77,7 +80,7 @@ namespace lmBoxClient.Entities
         internal new Dictionary<String, String> ToDictionary()
         {
             Dictionary<String, String> dict = base.ToDictionary();
-            if (productNumber != null) dict["productNumber"] = productNumber;
+            if (productNumber != null) dict[Constants.Product.PRODUCT_NUMBER] = productNumber;
             foreach (KeyValuePair<String, String> prop in licenseeProperties)
             {
                 dict[prop.Key] = prop.Value;

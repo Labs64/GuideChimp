@@ -40,7 +40,7 @@ namespace lmBoxClient.Entities
             return false;
         }
 
-        internal void verifyTypeIsString(object o)
+        internal static void verifyTypeIsString(object o)
         {
             if (!(o is String))
             {

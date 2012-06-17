@@ -19,7 +19,9 @@ namespace lmBoxClient
                 context.password = "demo";
 
                 String product = "P014";
+                String licenseTemplate = "E011";
 
+                #region ****************** Licensee
                 List<Licensee> licensees = LicenseeService.list(context);
                 Console.WriteLine("Got the following licensees:");
                 foreach (Licensee licensee in licensees)
@@ -41,12 +43,43 @@ namespace lmBoxClient
                     Console.WriteLine(licensee.ToString());
                 }
                 Console.WriteLine("");
+                #endregion
+
+                #region ****************** License
+                List<License> licenses = LicenseService.list(context);
+                Console.WriteLine("Got the following licenses:");
+                foreach (License license in licenses)
+                {
+                    Console.WriteLine(license.ToString());
+                }
+                Console.WriteLine("");
+
+                License newLicense = new License();
+                License addedLicense = LicenseService.create(context, addedLicensee.number, licenseTemplate, null, newLicense);
+                Console.WriteLine("Added license:");
+                Console.WriteLine(addedLicense.ToString());
+                Console.WriteLine("");
+
+                licenses = LicenseService.list(context);
+                Console.WriteLine("Got the following licenses after add:");
+                foreach (License license in licenses)
+                {
+                    Console.WriteLine(license.ToString());
+                }
+                Console.WriteLine("");
+                #endregion
+
+                #region ****************** Validate
+                ValidationResult validationResult = LicenseeService.validate(context, addedLicensee.number);
+                Console.WriteLine("Validation result for created licensee:");
+                Console.WriteLine(validationResult.ToString());
+                #endregion
+
             }
             catch (Exception e)
             {
                 Console.WriteLine("Got exception:");
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.InnerException);
+                Console.WriteLine(e);
             }
 
             Console.WriteLine("Press <Enter> to exit..."); 

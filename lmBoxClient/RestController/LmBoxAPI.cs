@@ -14,6 +14,7 @@ namespace lmBoxClient.RestController
 
         public static lmbox request(Context context, Method method, String path, Dictionary<String, String> parameters)
         {
+            #region HTTP request preparation
             // Workaround of the mod_proxy_ajp problem.
             // mod_proxy_ajp has problem processing HTTP/1.1 POST request with delayed payload transmission (Expect: 100 Continue), causes 500 Server Error in AJP module.
             // Resources on the topic:
@@ -64,10 +65,12 @@ namespace lmBoxClient.RestController
                 dataStream.Write(byteArray, 0, byteArray.Length);
                 dataStream.Close();
             }
+            #endregion
 
             lmbox responsePayload = null;
             try
             {
+                #region HTTP response parsing
                 using (HttpWebResponse response = (request as HttpWebRequest).GetResponse() as HttpWebResponse)
                 {
                     HttpStatusCode statusCode = response.StatusCode;
@@ -83,10 +86,12 @@ namespace lmBoxClient.RestController
                             throw new Exception(String.Format("Got unsupported response result code {0}: '{1}'", response.StatusCode, response.StatusDescription));
                     }
                 }
+                #endregion
             }
             catch (WebException ex)
             {
-                String textResponse = null;
+                #region HTTP and lmBox errors conversion to Exception
+                String plainTextResponse = null;
                 using (HttpWebResponse response = ex.Response as HttpWebResponse)
                 {
                     if (response != null)
@@ -101,30 +106,27 @@ namespace lmBoxClient.RestController
                             response.GetResponseStream().Seek(0, SeekOrigin.Begin);
                             using (var reader = new StreamReader(response.GetResponseStream()))
                             {
-                                textResponse = reader.ReadToEnd();
+                                plainTextResponse = reader.ReadToEnd();
                             }
                         }
-                        HttpStatusCode statusCode = response.StatusCode;
                         response.Close();
-
-                        switch (statusCode)
-                        {
-                            case HttpStatusCode.BadRequest:
-                                StringBuilder messages = new StringBuilder();
-                                messages.AppendLine("Bad request to the lmBoxAPI:");
-                                if (responsePayload != null)
-                                {
-                                    foreach (info i in responsePayload.infos)
-                                    {
-                                        messages.AppendLine(i.Value);
-                                    }
-                                }
-                                throw new Exception(messages.ToString());
-                        }
                     }
                 }
-
-                throw new Exception("Request to lmBoxAPI failed.\n" + ((textResponse != null) ? textResponse : ""), ex);
+                StringBuilder messages = new StringBuilder();
+                messages.AppendLine("Bad request to the lmBoxAPI:");
+                if (responsePayload != null)
+                {
+                    foreach (info i in responsePayload.infos)
+                    {
+                        messages.AppendLine(i.Value);
+                    }
+                }
+                if (plainTextResponse != null)
+                {
+                    messages.AppendLine(plainTextResponse);
+                }
+                throw new Exception(messages.ToString(), ex);
+                #endregion
             }
             return responsePayload;
         }
