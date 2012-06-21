@@ -42,14 +42,13 @@ namespace lmBoxClient.Entities
                 switch (p.name)
                 {
                     case Constants.Product.PRODUCT_NUMBER:
-                        verifyTypeIsString(p.Item);
-                        productNumber = p.Item as String;
+                        productNumber = p.Value;
                         break;
                     default:
                         if (!base.setFromProperty(p)) // Not BaseEntity property?
                         {
                             // custom property
-                            licenseeProperties.Add(p.name, p.Item as String);
+                            licenseeProperties.Add(p.name, p.Value);
                         }
                         break;
                 }

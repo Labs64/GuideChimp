@@ -14,7 +14,8 @@ namespace lmBoxClient
             try
             {
                 Context context = new Context();
-                context.baseUrl = "http://lmbox.labs64.com/core/rest";
+                // context.baseUrl = "http://lmbox.labs64.com/core/rest";
+                context.baseUrl = "http://localhost:28080/core/rest";
                 context.username = "demo";
                 context.password = "demo";
 

@@ -92,21 +92,33 @@ public partial class info {
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://lmbox.labs64.com/schema/context")]
-public partial class property {
+public partial class list {
     
-    private object itemField;
+    private property[] propertyField;
+    
+    private list[] list1Field;
     
     private string nameField;
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("list", typeof(propertyList))]
-    [System.Xml.Serialization.XmlElementAttribute("value", typeof(string))]
-    public object Item {
+    [System.Xml.Serialization.XmlElementAttribute("property")]
+    public property[] property {
         get {
-            return this.itemField;
+            return this.propertyField;
         }
         set {
-            this.itemField = value;
+            this.propertyField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("list")]
+    public list[] list1 {
+        get {
+            return this.list1Field;
+        }
+        set {
+            this.list1Field = value;
         }
     }
     
@@ -127,14 +139,27 @@ public partial class property {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://lmbox.labs64.com/schema/context")]
-public partial class propertyList {
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://lmbox.labs64.com/schema/context")]
+public partial class property {
     
-    private string[] valueField;
+    private string nameField;
+    
+    private string valueField;
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("value")]
-    public string[] value {
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string name {
+        get {
+            return this.nameField;
+        }
+        set {
+            this.nameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTextAttribute()]
+    public string Value {
         get {
             return this.valueField;
         }
@@ -154,6 +179,8 @@ public partial class item {
     
     private property[] propertyField;
     
+    private list[] listField;
+    
     private string typeField;
     
     /// <remarks/>
@@ -164,6 +191,17 @@ public partial class item {
         }
         set {
             this.propertyField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("list")]
+    public list[] list {
+        get {
+            return this.listField;
+        }
+        set {
+            this.listField = value;
         }
     }
     

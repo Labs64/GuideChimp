@@ -48,18 +48,16 @@ namespace lmBoxClient.Entities
                 switch (p.name)
                 {
                     case Constants.Licensee.LICENSEE_NUMBER:
-                        verifyTypeIsString(p.Item);
-                        licenseeNumber = p.Item as String;
+                        licenseeNumber = p.Value;
                         break;
                     case Constants.LicenseTemplate.LICENSE_TEMPLATE_NUMBER:
-                        verifyTypeIsString(p.Item);
-                        licenseTemplateNumber = p.Item as String;
+                        licenseTemplateNumber = p.Value;
                         break;
                     default:
                         if (!base.setFromProperty(p)) // Not BaseEntity property?
                         {
                             // custom property
-                            licenseProperties.Add(p.name, p.Item as String);
+                            licenseProperties.Add(p.name, p.Value);
                         }
                         break;
                 }

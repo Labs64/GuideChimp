@@ -12,30 +12,39 @@ namespace lmBoxClient.Entities
     public class ValidationResult
     {
 
-        private Dictionary<String, Dictionary<String, String>> validations;
+        private Dictionary<String, Composition> validations;
 
         public ValidationResult(lmbox source)
         {
-            validations = new Dictionary<String, Dictionary<String, String>>();
+            validations = new Dictionary<String, Composition>();
             foreach (item i in source.items)
             {
                 if (!Constants.ValidationResult.VALIDATION_RESULT_TYPE.Equals(i.type))
                 {
                     throw new Exception(String.Format("Wrong object type '{0}', expected '{1}'", (i.type != null) ? i.type : "<null>", Constants.ValidationResult.VALIDATION_RESULT_TYPE));
                 }
-                Dictionary<String, String> pmValidateProperties = new Dictionary<String, String>();
+                Composition pmValidateProperties = new Composition();
                 String productModuleNumber = null;
-                foreach (property p in i.property)
+                if (i.property != null)
                 {
-                    switch (p.name)
+                    foreach (property p in i.property)
                     {
-                        case Constants.ProductModule.PRODUCT_MODULE_NUMBER:
-                            BaseEntity.verifyTypeIsString(p.Item);
-                            productModuleNumber = p.Item as String;
-                            break;
-                        default:
-                            pmValidateProperties.Add(p.name, p.Item as String);
-                            break;
+                        switch (p.name)
+                        {
+                            case Constants.ProductModule.PRODUCT_MODULE_NUMBER:
+                                productModuleNumber = p.Value;
+                                break;
+                            default:
+                                pmValidateProperties.put(p.name, p.Value);
+                                break;
+                        }
+                    }
+                }
+                if (i.list != null)
+                {
+                    foreach (list l in i.list)
+                    {
+                        pmValidateProperties.properties.Add(l.name, convertFromList(l));
                     }
                 }
                 if (productModuleNumber == null)
@@ -46,17 +55,37 @@ namespace lmBoxClient.Entities
             }
         }
 
-        public Dictionary<String, Dictionary<String, String>> getValidations()
+        private Composition convertFromList(list l)
+        {
+            Composition result = new Composition();
+            if (l.property != null)
+            {
+                foreach (property p in l.property)
+                {
+                    result.put(p.name, p.Value);
+                }
+            }
+            if (l.list1 != null)
+            {
+                foreach (list l1 in l.list1)
+                {
+                    result.properties.Add(l1.name, convertFromList(l1));
+                }
+            }
+            return result;
+        }
+
+        public Dictionary<String, Composition> getValidations()
         {
             return validations;
         }
 
-        public Dictionary<String, String> getProductModuleValidation(String productModuleNumber)
+        public Composition getProductModuleValidation(String productModuleNumber)
         {
             return validations[productModuleNumber];
         }
 
-        internal void setProductModuleValidation(String productModuleNumber, Dictionary<String, String> productModuleValidaton)
+        internal void setProductModuleValidation(String productModuleNumber, Composition productModuleValidaton)
         {
             validations.Add(productModuleNumber, productModuleValidaton);
         }
@@ -72,7 +101,7 @@ namespace lmBoxClient.Entities
             sb.Append(Constants.ValidationResult.VALIDATION_RESULT_TYPE);
             sb.Append("[");
             bool first = true;
-            foreach (KeyValuePair<String, Dictionary<String, String>> validationEntry in getValidations())
+            foreach (KeyValuePair<String, Composition> validationEntry in getValidations())
             {
                 if (first) {
                     first = false;
@@ -83,24 +112,67 @@ namespace lmBoxClient.Entities
                 sb.Append("<");
                 sb.Append(validationEntry.Key);
                 sb.Append(">");
-                sb.Append("{");
-                bool firstInner = true;
-                foreach (KeyValuePair<String, String> prop in validationEntry.Value)
-                {
-                    if (firstInner) {
-                        firstInner = false;
-                    } else {
-                        sb.Append(", ");
-                    }
-                    sb.Append(prop.Key);
-                    sb.Append("=");
-                    sb.Append(prop.Value);
-                }
-                sb.Append("}");
+                sb.Append(validationEntry.Value.ToString());
             }
             sb.Append("]");
             return sb.ToString();
         }
 
     }
+
+    public class Composition
+    {
+        public Dictionary<String, Composition> properties { get; private set; }
+        public String value { get; set; }
+
+        public Composition() // list
+        {
+            properties = new Dictionary<String, Composition>();
+            value = null;
+        }
+
+        public Composition(String value) // property
+        {
+            properties = null;
+            this.value = value;
+        }
+
+        public void put(String key, String value) {
+            properties.Add(key, new Composition(value));
+        }
+
+        public new String ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (value == null) // list
+            {
+                sb.Append("{");
+                if (properties == null)
+                {
+                    sb.Append("<null>");
+                }
+                else
+                {
+                    bool first = true;
+                    foreach (KeyValuePair<String, Composition> prop in properties)
+                    {
+                        if (first)
+                            first = false;
+                        else
+                            sb.Append(", ");
+                        sb.Append(prop.Key);
+                        sb.Append("=");
+                        sb.Append(prop.Value.ToString());
+                    }
+                }
+                sb.Append("}");
+            }
+            else
+            {
+                sb.Append(value);
+            }
+            return sb.ToString();
+        }
+    }
+
 }

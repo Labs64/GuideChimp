@@ -21,19 +21,17 @@ namespace lmBoxClient.Entities
             switch (p.name)
             {
                 case Constants.NUMBER:
-                    verifyTypeIsString(p.Item);
-                    number = p.Item as String;
+                    number = p.Value;
                     return true;
                 case Constants.ACTIVE:
-                    verifyTypeIsString(p.Item);
                     bool tactive;
-                    if (Boolean.TryParse(p.Item as String, out tactive))
+                    if (Boolean.TryParse(p.Value, out tactive))
                     {
                         active = tactive;
                     }
                     else
                     {
-                        throw new Exception(String.Format("Expected value representing boolean for property '{0}', got '{1}'", Constants.ACTIVE, p.Item as String));
+                        throw new Exception(String.Format("Expected value representing boolean for property '{0}', got '{1}'", Constants.ACTIVE, p.Value));
                     }
                     return true;
             }
