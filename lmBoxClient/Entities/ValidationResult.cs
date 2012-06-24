@@ -14,6 +14,11 @@ namespace lmBoxClient.Entities
 
         private Dictionary<String, Composition> validations;
 
+        public ValidationResult()
+        {
+            validations = new Dictionary<String, Composition>();
+        }
+
         public ValidationResult(lmbox source)
         {
             validations = new Dictionary<String, Composition>();
@@ -21,7 +26,7 @@ namespace lmBoxClient.Entities
             {
                 if (!Constants.ValidationResult.VALIDATION_RESULT_TYPE.Equals(i.type))
                 {
-                    throw new Exception(String.Format("Wrong object type '{0}', expected '{1}'", (i.type != null) ? i.type : "<null>", Constants.ValidationResult.VALIDATION_RESULT_TYPE));
+                    throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (i.type != null) ? i.type : "<null>", Constants.ValidationResult.VALIDATION_RESULT_TYPE));
                 }
                 Composition pmValidateProperties = new Composition();
                 String productModuleNumber = null;
@@ -49,7 +54,7 @@ namespace lmBoxClient.Entities
                 }
                 if (productModuleNumber == null)
                 {
-                    throw new Exception(String.Format("Validation item does not contain property '{0}'", Constants.ProductModule.PRODUCT_MODULE_NUMBER));
+                    throw new LmBoxException(String.Format("Validation item does not contain property '{0}'", Constants.ProductModule.PRODUCT_MODULE_NUMBER));
                 }
                 setProductModuleValidation(productModuleNumber, pmValidateProperties);
             }
@@ -82,7 +87,14 @@ namespace lmBoxClient.Entities
 
         public Composition getProductModuleValidation(String productModuleNumber)
         {
-            return validations[productModuleNumber];
+            try
+            {
+                return validations[productModuleNumber];
+            }
+            catch (KeyNotFoundException)
+            {
+                return new Composition(); // TODO: replace dummy response with proper error handling
+            }
         }
 
         internal void setProductModuleValidation(String productModuleNumber, Composition productModuleValidaton)
@@ -139,6 +151,14 @@ namespace lmBoxClient.Entities
 
         public void put(String key, String value) {
             properties.Add(key, new Composition(value));
+        }
+
+        public Composition this[String key]
+        {
+            get
+            {
+                return properties[key];
+            }
         }
 
         public new String ToString()

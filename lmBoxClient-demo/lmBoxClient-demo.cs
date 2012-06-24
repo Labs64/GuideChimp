@@ -77,6 +77,11 @@ namespace lmBoxClient
                 #endregion
 
             }
+            catch (LmBoxException e)
+            {
+                Console.WriteLine("Got lmBox exception:");
+                Console.WriteLine(e);
+            }
             catch (Exception e)
             {
                 Console.WriteLine("Got exception:");

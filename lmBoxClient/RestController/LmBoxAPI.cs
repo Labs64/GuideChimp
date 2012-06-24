@@ -83,7 +83,7 @@ namespace lmBoxClient.RestController
                         case HttpStatusCode.NoContent:
                             break;
                         default:
-                            throw new Exception(String.Format("Got unsupported response result code {0}: '{1}'", response.StatusCode, response.StatusDescription));
+                            throw new LmBoxException(String.Format("Got unsupported response result code {0}: '{1}'", response.StatusCode, response.StatusDescription));
                     }
                 }
                 #endregion
@@ -125,7 +125,7 @@ namespace lmBoxClient.RestController
                 {
                     messages.AppendLine(plainTextResponse);
                 }
-                throw new Exception(messages.ToString(), ex);
+                throw new LmBoxException(messages.ToString(), ex);
                 #endregion
             }
             return responsePayload;

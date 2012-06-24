@@ -31,7 +31,7 @@ namespace lmBoxClient.Entities
                     }
                     else
                     {
-                        throw new Exception(String.Format("Expected value representing boolean for property '{0}', got '{1}'", Constants.ACTIVE, p.Value));
+                        throw new LmBoxException(String.Format("Expected value representing boolean for property '{0}', got '{1}'", Constants.ACTIVE, p.Value));
                     }
                     return true;
             }
@@ -42,7 +42,7 @@ namespace lmBoxClient.Entities
         {
             if (!(o is String))
             {
-                throw new Exception(String.Format("Expected string type, got '{0}'", o.GetType()));
+                throw new LmBoxException(String.Format("Expected string type, got '{0}'", o.GetType()));
             }
         }
 

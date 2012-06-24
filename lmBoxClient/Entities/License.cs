@@ -40,7 +40,7 @@ namespace lmBoxClient.Entities
         {
             if (!Constants.License.LICENSE_TYPE.Equals(source.type))
             {
-                throw new Exception(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.License.LICENSE_TYPE));
+                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.License.LICENSE_TYPE));
             }
             licenseProperties = new Dictionary<String, String>();
             foreach (property p in source.property)
