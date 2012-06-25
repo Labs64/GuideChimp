@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Text;
 using System.Web;
+using lmBoxClient.Entities;
 
 namespace lmBoxClient.RestController
 {
@@ -24,7 +25,7 @@ namespace lmBoxClient.RestController
             // https://issues.apache.org/bugzilla/show_bug.cgi?id=47087
             ServicePointManager.Expect100Continue = false;
 
-            HttpWebRequest request = WebRequest.Create(context.baseUrl + path) as HttpWebRequest;
+            HttpWebRequest request = WebRequest.Create(context.baseUrl + Constants.REST_API_PATH + path) as HttpWebRequest;
             request.UserAgent = "lmBox C# Client";
             //request.ProtocolVersion = new System.Version(1, 0);
             switch (method)
