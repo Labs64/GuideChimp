@@ -11,7 +11,7 @@ namespace lmBoxClient.RestController
 {
     class LmBoxAPI
     {
-        public enum Method { GET, POST };
+        public enum Method { GET, POST, DELETE };
 
         public static lmbox request(Context context, Method method, String path, Dictionary<String, String> parameters)
         {
@@ -32,6 +32,7 @@ namespace lmBoxClient.RestController
             {
                 case Method.GET: request.Method = "GET"; break;
                 case Method.POST: request.Method = "POST"; break;
+                case Method.DELETE: request.Method = "DELETE"; break;
                 default:
                     // TODO: error
                     break;
@@ -75,17 +76,17 @@ namespace lmBoxClient.RestController
                 using (HttpWebResponse response = (request as HttpWebRequest).GetResponse() as HttpWebResponse)
                 {
                     HttpStatusCode statusCode = response.StatusCode;
-                    responsePayload = deserialize(response.GetResponseStream());
-                    response.Close();
-
                     switch (statusCode)
                     {
                         case HttpStatusCode.OK:
+                            responsePayload = deserialize(response.GetResponseStream());
+                            break;
                         case HttpStatusCode.NoContent:
                             break;
                         default:
                             throw new LmBoxException(String.Format("Got unsupported response result code {0}: '{1}'", response.StatusCode, response.StatusDescription));
                     }
+                      response.Close();
                 }
                 #endregion
             }
@@ -137,6 +138,5 @@ namespace lmBoxClient.RestController
             XmlSerializer lmBoxSerializer = new XmlSerializer(typeof(lmbox));
             return lmBoxSerializer.Deserialize(responseStream) as lmbox;
         }
-
     }
 }

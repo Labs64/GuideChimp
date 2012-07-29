@@ -15,7 +15,7 @@ namespace lmBoxClient
             {
                 Context context = new Context();
                 // context.baseUrl = "http://lmbox.labs64.com/core/rest";
-                context.baseUrl = "http://localhost:28080/core/rest";
+                context.baseUrl = "http://10.0.2.2:28080";
                 context.username = "demo";
                 context.password = "demo";
 
@@ -23,6 +23,22 @@ namespace lmBoxClient
                 String licenseTemplate = "E011";
 
                 #region ****************** Licensee
+                Licensee gotLicensee = LicenseeService.get(context, "I011");
+                Console.WriteLine("Got default licensee: ");
+                Console.WriteLine(gotLicensee.ToString());
+                Console.WriteLine("");
+
+                Licensee updateLicensee = new Licensee();
+                updateLicensee.licenseeProperties.Add("Updated property name", "Updated value"); 
+                Licensee upLicensee = LicenseeService.update(context, "I011", updateLicensee);
+                Console.WriteLine("Updated default licensee: ");
+                Console.WriteLine(upLicensee.ToString());
+                Console.WriteLine("");
+
+                LicenseeService.delete(context, "I011", true);
+                Console.WriteLine("Deleted default licensee!");
+                Console.WriteLine("");
+
                 List<Licensee> licensees = LicenseeService.list(context);
                 Console.WriteLine("Got the following licensees:");
                 foreach (Licensee licensee in licensees)
@@ -44,9 +60,35 @@ namespace lmBoxClient
                     Console.WriteLine(licensee.ToString());
                 }
                 Console.WriteLine("");
+
+                Licensee defaultLicensee = new Licensee();
+                defaultLicensee.number = "I011";
+                Licensee addedDLicensee = LicenseeService.create(context, product, defaultLicensee);
+                Console.WriteLine("Added default licensee:");
+                Console.WriteLine(addedDLicensee.ToString());
+                Console.WriteLine("");
                 #endregion
 
                 #region ****************** License
+                License defaultLicense = new License();
+                defaultLicense.number = "L011";
+                License addedDLicense = LicenseService.create(context, "I011", licenseTemplate, null, defaultLicense);
+                Console.WriteLine("Added default license:");
+                Console.WriteLine(addedDLicense.ToString());
+                Console.WriteLine("");
+
+                License gotLicense = LicenseService.get(context, "L011");
+                Console.WriteLine("Got default license: ");
+                Console.WriteLine(gotLicense.ToString());
+                Console.WriteLine("");
+
+                License updateLicense = new License();
+                updateLicense.licenseProperties.Add("Updated property name", "Updated value"); 
+                License upLicense = LicenseService.update(context, "L011", null, updateLicense);
+                Console.WriteLine("Updated default license: ");
+                Console.WriteLine(upLicense.ToString());
+                Console.WriteLine("");
+
                 List<License> licenses = LicenseService.list(context);
                 Console.WriteLine("Got the following licenses:");
                 foreach (License license in licenses)
@@ -68,6 +110,11 @@ namespace lmBoxClient
                     Console.WriteLine(license.ToString());
                 }
                 Console.WriteLine("");
+
+                LicenseService.delete(context, "L011");
+                Console.WriteLine("Deleted default licensee!");
+                Console.WriteLine("");
+
                 #endregion
 
                 #region ****************** Validate

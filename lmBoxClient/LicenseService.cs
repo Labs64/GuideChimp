@@ -33,8 +33,8 @@ namespace lmBoxClient
         /// </summary>
         public static License get(Context context, String number)
         {
-            // TODO: Stub
-            return null;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.endPoint + number, null);
+            return new License(output.items[0]);
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace lmBoxClient
         /// </summary>
         public static License update(Context context, String number, String transactionNumber, License updateLicense)
         {
-            // TODO: Stub
-            return null;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.License.endPoint + number, updateLicense.ToDictionary());
+            return new License(output.items[0]);
         }
 
         /// <summary>
@@ -69,8 +69,7 @@ namespace lmBoxClient
         /// </summary>
         public static void delete(Context context, String number)
         {
-            // TODO: Stub
-            return;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.License.endPoint + number, null);
         }
 
     }
