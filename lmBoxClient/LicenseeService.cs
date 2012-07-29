@@ -31,8 +31,8 @@ namespace lmBoxClient
         /// </summary>
         public static Licensee get(Context context, String number)
         {
-            // TODO: Stub
-            return null;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee/" + number, null);
+            return new Licensee(output.items[0]);
         }
 
         /// <summary>
@@ -57,8 +57,9 @@ namespace lmBoxClient
         /// </summary>
         public static Licensee update(Context context, String number, Licensee updateLicensee)
         {
-            // TODO: Stub
-            return null;
+            updateLicensee.number = number;
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee/" + number, updateLicensee.ToDictionary());
+            return new Licensee(output.items[0]);
         }
 
         /// <summary>
@@ -67,8 +68,7 @@ namespace lmBoxClient
         /// </summary>
         public static void delete(Context context, String number, bool forceCascade)
         {
-            // TODO: Stub
-            return;
+                lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/licensee/" + number, null);
         }
 
         /// <summary>
