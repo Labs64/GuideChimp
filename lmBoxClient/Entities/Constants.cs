@@ -12,10 +12,18 @@ namespace lmBoxClient.Entities
         internal const String ACTIVE = "active";
         internal const String NUMBER = "number";
         internal const String NAME = "name";
+        internal const String CASCADE = "forceCascade";
+
+        internal class Vendor
+        {
+            internal const String VENDOR_NUMBER = "vendorNumber";
+            internal const String VENDOR_TYPE = "Vendor";
+        }
 
         internal class Product
         {
             internal const String PRODUCT_NUMBER = "productNumber";
+            internal const String PRODUCT_TYPE = "Product";
         }
 
         internal class ProductModule
@@ -37,7 +45,7 @@ namespace lmBoxClient.Entities
 
         internal class License
         {
-            internal const String endPoint = "/license";
+            internal const String endPoint = "/license/";
             internal const String LICENSE_TYPE = "License";
         }
 

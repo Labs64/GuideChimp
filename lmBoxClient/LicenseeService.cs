@@ -68,7 +68,8 @@ namespace lmBoxClient
         /// </summary>
         public static void delete(Context context, String number, bool forceCascade)
         {
-                lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/licensee/" + number, null);
+            String strCascade = Convert.ToString(forceCascade).ToLower();
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/licensee/" + number + "?" + Constants.CASCADE + "=" + strCascade, null);
         }
 
         /// <summary>

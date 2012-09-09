@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Product.cs" />
     <Compile Include="LicenseService.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\Constants.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="LicenseeService.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="LmBoxException.cs" />
+    <Compile Include="ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestController\LmBoxAPI.cs" />
   </ItemGroup>
