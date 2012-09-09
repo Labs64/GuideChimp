@@ -15,16 +15,20 @@ namespace lmBoxClient
             {
                 Context context = new Context();
                 context.baseUrl = "http://lmbox.labs64.com/core/rest";
-                // context.baseUrl = "http://10.0.2.2:28080";
+                //context.baseUrl = "http://10.0.2.2:28080";
                 context.username = "demo";
                 context.password = "demo";
 
  //               String vendor = "VDEMO";
                 String product = "P014";
                 String licensee = "I011";
+                String productModule = "M001";
                 String licenseTemplate = "E001";
 
                 #region ****************** Product
+
+               ProductService.delete(context, product, true);
+
                 Product defaultProduct = new Product();
                 defaultProduct.number = product;
                 defaultProduct.name = "Default product";
@@ -59,8 +63,8 @@ namespace lmBoxClient
                 #endregion
 
                 #region ****************** Licensee
- //               LicenseeService.delete(context, licensee, true);
-                
+                LicenseeService.delete(context, licensee, true);
+
                 Licensee defaultLicensee = new Licensee();
                 defaultLicensee.number = licensee;
                 Licensee addedDLicensee = LicenseeService.create(context, "P015", defaultLicensee);
@@ -148,6 +152,66 @@ namespace lmBoxClient
                 LicenseService.delete(context, "L011");
                 Console.WriteLine("Deleted default license!");
                 Console.WriteLine("");
+                #endregion
+
+                #region ****************** ProductModule
+                List<ProductModule> productModules = ProductModuleService.list(context, null);
+                Console.WriteLine("Got the following ProductModules:");
+                foreach (ProductModule prodMod in productModules)
+                {
+                    Console.WriteLine(prodMod.ToString());
+                }
+                Console.WriteLine("");
+
+                ProductModule gotProductModule = ProductModuleService.get(context, productModule);
+                Console.WriteLine("Got default product module: ");
+                Console.WriteLine(gotProductModule.ToString());
+                Console.WriteLine("");
+
+     /**           ProductModuleService.delete(context, productModule, true);
+                Console.WriteLine("Deleted default ProductModule!");
+                Console.WriteLine("");
+                */
+                ProductService.create(context, defaultProduct);
+ /**               
+                ProductModule defaultProductModule = new ProductModule();
+                defaultProductModule.number = productModule;
+                defaultProductModule.name = "Default product module";
+                ProductModule addedDProductModule = ProductModuleService.create(context, product, defaultProductModule);
+                Console.WriteLine("Added default product module:");
+                Console.WriteLine(addedDProductModule.ToString());
+                Console.WriteLine("");
+                
+                ProductModule updateProductModule = new ProductModule();
+                updateProductModule.productModuleProperties.Add("Updated property name", "Updated property value");
+                ProductModule upProductModule = ProductModuleService.update(context, productModule, updateProductModule);
+                Console.WriteLine("Updated default product module: ");
+                Console.WriteLine(upProductModule.ToString())
+  * ;
+                Console.WriteLine("");*/
+                #endregion
+
+                #region LicenseTemplate
+                LicenseTemplate defaultLicenseTemplate = new LicenseTemplate();
+                defaultLicenseTemplate.number = "E011";
+                LicenseTemplate addedDLicenseTemplate = LicenseTemplateService.create(context, productModule, defaultLicenseTemplate);
+                Console.WriteLine("Added default license template:");
+                Console.WriteLine(addedDLicenseTemplate.ToString());
+                Console.WriteLine("");
+
+                LicenseTemplate gotLicenseTemplate = LicenseTemplateService.get(context, licenseTemplate);
+                Console.WriteLine("Got default license: ");
+                Console.WriteLine(gotLicense.ToString());
+                Console.WriteLine("");
+
+                List<LicenseTemplate> licenseTemplates = LicenseTemplateService.list(context, null);
+                Console.WriteLine("Got the following license templates:");
+                foreach (LicenseTemplate lTemplate in licenseTemplates)
+                {
+                    Console.WriteLine(lTemplate.ToString());
+                }
+                Console.WriteLine("");               
+
                 #endregion
 
                 #region ****************** Validate

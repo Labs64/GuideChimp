@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\LicenseTemplate.cs" />
+    <Compile Include="LicenseTemplateService.cs" />
+    <Compile Include="ProductModuleService.cs" />
+    <Compile Include="Entities\ProductModule.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="LicenseService.cs" />
     <Compile Include="Entities\BaseEntity.cs" />

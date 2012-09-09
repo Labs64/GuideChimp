@@ -34,6 +34,7 @@ namespace lmBoxClient.Entities
 
         internal class LicenseTemplate
         {
+            internal const String LICENSE_TEMPLATE_TYPE = "licenseTemplate";
             internal const String LICENSE_TEMPLATE_NUMBER = "licenseTemplateNumber";
         }
 
