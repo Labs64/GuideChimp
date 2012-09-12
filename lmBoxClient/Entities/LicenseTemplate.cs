@@ -11,6 +11,14 @@ namespace lmBoxClient.Entities
     /// </summary>
     public class LicenseTemplate : BaseEntity
     {
+        enum Type { FEATURE, TIMEVOLUME };
+
+        /// <summary>
+        /// License type name. Not null. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/LicenseTemplate.html
+        /// </summary>
+        public String licenseType { get; set; }
+        
         /// <summary>
         /// License template name. Not null. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/LicenseTemplate.html
@@ -53,6 +61,9 @@ namespace lmBoxClient.Entities
                     case Constants.ProductModule.PRODUCT_MODULE_NUMBER:
                         productModuleNumber = p.Value;
                         break;
+                    case Constants.LICENSE_TYPE:
+                        licenseType = p.Value;
+                        break;
                     default:
                         if (!base.setFromProperty(p)) // Not BaseEntity property?
                         {
@@ -67,7 +78,7 @@ namespace lmBoxClient.Entities
         public new String ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Constants.License.LICENSE_TYPE);
+            sb.Append(Constants.LicenseTemplate.LICENSE_TEMPLATE_TYPE);
             sb.Append("[");
             sb.Append(base.ToString());
             sb.Append(", ");
@@ -78,6 +89,10 @@ namespace lmBoxClient.Entities
             sb.Append(Constants.ProductModule.PRODUCT_MODULE_NUMBER);
             sb.Append("=");
             sb.Append(productModuleNumber);
+            sb.Append(", ");
+            sb.Append(Constants.LICENSE_TYPE);
+            sb.Append("=");
+            sb.Append(licenseType);
             foreach (KeyValuePair<String, String> prop in licenseTemplateProperties)
             {
                 sb.Append(", ");
@@ -94,6 +109,15 @@ namespace lmBoxClient.Entities
             Dictionary<String, String> dict = base.ToDictionary();
             if (name != null) dict[Constants.NAME] = name;
             if (productModuleNumber != null) dict[Constants.ProductModule.PRODUCT_MODULE_NUMBER] = productModuleNumber;
+            if ((licenseType != null) & (Array.IndexOf(Enum.GetNames(typeof(Type)), licenseType) != -1))
+            {
+                dict[Constants.LICENSE_TYPE] = licenseType;
+            }
+            else
+            {
+                throw new LmBoxException(String.Format("Wrong license type '{0}'", licenseType));
+            }
+   
             foreach (KeyValuePair<String, String> prop in licenseTemplateProperties)
             {
                 dict[prop.Key] = prop.Value;
