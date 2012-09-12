@@ -122,6 +122,7 @@ namespace lmBoxClient
 
                 LicenseTemplate updateLicenseTemplate = new LicenseTemplate();
                 updateLicenseTemplate.active = true;
+                updateLicenseTemplate.automatic = true; // workaround: at the moment not specified booleans treated as "false"
                 licenseTemplate = LicenseTemplateService.update(context, demoLicenseTemplate1_Number, updateLicenseTemplate);
                 ConsoleWriter.WriteEntity("Updated license template:", licenseTemplate);
 
@@ -129,6 +130,7 @@ namespace lmBoxClient
 
                 #endregion
 
+                /*
                 #region ****************** Licensee
 
                 Licensee newLicensee = new Licensee();
@@ -200,6 +202,7 @@ namespace lmBoxClient
                 ValidationResult validationResult = LicenseeService.validate(context, demoLicenseeNumber);
                 ConsoleWriter.WriteEntity("Validation result for created licensee:", validationResult);
                 #endregion
+                */
 
             }
             catch (LmBoxException e)

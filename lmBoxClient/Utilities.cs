@@ -50,5 +50,17 @@ namespace lmBoxClient.RestController
             }
         }
 
+        public static String CheckedDecimalToString(Decimal? source)
+        {
+            if (source.HasValue)
+            {
+                return source.Value.ToString("F2", lmBoxNumberFormat);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
     }
 }

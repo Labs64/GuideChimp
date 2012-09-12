@@ -46,19 +46,19 @@ namespace lmBoxClient.Entities
         /// If set to true, every new licensee automatically gets one license out of this license template on creation. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/LicenseTemplate.html
         /// </summary>
-        public Boolean automatic { get; set; }
+        public Boolean? automatic { get; set; }
 
         /// <summary>
         /// If set to true, this license template is not shown in lmBoxShop as offered for purchase. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/LicenseTemplate.html
         /// </summary>
-        public Boolean hidden { get; set; }
+        public Boolean? hidden { get; set; }
 
         /// <summary>
         /// If set to true, licenses from this license template are not visible to the end customer, but participate in validation. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/LicenseTemplate.html
         /// </summary>
-        public Boolean hideLicenses { get; set; }
+        public Boolean? hideLicenses { get; set; }
 
         /// <summary>
         /// Custom properties of the license template. See lmBoxAPI JavaDoc for details:
@@ -137,13 +137,10 @@ namespace lmBoxClient.Entities
             sb.Append(Constants.LicenseTemplate.LICENSE_TYPE);
             sb.Append("=");
             sb.Append(licenseType);
-            if (price.HasValue)
-            {
-                sb.Append(", ");
-                sb.Append(Constants.PRICE);
-                sb.Append("=");
-                sb.Append(price.Value.ToString("F2", Utilities.lmBoxNumberFormat));
-            }
+            sb.Append(", ");
+            sb.Append(Constants.PRICE);
+            sb.Append("=");
+            sb.Append(Utilities.CheckedDecimalToString(price));
             sb.Append(", ");
             sb.Append(Constants.CURRENCY);
             sb.Append("=");
@@ -179,9 +176,9 @@ namespace lmBoxClient.Entities
             if (licenseType != null) dict[Constants.LicenseTemplate.LICENSE_TYPE] = licenseType;
             if (price.HasValue) dict[Constants.PRICE] = price.Value.ToString("F2", Utilities.lmBoxNumberFormat);
             if (currency != null) dict[Constants.CURRENCY] = currency;
-            dict[Constants.LicenseTemplate.AUTOMATIC] = automatic.ToString();
-            dict[Constants.LicenseTemplate.HIDDEN] = hidden.ToString();
-            dict[Constants.LicenseTemplate.HIDE_LICENSES] = hideLicenses.ToString();
+            if (automatic.HasValue) dict[Constants.LicenseTemplate.AUTOMATIC] = automatic.ToString();
+            if (hidden.HasValue) dict[Constants.LicenseTemplate.HIDDEN] = hidden.ToString();
+            if (hideLicenses.HasValue) dict[Constants.LicenseTemplate.HIDE_LICENSES] = hideLicenses.ToString();
             foreach (KeyValuePair<String, String> prop in licenseTemplateProperties)
             {
                 dict[prop.Key] = prop.Value;

@@ -14,7 +14,7 @@ namespace lmBoxClient.Entities
     {
         // Properties
         public String number { get; set; }
-        public Boolean active { get; set; }
+        public Boolean? active { get; set; }
 
         // returns true if property was consumed.
         internal bool setFromProperty(property p)
@@ -56,7 +56,7 @@ namespace lmBoxClient.Entities
         {
             Dictionary<String, String> dict = new Dictionary<String, String>();
             if (number != null) dict[Constants.NUMBER] = number;
-            dict[Constants.ACTIVE] = active.ToString();
+            if (active.HasValue) dict[Constants.ACTIVE] = active.ToString();
             return dict;
         }
     }
