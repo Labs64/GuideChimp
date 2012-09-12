@@ -23,7 +23,7 @@ namespace lmBoxClient
             newLicense.licenseeNumber = licenseeNumber;
             newLicense.licenseTemplateNumber = licenseTemplateNumber;
             newLicense.licenseProperties.Add(Constants.Transaction.TRANSACTION_NUMBER, transactionNumber);
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.License.endPoint, newLicense.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.License.ENDPOINT_PATH, newLicense.ToDictionary());
             return new License(output.items[0]);
         }
 
@@ -33,7 +33,7 @@ namespace lmBoxClient
         /// </summary>
         public static License get(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.endPoint + number, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.ENDPOINT_PATH + "/" + number, null);
             return new License(output.items[0]);
         }
 
@@ -43,7 +43,7 @@ namespace lmBoxClient
         /// </summary>
         public static List<License> list(Context context)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.endPoint, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.ENDPOINT_PATH, null);
 
             List<License> licenses = new List<License>();
             foreach (item i in output.items)
@@ -59,7 +59,7 @@ namespace lmBoxClient
         /// </summary>
         public static License update(Context context, String number, String transactionNumber, License updateLicense)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.License.endPoint + number, updateLicense.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.License.ENDPOINT_PATH + "/" + number, updateLicense.ToDictionary());
             return new License(output.items[0]);
         }
 
@@ -69,7 +69,7 @@ namespace lmBoxClient
         /// </summary>
         public static void delete(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.License.endPoint + number, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.License.ENDPOINT_PATH + "/" + number, null);
         }
 
     }

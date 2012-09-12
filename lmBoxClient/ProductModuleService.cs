@@ -21,7 +21,7 @@ namespace lmBoxClient
         public static ProductModule create(Context context, String productNumber, ProductModule newProductModule)
         {
             newProductModule.productNumber = productNumber;
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/productmodule", newProductModule.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.ProductModule.ENDPOINT_PATH, newProductModule.ToDictionary());
             return new ProductModule(output.items[0]);
         }
 
@@ -31,7 +31,7 @@ namespace lmBoxClient
         /// </summary>
         public static ProductModule get(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/productmodule/" + number, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.ProductModule.ENDPOINT_PATH + "/" + number, null);
             return new ProductModule(output.items[0]);
         }
 
@@ -41,7 +41,7 @@ namespace lmBoxClient
         /// </summary>
         public static List<ProductModule> list(Context context, String filter)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/productmodule", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.ProductModule.ENDPOINT_PATH, null);
 
             List<ProductModule> productModules = new List<ProductModule>();
             foreach (item i in output.items)
@@ -58,7 +58,7 @@ namespace lmBoxClient
         public static ProductModule update(Context context, String number, ProductModule updateProductModule)
         {
             updateProductModule.number = number;
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/productmodule/" + number, updateProductModule.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.ProductModule.ENDPOINT_PATH + "/" + number, updateProductModule.ToDictionary());
             return new ProductModule(output.items[0]);
         }
 
@@ -69,7 +69,7 @@ namespace lmBoxClient
         public static void delete(Context context, String number, bool forceCascade)
         {
             String strCascade = Convert.ToString(forceCascade).ToLower();
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/productmodule/" + number + "?" + Constants.CASCADE + "=" + strCascade, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.ProductModule.ENDPOINT_PATH + "/" + number, Utilities.forceCascadeToDict(forceCascade));
         }
 
     }

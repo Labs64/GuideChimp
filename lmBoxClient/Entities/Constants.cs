@@ -5,7 +5,7 @@ using System.Text;
 
 namespace lmBoxClient.Entities
 {
-    internal class Constants
+    public class Constants
     {
         internal const String REST_API_PATH = "/core/rest";
         internal const String SHOP_PATH = "/app/content/shop.xhtml";
@@ -13,49 +13,63 @@ namespace lmBoxClient.Entities
         internal const String NUMBER = "number";
         internal const String NAME = "name";
         internal const String CASCADE = "forceCascade";
+        internal const String PRICE = "price";
+        internal const String CURRENCY = "currency";
 
-        internal class Vendor
+        public class Vendor
         {
+            internal const String TYPE_NAME = "Vendor";
             internal const String VENDOR_NUMBER = "vendorNumber";
-            internal const String VENDOR_TYPE = "Vendor";
         }
 
-        internal class Product
+        public class Product
         {
+            internal const String ENDPOINT_PATH = "product";
+            internal const String TYPE_NAME = "Product";
             internal const String PRODUCT_NUMBER = "productNumber";
-            internal const String PRODUCT_TYPE = "Product";
         }
 
-        internal class ProductModule
+        public class ProductModule
         {
-            internal const String PRODUCT_MODULE_TYPE = "ProductModule";
+            internal const String ENDPOINT_PATH = "productmodule";
+            internal const String TYPE_NAME = "ProductModule";
+            internal const String PRODUCT_MODULE_LICENSING_MODEL = "licensingModel";
             internal const String PRODUCT_MODULE_NUMBER = "productModuleNumber";
         }
 
-        internal class LicenseTemplate
+        public class LicenseTemplate
         {
-            internal const String LICENSE_TEMPLATE_TYPE = "licenseTemplate";
+            internal const String ENDPOINT_PATH = "licensetemplate";            
+            internal const String TYPE_NAME = "LicenseTemplate";
             internal const String LICENSE_TEMPLATE_NUMBER = "licenseTemplateNumber";
+            internal const String LICENSE_TYPE = "licenseType";
+            internal const String AUTOMATIC = "automatic";
+            internal const String HIDDEN = "hidden";
+            internal const String HIDE_LICENSES = "hideLicenses";
         }
 
-        internal class Licensee
+        public class Licensee
         {
-            internal const String LICENSEE_TYPE = "Licensee";
+            internal const String ENDPOINT_PATH = "licensee";
+            internal const String TYPE_NAME = "Licensee";
             internal const String LICENSEE_NUMBER = "licenseeNumber";
         }
 
-        internal class License
+        public class License
         {
-            internal const String endPoint = "/license/";
-            internal const String LICENSE_TYPE = "License";
+            internal const String ENDPOINT_PATH = "license";
+            internal const String TYPE_NAME = "License";
+            public const String PROP_PARENT_FEATURE = "parentFeature";
+            public const String PROP_TIME_VOLUME = "timeVolume";
+            public const String PROP_START_DATE = "startDate";
         }
 
-        internal class Transaction
+        public class Transaction
         {
             internal const String TRANSACTION_NUMBER = "transactionNumber";
         }
 
-        internal class ValidationResult
+        public class ValidationResult
         {
             internal const String VALIDATION_RESULT_TYPE = "ProductModuleValidation";
         }

@@ -51,6 +51,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ConsoleWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lmBoxClient\lmBoxClient.csproj">

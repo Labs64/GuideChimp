@@ -25,24 +25,9 @@ namespace lmBoxClient.RestController
             // https://issues.apache.org/bugzilla/show_bug.cgi?id=47087
             ServicePointManager.Expect100Continue = false;
 
-            HttpWebRequest request = WebRequest.Create(context.baseUrl + Constants.REST_API_PATH + path) as HttpWebRequest;
-            request.UserAgent = "lmBox C# Client";
-            //request.ProtocolVersion = new System.Version(1, 0);
-            switch (method)
-            {
-                case Method.GET: request.Method = "GET"; break;
-                case Method.POST: request.Method = "POST"; break;
-                case Method.DELETE: request.Method = "DELETE"; break;
-                default:
-                    // TODO: error
-                    break;
-            }
-            request.Credentials = new NetworkCredential(context.username, context.password);
-            request.Accept = "application/xml";
-            request.SendChunked = false;
+            StringBuilder requestPayload = new StringBuilder();
             if (parameters != null)
             {
-                StringBuilder requestPayload = new StringBuilder();
                 bool first = true;
                 foreach (KeyValuePair<String, String> param in parameters)
                 {
@@ -59,8 +44,41 @@ namespace lmBoxClient.RestController
                     requestPayload.Append("=");
                     requestPayload.Append(HttpUtility.UrlEncode(param.Value));
                 }
+            }
+            String urlParam = "";
+            String requestBody = null;
+            switch (method)
+            {
+                case Method.GET:
+                case Method.DELETE:
+                    urlParam = "?" + requestPayload.ToString();
+                    break;
+                case Method.POST:
+                    requestBody = requestPayload.ToString();
+                    break;
+                default:
+                    // TODO: error - unsupported method
+                    break;
+            }
+
+            HttpWebRequest request = WebRequest.Create(context.baseUrl + Constants.REST_API_PATH + "/" + path + urlParam) as HttpWebRequest;
+            request.UserAgent = "lmBox C# Client";
+            switch (method)
+            {
+                case Method.GET: request.Method = "GET"; break;
+                case Method.POST: request.Method = "POST"; break;
+                case Method.DELETE: request.Method = "DELETE"; break;
+                default:
+                    // TODO: error - unsupported method
+                    break;
+            }
+            request.Credentials = new NetworkCredential(context.username, context.password);
+            request.Accept = "application/xml";
+            request.SendChunked = false;
+            if (requestBody != null)
+            {
                 request.ContentType = "application/x-www-form-urlencoded";
-                byte[] byteArray = Encoding.UTF8.GetBytes(requestPayload.ToString());
+                byte[] byteArray = Encoding.UTF8.GetBytes(requestBody);
                 request.ContentLength = byteArray.Length;
 
                 Stream dataStream = request.GetRequestStream();

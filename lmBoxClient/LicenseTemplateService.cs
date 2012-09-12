@@ -21,7 +21,7 @@ namespace lmBoxClient
         public static LicenseTemplate create(Context context, String productModuleNumber, LicenseTemplate newLicenseTemplate)
         {
             newLicenseTemplate.productModuleNumber = productModuleNumber;
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensetemplate", newLicenseTemplate.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.LicenseTemplate.ENDPOINT_PATH, newLicenseTemplate.ToDictionary());
             return new LicenseTemplate(output.items[0]);
         }
 
@@ -31,7 +31,7 @@ namespace lmBoxClient
         /// </summary>
         public static LicenseTemplate get(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensetemplate/" + number, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.LicenseTemplate.ENDPOINT_PATH + "/" + number, null);
             return new LicenseTemplate(output.items[0]);
         }
 
@@ -41,7 +41,7 @@ namespace lmBoxClient
         /// </summary>
         public static List<LicenseTemplate> list(Context context, String filter)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensetemplate", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.LicenseTemplate.ENDPOINT_PATH, null);
 
             List<LicenseTemplate> licenseTemplates = new List<LicenseTemplate>();
             foreach (item i in output.items)
@@ -56,7 +56,7 @@ namespace lmBoxClient
         /// </summary>
         public static LicenseTemplate update(Context context, String number, LicenseTemplate updateLicenseTemplate)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensetemplate/" + number, updateLicenseTemplate.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.LicenseTemplate.ENDPOINT_PATH + "/" + number, updateLicenseTemplate.ToDictionary());
             return new LicenseTemplate(output.items[0]);
         }
 
@@ -67,7 +67,8 @@ namespace lmBoxClient
         public static void delete(Context context, String number, Boolean forceCascade)
         {
             String strCascade = Convert.ToString(forceCascade).ToLower();
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/licensetemplate/" + number + "?" + Constants.CASCADE + "=" + strCascade, null);
-        }    }
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.LicenseTemplate.ENDPOINT_PATH + "/" + number, Utilities.forceCascadeToDict(forceCascade));
+        }
 
     }
+}

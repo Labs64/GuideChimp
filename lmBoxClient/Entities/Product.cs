@@ -32,29 +32,33 @@ namespace lmBoxClient.Entities
         // construct from REST response item
         internal Product(item source)
         {
-            if (!Constants.Product.PRODUCT_TYPE.Equals(source.type))
+            if (!Constants.Product.TYPE_NAME.Equals(source.type))
             {
-                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.Product.PRODUCT_TYPE));
+                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.Product.TYPE_NAME));
             }
             productProperties = new Dictionary<String, String>();
             foreach (property p in source.property)
             {
-                if (p.name == Constants.NAME)
+                switch (p.name)
                 {
-                    name = p.Value;
-                }
-                if (!base.setFromProperty(p)) // Not BaseEntity property?
-                {
-                    // custom property
-                    productProperties.Add(p.name, p.Value);
+                    case Constants.NAME:
+                        name = p.Value;
+                        break;
+                    default:
+                        if (!base.setFromProperty(p)) // Not BaseEntity property?
+                        {
+                            // custom property
+                            productProperties.Add(p.name, p.Value);
+                        }
+                        break;
                 }
             }
         }
 
-        public new String ToString()
+        public override String ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Constants.Product.PRODUCT_TYPE);
+            sb.Append(Constants.Product.TYPE_NAME);
             sb.Append("[");
             sb.Append(base.ToString());
             foreach (KeyValuePair<String, String> prop in productProperties)

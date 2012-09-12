@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using lmBoxClient.RestController;
 
 namespace lmBoxClient.Entities
 {
@@ -9,7 +10,7 @@ namespace lmBoxClient.Entities
     /// Defines common entity fields. See lmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/BaseDBEntity.html
     /// </summary>
-    public abstract class BaseEntity
+    public abstract class BaseEntity : IEntity
     {
         // Properties
         public String number { get; set; }
@@ -24,15 +25,7 @@ namespace lmBoxClient.Entities
                     number = p.Value;
                     return true;
                 case Constants.ACTIVE:
-                    bool tactive;
-                    if (Boolean.TryParse(p.Value, out tactive))
-                    {
-                        active = tactive;
-                    }
-                    else
-                    {
-                        throw new LmBoxException(String.Format("Expected value representing boolean for property '{0}', got '{1}'", Constants.ACTIVE, p.Value));
-                    }
+                    active = Utilities.CheckedParseBoolean(p.Value, Constants.ACTIVE);
                     return true;
             }
             return false;
@@ -46,7 +39,7 @@ namespace lmBoxClient.Entities
             }
         }
 
-        internal new String ToString()
+        public virtual String ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(Constants.NUMBER);

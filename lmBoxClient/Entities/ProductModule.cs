@@ -18,6 +18,12 @@ namespace lmBoxClient.Entities
         public String name { get; set; }
 
         /// <summary>
+        /// LicensingModel name. Not null. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
+        /// </summary>
+        public String licensingModel { get; set; }
+
+        /// <summary>
         /// Product number related to this ProductModule. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
         /// </summary>
@@ -38,40 +44,53 @@ namespace lmBoxClient.Entities
         // construct from REST response item
         internal ProductModule(item source)
         {
-            if (!Constants.ProductModule.PRODUCT_MODULE_TYPE.Equals(source.type))
+            if (!Constants.ProductModule.TYPE_NAME.Equals(source.type))
             {
-                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.ProductModule.PRODUCT_MODULE_TYPE));
+                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.ProductModule.TYPE_NAME));
             }
             productModuleProperties = new Dictionary<String, String>();
             foreach (property p in source.property)
             {
-                switch(p.name)
+                switch (p.name)
                 {
                     case Constants.NAME:
                         name = p.Value;
                         break;
+                    case Constants.ProductModule.PRODUCT_MODULE_LICENSING_MODEL:
+                        licensingModel = p.Value;
+                        break;
                     case Constants.Product.PRODUCT_NUMBER:
                         productNumber = p.Value;
-                    break;
-                }
-                if (!base.setFromProperty(p)) // Not BaseEntity property?
-                {
-                    // custom property
-                    productModuleProperties.Add(p.name, p.Value);
+                        break;
+                    default:
+                        if (!base.setFromProperty(p)) // Not BaseEntity property?
+                        {
+                            // custom property
+                            productModuleProperties.Add(p.name, p.Value);
+                        }
+                        break;
                 }
             }
         }
 
-        public new String ToString()
+        public override String ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Constants.ProductModule.PRODUCT_MODULE_TYPE);
+            sb.Append(Constants.ProductModule.TYPE_NAME);
             sb.Append("[");
             sb.Append(base.ToString());
             sb.Append(", ");
             sb.Append(Constants.Product.PRODUCT_NUMBER);
             sb.Append("=");
             sb.Append(productNumber);
+            sb.Append(", ");
+            sb.Append(Constants.NAME);
+            sb.Append("=");
+            sb.Append(name);
+            sb.Append(", ");
+            sb.Append(Constants.ProductModule.PRODUCT_MODULE_LICENSING_MODEL);
+            sb.Append("=");
+            sb.Append(licensingModel);
             foreach (KeyValuePair<String, String> prop in productModuleProperties)
             {
                 sb.Append(", ");
@@ -87,6 +106,7 @@ namespace lmBoxClient.Entities
         {
             Dictionary<String, String> dict = base.ToDictionary();
             if (name != null) dict[Constants.NAME] = name;
+            if (licensingModel != null) dict[Constants.ProductModule.PRODUCT_MODULE_LICENSING_MODEL] = licensingModel;
             if (productNumber != null) dict[Constants.Product.PRODUCT_NUMBER] = productNumber;
             foreach (KeyValuePair<String, String> prop in productModuleProperties)
             {

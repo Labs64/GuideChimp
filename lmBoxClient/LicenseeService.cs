@@ -21,7 +21,7 @@ namespace lmBoxClient
         public static Licensee create(Context context, String productNumber, Licensee newLicensee)
         {
             newLicensee.productNumber = productNumber;
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee", newLicensee.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.Licensee.ENDPOINT_PATH, newLicensee.ToDictionary());
             return new Licensee(output.items[0]);
         }
 
@@ -31,7 +31,7 @@ namespace lmBoxClient
         /// </summary>
         public static Licensee get(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee/" + number, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH + "/" + number, null);
             return new Licensee(output.items[0]);
         }
 
@@ -41,7 +41,7 @@ namespace lmBoxClient
         /// </summary>
         public static List<Licensee> list(Context context)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH, null);
 
             List<Licensee> licensees = new List<Licensee>();
             foreach (item i in output.items)
@@ -58,7 +58,7 @@ namespace lmBoxClient
         public static Licensee update(Context context, String number, Licensee updateLicensee)
         {
             updateLicensee.number = number;
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/licensee/" + number, updateLicensee.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.Licensee.ENDPOINT_PATH + "/" + number, updateLicensee.ToDictionary());
             return new Licensee(output.items[0]);
         }
 
@@ -66,10 +66,9 @@ namespace lmBoxClient
         /// Deletes licensee. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
-        public static void delete(Context context, String number, bool forceCascade)
+        public static void delete(Context context, String number, Boolean forceCascade)
         {
-            String strCascade = Convert.ToString(forceCascade).ToLower();
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/licensee/" + number + "?" + Constants.CASCADE + "=" + strCascade, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.Licensee.ENDPOINT_PATH + "/" + number, Utilities.forceCascadeToDict(forceCascade));
         }
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace lmBoxClient
         /// </summary>
         public static ValidationResult validate(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/licensee/" + number + "/validate", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH + "/" + number + "/validate", null);
             return new ValidationResult(output);
         }
 

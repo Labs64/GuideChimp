@@ -32,9 +32,9 @@ namespace lmBoxClient.Entities
         // construct from REST response item
         internal Licensee(item source)
         {
-            if (!Constants.Licensee.LICENSEE_TYPE.Equals(source.type))
+            if (!Constants.Licensee.TYPE_NAME.Equals(source.type))
             {
-                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.Licensee.LICENSEE_TYPE));
+                throw new LmBoxException(String.Format("Wrong object type '{0}', expected '{1}'", (source.type != null) ? source.type : "<null>", Constants.Licensee.TYPE_NAME));
             }
             licenseeProperties = new Dictionary<String, String>();
             foreach (property p in source.property)
@@ -55,10 +55,10 @@ namespace lmBoxClient.Entities
             }
         }
 
-        public new String ToString()
+        public override String ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Constants.Licensee.LICENSEE_TYPE);
+            sb.Append(Constants.Licensee.TYPE_NAME);
             sb.Append("[");
             sb.Append(base.ToString());
             sb.Append(", ");

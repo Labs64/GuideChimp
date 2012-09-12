@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using lmBoxClient;
 using lmBoxClient.Entities;
+using System.Net;
 
 namespace lmBoxClient
 {
@@ -11,127 +12,168 @@ namespace lmBoxClient
     {
         static void Main(string[] args)
         {
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; }; // Trust the self-signed certificate at lmbox.labs64.com.
+            Context context = new Context();
+            context.baseUrl = "https://lmbox.labs64.com";
+            context.username = "demo";
+            context.password = "demo";
+
+            String demoProductNumber = "P001demo";
+            String demoProductModuleNumber = "M001demo";
+            String demoLicensingModel = "TimeEvaluation";
+
+            String demoLicenseTemplate1_Number = "E001demo";
+            String demoLicenseTemplate1_Name = "Demo Evaluation Period";
+            String demoLicenseTemplate1_Type = "TIMEVOLUME";
+            Decimal demoLicenseTemplate1_Price = 12.50M;
+            String demoLicenseTemplate1_Currency = "EUR";
+            String demoLicenseTemplate1_TimeVolume = "5"; // days
+            Boolean demoLicenseTemplate1_Automatic = true;
+
+            String demoLicenseeNumber = "I001demo";
+
             try
             {
-                Context context = new Context();
-                context.baseUrl = "http://lmbox.labs64.com/core/rest";
-                //context.baseUrl = "http://10.0.2.2:28080";
-                context.username = "demo";
-                context.password = "demo";
-
- //               String vendor = "VDEMO";
-                String product = "P014";
-                String licensee = "I011";
-                String productModule = "M001";
-                String licenseTemplate = "E001";
-
                 #region ****************** Product
 
-               ProductService.delete(context, product, true);
+                Product newProduct = new Product();
+                newProduct.number = demoProductNumber;
+                newProduct.name = "Demo product";
+                Product product = ProductService.create(context, newProduct);
+                ConsoleWriter.WriteEntity("Added product:", product);
 
-                Product defaultProduct = new Product();
-                defaultProduct.number = product;
-                defaultProduct.name = "Default product";
-                Product addedDProduct = ProductService.create(context, defaultProduct);
-                Console.WriteLine("Added default product:");
-                Console.WriteLine(addedDProduct.ToString());
-                Console.WriteLine("");
+                product = ProductService.get(context, demoProductNumber);
+                ConsoleWriter.WriteEntity("Got product:", product);
 
-                Product gotProduct = ProductService.get(context, product);
-                Console.WriteLine("Got default product: ");
-                Console.WriteLine(gotProduct.ToString());
-                Console.WriteLine("");
+                List<Product> products = ProductService.list(context);
+                ConsoleWriter.WriteList("Got the following products:", products);
 
                 Product updateProduct = new Product();
                 updateProduct.productProperties.Add("Updated property name", "Updated value");
-                Product upProduct = ProductService.update(context, product, updateProduct);
-                Console.WriteLine("Updated default product: ");
-                Console.WriteLine(upProduct.ToString());
-                Console.WriteLine("");
+                product = ProductService.update(context, demoProductNumber, updateProduct);
+                ConsoleWriter.WriteEntity("Updated product:", product);
 
-                ProductService.delete(context, product, true);
-                Console.WriteLine("Deleted default Product!");
-                Console.WriteLine("");
-               
-                List<Product> products = ProductService.list(context);
-                Console.WriteLine("Got the following Products:");
-                foreach (Product prod in products)
-                {
-                    Console.WriteLine(prod.ToString());
-                }
-                Console.WriteLine("");
+                ProductService.delete(context, demoProductNumber, true);
+                ConsoleWriter.WriteMsg("Deleted Product!");
+
+                products = ProductService.list(context);
+                ConsoleWriter.WriteList("Got the following Products:", products);
+
+                product = ProductService.create(context, newProduct);
+                ConsoleWriter.WriteEntity("Added product again:", product);
+
+                products = ProductService.list(context);
+                ConsoleWriter.WriteList("Got the following Products:", products);
+
+                #endregion
+
+                #region ****************** ProductModule
+
+                ProductModule newProductModule = new ProductModule();
+                newProductModule.number = demoProductModuleNumber;
+                newProductModule.name = "Demo product module";
+                newProductModule.licensingModel = demoLicensingModel;
+                ProductModule productModule = ProductModuleService.create(context, demoProductNumber, newProductModule);
+                ConsoleWriter.WriteEntity("Added product module:", productModule);
+
+                productModule = ProductModuleService.get(context, demoProductModuleNumber);
+                ConsoleWriter.WriteEntity("Got product module:", productModule);
+
+                List<ProductModule> productModules = ProductModuleService.list(context, null);
+                ConsoleWriter.WriteList("Got the following ProductModules:", productModules);
+
+                ProductModule updateProductModule = new ProductModule();
+                updateProductModule.productModuleProperties.Add("Updated property name", "Updated property value");
+                productModule = ProductModuleService.update(context, demoProductModuleNumber, updateProductModule);
+                ConsoleWriter.WriteEntity("Updated product module:", productModule);
+
+                ProductModuleService.delete(context, demoProductModuleNumber, true);
+                ConsoleWriter.WriteMsg("Deleted ProductModule!");
+
+                productModules = ProductModuleService.list(context, null);
+                ConsoleWriter.WriteList("Got the following ProductModules:", productModules);
+
+                productModule = ProductModuleService.create(context, demoProductNumber, newProductModule);
+                ConsoleWriter.WriteEntity("Added product module again:", productModule);
+
+                productModules = ProductModuleService.list(context, null);
+                ConsoleWriter.WriteList("Got the following ProductModules:", productModules);
+
+                #endregion
+
+                #region ****************** LicenseTemplate
+                LicenseTemplate newLicenseTemplate = new LicenseTemplate();
+                newLicenseTemplate.number = demoLicenseTemplate1_Number;
+                newLicenseTemplate.name = demoLicenseTemplate1_Name;
+                newLicenseTemplate.licenseType = demoLicenseTemplate1_Type;
+                newLicenseTemplate.price = demoLicenseTemplate1_Price;
+                newLicenseTemplate.currency = demoLicenseTemplate1_Currency;
+                newLicenseTemplate.licenseTemplateProperties[Constants.License.PROP_TIME_VOLUME] = demoLicenseTemplate1_TimeVolume;
+                newLicenseTemplate.automatic = demoLicenseTemplate1_Automatic;
+                ConsoleWriter.WriteEntity("Adding license template:", newLicenseTemplate);
+                LicenseTemplate licenseTemplate = LicenseTemplateService.create(context, demoProductModuleNumber, newLicenseTemplate);
+                ConsoleWriter.WriteEntity("Added license template:", licenseTemplate);
+
+                licenseTemplate = LicenseTemplateService.get(context, demoLicenseTemplate1_Number);
+                ConsoleWriter.WriteEntity("Got licenseTemplate:", licenseTemplate);
+
+                List<LicenseTemplate> licenseTemplates = LicenseTemplateService.list(context, null);
+                ConsoleWriter.WriteList("Got the following license templates:", licenseTemplates);
+
+                LicenseTemplate updateLicenseTemplate = new LicenseTemplate();
+                updateLicenseTemplate.active = true;
+                licenseTemplate = LicenseTemplateService.update(context, demoLicenseTemplate1_Number, updateLicenseTemplate);
+                ConsoleWriter.WriteEntity("Updated license template:", licenseTemplate);
+
+                // TODO: delete
+
                 #endregion
 
                 #region ****************** Licensee
-                LicenseeService.delete(context, licensee, true);
 
-                Licensee defaultLicensee = new Licensee();
-                defaultLicensee.number = licensee;
-                Licensee addedDLicensee = LicenseeService.create(context, "P015", defaultLicensee);
-                Console.WriteLine("Added default licensee:");
-                Console.WriteLine(addedDLicensee.ToString());
-                Console.WriteLine("");
-
-                Licensee gotLicensee = LicenseeService.get(context, licensee);
-                Console.WriteLine("Got default licensee: ");
-                Console.WriteLine(gotLicensee.ToString());
-                Console.WriteLine("");
-
-                Licensee updateLicensee = new Licensee();
-                updateLicensee.licenseeProperties.Add("Updated property name", "Updated value"); 
-                Licensee upLicensee = LicenseeService.update(context, licensee, updateLicensee);
-                Console.WriteLine("Updated default licensee: ");
-                Console.WriteLine(upLicensee.ToString());
-                Console.WriteLine("");
-
-                LicenseeService.delete(context, licensee, true);
-                Console.WriteLine("Deleted default licensee!");
-                Console.WriteLine("");
+                Licensee newLicensee = new Licensee();
+                newLicensee.number = demoLicenseeNumber;
+                Licensee licensee = LicenseeService.create(context, demoProductNumber, newLicensee);
+                ConsoleWriter.WriteEntity("Added licensee:", licensee);
 
                 List<Licensee> licensees = LicenseeService.list(context);
-                Console.WriteLine("Got the following licensees:");
-                foreach (Licensee licenz in licensees)
-                {
-                    Console.WriteLine(licenz.ToString());
-                }
-                Console.WriteLine("");
+                ConsoleWriter.WriteList("Got the following licensees:", licensees);
 
-                Licensee addedLicensee = new Licensee();
-                addedLicensee.number = licensee;
-                Licensee addedNewLicensee = LicenseeService.create(context, "P015", addedLicensee);
-                Console.WriteLine("Added new licensee:");
-                Console.WriteLine(addedNewLicensee.ToString());
-                Console.WriteLine("");
-                
+                LicenseeService.delete(context, demoLicenseeNumber, true);
+                ConsoleWriter.WriteMsg("Deleted licensee!");
+
                 licensees = LicenseeService.list(context);
-                Console.WriteLine("Got the following licensees after add:");
-                foreach (Licensee licenz in licensees)
-                {
-                    Console.WriteLine(licenz.ToString());
-                }
-                Console.WriteLine("");
+                ConsoleWriter.WriteList("Got the following licensees:", licensees);
+
+                licensee = LicenseeService.create(context, demoProductNumber, newLicensee);
+                ConsoleWriter.WriteEntity("Added licensee again:", licensee);
+
+                licensee = LicenseeService.get(context, demoLicenseeNumber);
+                ConsoleWriter.WriteEntity("Got licensee:", licensee);
+
+                Licensee updateLicensee = new Licensee();
+                updateLicensee.licenseeProperties.Add("Updated property name", "Updated value");
+                licensee = LicenseeService.update(context, demoLicenseeNumber, updateLicensee);
+                ConsoleWriter.WriteEntity("Updated licensee:", licensee);
+
+                licensees = LicenseeService.list(context);
+                ConsoleWriter.WriteList("Got the following licensees:", licensees);
 
                 #endregion
 
                 #region ****************** License
                 License defaultLicense = new License();
                 defaultLicense.number = "L011";
-                License addedDLicense = LicenseService.create(context, licensee, licenseTemplate, null, defaultLicense);
-                Console.WriteLine("Added default license:");
-                Console.WriteLine(addedDLicense.ToString());
-                Console.WriteLine("");
+                License addedDLicense = LicenseService.create(context, demoLicenseeNumber, demoLicenseTemplate1_Number, null, defaultLicense);
+                ConsoleWriter.WriteEntity("Added default license:", addedDLicense);
 
                 License gotLicense = LicenseService.get(context, "L011");
-                Console.WriteLine("Got default license: ");
-                Console.WriteLine(gotLicense.ToString());
-                Console.WriteLine("");
+                ConsoleWriter.WriteEntity("Got default license:", gotLicense);
 
                 License updateLicense = new License();
-                updateLicense.licenseProperties.Add("Updated property name", "Updated value"); 
+                updateLicense.licenseProperties.Add("Updated property name", "Updated value");
                 License upLicense = LicenseService.update(context, "L011", null, updateLicense);
-                Console.WriteLine("Updated default license: ");
-                Console.WriteLine(upLicense.ToString());
-                Console.WriteLine("");
+                ConsoleWriter.WriteEntity("Updated default license:", upLicense);
 
                 List<License> licenses = LicenseService.list(context);
                 Console.WriteLine("Got the following licenses:");
@@ -154,73 +196,10 @@ namespace lmBoxClient
                 Console.WriteLine("");
                 #endregion
 
-                #region ****************** ProductModule
-                List<ProductModule> productModules = ProductModuleService.list(context, null);
-                Console.WriteLine("Got the following ProductModules:");
-                foreach (ProductModule prodMod in productModules)
-                {
-                    Console.WriteLine(prodMod.ToString());
-                }
-                Console.WriteLine("");
-
-                ProductModule gotProductModule = ProductModuleService.get(context, productModule);
-                Console.WriteLine("Got default product module: ");
-                Console.WriteLine(gotProductModule.ToString());
-                Console.WriteLine("");
-
-     /**           ProductModuleService.delete(context, productModule, true);
-                Console.WriteLine("Deleted default ProductModule!");
-                Console.WriteLine("");
-                */
-                ProductService.create(context, defaultProduct);
- /**               
-                ProductModule defaultProductModule = new ProductModule();
-                defaultProductModule.number = productModule;
-                defaultProductModule.name = "Default product module";
-                ProductModule addedDProductModule = ProductModuleService.create(context, product, defaultProductModule);
-                Console.WriteLine("Added default product module:");
-                Console.WriteLine(addedDProductModule.ToString());
-                Console.WriteLine("");
-                
-                ProductModule updateProductModule = new ProductModule();
-                updateProductModule.productModuleProperties.Add("Updated property name", "Updated property value");
-                ProductModule upProductModule = ProductModuleService.update(context, productModule, updateProductModule);
-                Console.WriteLine("Updated default product module: ");
-                Console.WriteLine(upProductModule.ToString())
-  * ;
-                Console.WriteLine("");*/
-                #endregion
-
-                #region LicenseTemplate
-                LicenseTemplate defaultLicenseTemplate = new LicenseTemplate();
-                defaultLicenseTemplate.number = "E011";
-                LicenseTemplate addedDLicenseTemplate = LicenseTemplateService.create(context, productModule, defaultLicenseTemplate);
-                Console.WriteLine("Added default license template:");
-                Console.WriteLine(addedDLicenseTemplate.ToString());
-                Console.WriteLine("");
-
-                LicenseTemplate gotLicenseTemplate = LicenseTemplateService.get(context, licenseTemplate);
-                Console.WriteLine("Got default license: ");
-                Console.WriteLine(gotLicense.ToString());
-                Console.WriteLine("");
-
-                List<LicenseTemplate> licenseTemplates = LicenseTemplateService.list(context, null);
-                Console.WriteLine("Got the following license templates:");
-                foreach (LicenseTemplate lTemplate in licenseTemplates)
-                {
-                    Console.WriteLine(lTemplate.ToString());
-                }
-                Console.WriteLine("");               
-
-                #endregion
-
                 #region ****************** Validate
-                ValidationResult validationResult = LicenseeService.validate(context, licensee);
-                Console.WriteLine("Validation result for created licensee:");
-                Console.WriteLine(validationResult.ToString());
+                ValidationResult validationResult = LicenseeService.validate(context, demoLicenseeNumber);
+                ConsoleWriter.WriteEntity("Validation result for created licensee:", validationResult);
                 #endregion
-
-                LicenseeService.delete(context, licensee, true);
 
             }
             catch (LmBoxException e)
@@ -232,6 +211,24 @@ namespace lmBoxClient
             {
                 Console.WriteLine("Got exception:");
                 Console.WriteLine(e);
+            }
+            finally
+            {
+                try
+                {
+                    // Cleanup - delete test product with all its related items
+                    ProductService.delete(context, demoProductNumber, true);
+                }
+                catch (LmBoxException e)
+                {
+                    Console.WriteLine("Got lmBox exception during cleanup:");
+                    Console.WriteLine(e);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Got exception during cleanup:");
+                    Console.WriteLine(e);
+                }
             }
 
             Console.WriteLine("Press <Enter> to exit..."); 

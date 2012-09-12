@@ -9,7 +9,7 @@ namespace lmBoxClient.Entities
     /// Contains result of the Licensee.validate() operation. See lmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/vo/ValidationResult.html
     /// </summary>
-    public class ValidationResult
+    public class ValidationResult : IEntity
     {
 
         private Dictionary<String, Composition> validations;
@@ -107,7 +107,7 @@ namespace lmBoxClient.Entities
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/vo/ValidationResult.html
         /// </summary>
         /// <returns></returns>
-        public new String ToString()
+        public override String ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(Constants.ValidationResult.VALIDATION_RESULT_TYPE);
@@ -120,7 +120,7 @@ namespace lmBoxClient.Entities
                 } else {
                     sb.Append(", ");
                 }
-                sb.Append(Constants.ProductModule.PRODUCT_MODULE_TYPE);
+                sb.Append(Constants.ProductModule.TYPE_NAME);
                 sb.Append("<");
                 sb.Append(validationEntry.Key);
                 sb.Append(">");

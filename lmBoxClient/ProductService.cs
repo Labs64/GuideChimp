@@ -20,7 +20,7 @@ namespace lmBoxClient
         /// </summary>
         public static Product create(Context context, Product newProduct)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/product", newProduct.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.Product.ENDPOINT_PATH, newProduct.ToDictionary());
             return new Product(output.items[0]);
         }
 
@@ -30,7 +30,7 @@ namespace lmBoxClient
         /// </summary>
         public static Product get(Context context, String number)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/product/" + number, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Product.ENDPOINT_PATH + "/" + number, null);
             return new Product(output.items[0]);
         }
 
@@ -40,7 +40,7 @@ namespace lmBoxClient
         /// </summary>
         public static List<Product> list(Context context)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, "/product", null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Product.ENDPOINT_PATH, null);
 
             List<Product> products = new List<Product>();
             foreach (item i in output.items)
@@ -57,7 +57,7 @@ namespace lmBoxClient
         public static Product update(Context context, String number, Product updateProduct)
         {
             updateProduct.number = number;
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, "/product/" + number, updateProduct.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.Product.ENDPOINT_PATH + "/" + number, updateProduct.ToDictionary());
             return new Product(output.items[0]);
         }
 
@@ -68,7 +68,7 @@ namespace lmBoxClient
         public static void delete(Context context, String number, bool forceCascade)
         {
             String strCascade = Convert.ToString(forceCascade).ToLower();
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, "/product/" + number + "?" + Constants.CASCADE + "=" + strCascade, null);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.DELETE, Constants.Product.ENDPOINT_PATH + "/" + number, Utilities.forceCascadeToDict(forceCascade));
         }
 
     }
