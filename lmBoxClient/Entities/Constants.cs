@@ -12,6 +12,7 @@ namespace lmBoxClient.Entities
         internal const String ACTIVE = "active";
         internal const String NUMBER = "number";
         internal const String NAME = "name";
+        internal const String VERSION = "version";
         internal const String CASCADE = "forceCascade";
         internal const String PRICE = "price";
         internal const String CURRENCY = "currency";

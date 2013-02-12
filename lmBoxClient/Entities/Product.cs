@@ -16,7 +16,13 @@ namespace lmBoxClient.Entities
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Product.html
         /// </summary>
         public String name { get; set; }
-       
+
+        /// <summary>
+        /// Product version. See lmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Product.html
+        /// </summary>
+        public String version { get; set; }
+
         /// <summary>
         /// Custom properties of the product. See lmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Product.html
@@ -44,6 +50,9 @@ namespace lmBoxClient.Entities
                     case Constants.NAME:
                         name = p.Value;
                         break;
+                    case Constants.VERSION:
+                        version = p.Value;
+                        break;
                     default:
                         if (!base.setFromProperty(p)) // Not BaseEntity property?
                         {
@@ -61,6 +70,17 @@ namespace lmBoxClient.Entities
             sb.Append(Constants.Product.TYPE_NAME);
             sb.Append("[");
             sb.Append(base.ToString());
+            sb.Append(", ");
+            sb.Append(Constants.NAME);
+            sb.Append("=");
+            sb.Append(name);
+            if (version != null)
+            {
+                sb.Append(", ");
+                sb.Append(Constants.VERSION);
+                sb.Append("=");
+                sb.Append(version);
+            }
             foreach (KeyValuePair<String, String> prop in productProperties)
             {
                 sb.Append(", ");
@@ -76,6 +96,7 @@ namespace lmBoxClient.Entities
         {
             Dictionary<String, String> dict = base.ToDictionary();
             if (name != null) dict[Constants.NAME] = name;
+            if (version != null) dict[Constants.VERSION] = version;
             foreach (KeyValuePair<String, String> prop in productProperties)
             {
                 dict[prop.Key] = prop.Value;
