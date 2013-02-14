@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.RestController;
-using lmBoxClient.Entities;
+using LmBoxClient.RestController;
+using LmBoxClient.Entities;
 using System.Data;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
     /// <summary>
-    /// C# representation of the LicenseTemplate Service. See lmBoxAPI JavaDoc for details:
+    /// C# representation of the LicenseTemplate Service. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseTemplateService.html
     /// </summary>
     public class LicenseTemplateService
     {
         /// <summary>
-        /// Creates new license template object with given properties. See lmBoxAPI JavaDoc for details:
+        /// Creates new license template object with given properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseTemplateService.html
         /// </summary>
         public static LicenseTemplate create(Context context, String productModuleNumber, LicenseTemplate newLicenseTemplate)
@@ -26,7 +26,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Gets license template by its number. See lmBoxAPI JavaDoc for details:
+        /// Gets license template by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseTemplateService.html
         /// </summary>
         public static LicenseTemplate get(Context context, String number)
@@ -36,12 +36,18 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Returns all license templates of a vendor. See lmBoxAPI JavaDoc for details:
+        /// Returns all license templates of a vendor. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseTemplateService.html
         /// </summary>
         public static List<LicenseTemplate> list(Context context, String filter)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.LicenseTemplate.ENDPOINT_PATH, null);
+            Dictionary<String, String> parameters = new Dictionary<String, String>();
+            if (filter != null && filter.Length > 0)
+            {
+                parameters.Add("filter", filter);
+            }
+
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.LicenseTemplate.ENDPOINT_PATH, parameters);
 
             List<LicenseTemplate> licenseTemplates = new List<LicenseTemplate>();
             foreach (item i in output.items)
@@ -51,7 +57,7 @@ namespace lmBoxClient
             return licenseTemplates;
         }
         /// <summary>
-        /// Updates license template properties. See lmBoxAPI JavaDoc for details:
+        /// Updates license template properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseTemplateService.html
         /// </summary>
         public static LicenseTemplate update(Context context, String number, LicenseTemplate updateLicenseTemplate)
@@ -61,7 +67,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Deletes license template. See lmBoxAPI JavaDoc for details:
+        /// Deletes license template. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseTemplateService.html
         /// </summary>
         public static void delete(Context context, String number, Boolean forceCascade)

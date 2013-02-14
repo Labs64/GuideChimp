@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.Entities;
+using LmBoxClient.Entities;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
     /// <summary>
-    /// Holds the common context for all calls to the lmBoxAPI RESTful, in particular server URL and login credentials.
+    /// Holds the common context for all calls to the LmBoxAPI RESTful, in particular server URL and login credentials.
     /// </summary>
     public class Context
     {
         /// <summary>
-        /// Server URL base of lmBoxAPI RESTful. Normally should be "https://lmbox.labs64.com".
+        /// Server URL base of LmBoxAPI RESTful. Normally should be "https://lmbox.labs64.com".
         /// </summary>
         public String baseUrl { get; set; }
 
@@ -32,10 +32,10 @@ namespace lmBoxClient
         public String vendorNumber { get; set; }
 
         /// <summary>
-        /// Use this call to form the redirection URL for lmBoxShop.
+        /// Use this call to form the redirection URL for LmBoxShop.
         /// </summary>
         /// <param name="licenseeNumber">External number of the licensee that is going to shop</param>
-        /// <returns>URL that is to be used to redirect licensee to lmBoxShop</returns>
+        /// <returns>URL that is to be used to redirect licensee to LmBoxShop</returns>
         public String getShopURL(String licenseeNumber)
         {
             StringBuilder sb = new StringBuilder();

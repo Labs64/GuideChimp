@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.RestController;
+using LmBoxClient.RestController;
 
-namespace lmBoxClient.Entities
+namespace LmBoxClient.Entities
 {
     /// <summary>
-    /// Defines common entity fields. See lmBoxAPI JavaDoc for details:
+    /// Defines common entity fields. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/BaseDBEntity.html
     /// </summary>
     public abstract class BaseEntity : IEntity

@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.RestController;
-using lmBoxClient.Entities;
+using LmBoxClient.RestController;
+using LmBoxClient.Entities;
 using System.Data;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
     /// <summary>
-    /// C# representation of the ProductModule Service. See lmBoxAPI JavaDoc for details:
+    /// C# representation of the ProductModule Service. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/ProductModuleService.html
     /// </summary>
     public class ProductModuleService 
     {
         /// <summary>
-        /// Creates new ProductModel object with given properties. See lmBoxAPI JavaDoc for details:
+        /// Creates new ProductModel object with given properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/ProductModuleService.html
         /// </summary>
         public static ProductModule create(Context context, String productNumber, ProductModule newProductModule)
@@ -26,7 +26,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Gets product module by its number. See lmBoxAPI JavaDoc for details:
+        /// Gets product module by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/ProductModuleService.html
         /// </summary>
         public static ProductModule get(Context context, String number)
@@ -36,12 +36,18 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Returns all product modules of a vendor. See lmBoxAPI JavaDoc for details:
+        /// Returns all product modules of a vendor. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/ProductModuleService.html
         /// </summary>
         public static List<ProductModule> list(Context context, String filter)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.ProductModule.ENDPOINT_PATH, null);
+            Dictionary<String, String> parameters = new Dictionary<String, String>();
+            if (filter != null && filter.Length > 0)
+            {
+                parameters.Add("filter", filter);
+            } 
+
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.ProductModule.ENDPOINT_PATH, parameters);
 
             List<ProductModule> productModules = new List<ProductModule>();
             foreach (item i in output.items)
@@ -52,7 +58,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Updates product module properties. See lmBoxAPI JavaDoc for details:
+        /// Updates product module properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/ProductModuleService.html
         /// </summary>
         public static ProductModule update(Context context, String number, ProductModule updateProductModule)
@@ -63,7 +69,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Deletes product module. See lmBoxAPI JavaDoc for details:
+        /// Deletes product module. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/ProductModuleService.html
         /// </summary>
         public static void delete(Context context, String number, bool forceCascade)

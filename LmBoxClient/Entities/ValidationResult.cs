@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace lmBoxClient.Entities
+namespace LmBoxClient.Entities
 {
     /// <summary>
-    /// Contains result of the Licensee.validate() operation. See lmBoxAPI JavaDoc for details:
+    /// Contains result of the Licensee.validate() operation. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/vo/ValidationResult.html
     /// </summary>
     public class ValidationResult : IEntity
@@ -103,7 +103,7 @@ namespace lmBoxClient.Entities
         }
 
         /// <summary>
-        /// Converts ValidationResult object to a String representation.  See lmBoxAPI JavaDoc for details:
+        /// Converts ValidationResult object to a String representation.  See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/vo/ValidationResult.html
         /// </summary>
         /// <returns></returns>

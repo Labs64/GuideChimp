@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lmBoxClient", "lmBoxClient\lmBoxClient.csproj", "{6506D713-D1BA-4B0C-8021-9C5076E9DFE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LmBoxClient", "lmBoxClient\LmBoxClient.csproj", "{6506D713-D1BA-4B0C-8021-9C5076E9DFE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lmBoxClient-demo", "lmBoxClient-demo\lmBoxClient-demo.csproj", "{C198E53C-4C42-4A68-98FF-52620E9C493A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LmBoxClient-demo", "lmBoxClient-demo\LmBoxClient-demo.csproj", "{C198E53C-4C42-4A68-98FF-52620E9C493A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

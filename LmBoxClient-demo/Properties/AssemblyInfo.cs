@@ -6,11 +6,11 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("lmBoxClient-demo")]
-[assembly: AssemblyDescription("Demo program demonstrates usage of lmBoxAPI in C#")]
+[assembly: AssemblyTitle("LmBoxClient-demo")]
+[assembly: AssemblyDescription("Demo program demonstrates usage of LmBoxAPI in C#")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Labs64 GmbH")]
-[assembly: AssemblyProduct("lmBoxClient-demo")]
+[assembly: AssemblyProduct("LmBoxClient-demo")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

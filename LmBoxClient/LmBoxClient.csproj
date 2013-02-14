@@ -8,8 +8,8 @@
     <ProjectGuid>{6506D713-D1BA-4B0C-8021-9C5076E9DFE2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>lmBoxClient</RootNamespace>
-    <AssemblyName>lmBoxClient</AssemblyName>
+    <RootNamespace>LmBoxClient</RootNamespace>
+    <AssemblyName>LmBoxClient</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\LicenseTemplate.cs" />
+    <Compile Include="Entities\Token.cs" />
     <Compile Include="LicenseTemplateService.cs" />
     <Compile Include="ProductModuleService.cs" />
     <Compile Include="Entities\ProductModule.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestController\LmBoxAPI.cs" />
+    <Compile Include="TokenService.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.RestController;
-using lmBoxClient.Entities;
+using LmBoxClient.RestController;
+using LmBoxClient.Entities;
 using System.Data;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
     /// <summary>
-    /// C# representation of the License Service. See lmBoxAPI JavaDoc for details:
+    /// C# representation of the License Service. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseService.html
     /// </summary>
     public class LicenseService
     {
         /// <summary>
-        /// Creates new license object with given properties. See lmBoxAPI JavaDoc for details:
+        /// Creates new license object with given properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseService.html
         /// </summary>
         public static License create(Context context, String licenseeNumber, String licenseTemplateNumber, String transactionNumber, License newLicense)
@@ -28,7 +28,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Gets license by its number. See lmBoxAPI JavaDoc for details:
+        /// Gets license by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseService.html
         /// </summary>
         public static License get(Context context, String number)
@@ -38,12 +38,18 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Returns all licenses of a vendor. See lmBoxAPI JavaDoc for details:
+        /// Returns all licenses of a vendor. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseService.html
         /// </summary>
-        public static List<License> list(Context context)
+        public static List<License> list(Context context, String filter)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.ENDPOINT_PATH, null);
+            Dictionary<String, String> parameters = new Dictionary<String, String>();
+            if (filter != null && filter.Length > 0)
+            {
+                parameters.Add("filter", filter);
+            } 
+
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.License.ENDPOINT_PATH, parameters);
 
             List<License> licenses = new List<License>();
             foreach (item i in output.items)
@@ -54,7 +60,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Updates license properties. See lmBoxAPI JavaDoc for details:
+        /// Updates license properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseService.html
         /// </summary>
         public static License update(Context context, String number, String transactionNumber, License updateLicense)
@@ -64,7 +70,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Deletes license. See lmBoxAPI JavaDoc for details:
+        /// Deletes license. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseService.html
         /// </summary>
         public static void delete(Context context, String number)

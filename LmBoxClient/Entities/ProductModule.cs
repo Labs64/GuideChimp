@@ -3,34 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace lmBoxClient.Entities
+namespace LmBoxClient.Entities
 {
     /// <summary>
-    /// Represents ProductModule. See lmBoxAPI JavaDoc for details:
+    /// Represents ProductModule. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
     /// </summary>
     public class ProductModule : BaseEntity
     {
         /// <summary>
-        /// ProductModule name. Not null. See lmBoxAPI JavaDoc for details:
+        /// ProductModule name. Not null. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
         /// </summary>
         public String name { get; set; }
 
         /// <summary>
-        /// LicensingModel name. Not null. See lmBoxAPI JavaDoc for details:
+        /// LicensingModel name. Not null. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
         /// </summary>
         public String licensingModel { get; set; }
 
         /// <summary>
-        /// Product number related to this ProductModule. See lmBoxAPI JavaDoc for details:
+        /// Product number related to this ProductModule. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
         /// </summary>
         public String productNumber { get; set; }
 
         /// <summary>
-        /// Custom properties of the product module. See lmBoxAPI JavaDoc for details:
+        /// Custom properties of the product module. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/ProductModule.html
         /// </summary>
         public Dictionary<String, String> productModuleProperties { get; private set; }

@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.Entities;
+using LmBoxClient.Entities;
 using System.Globalization;
 
-namespace lmBoxClient.RestController
+namespace LmBoxClient.RestController
 {
     static class Utilities
     {
-        public static NumberFormatInfo lmBoxNumberFormat { get; private set; }
+        public static NumberFormatInfo LmBoxNumberFormat { get; private set; }
 
         static Utilities()
         {
-            lmBoxNumberFormat = new NumberFormatInfo();
-            lmBoxNumberFormat.NumberDecimalSeparator = ".";
+            LmBoxNumberFormat = new NumberFormatInfo();
+            LmBoxNumberFormat.NumberDecimalSeparator = ".";
         }
 
         public static Dictionary<String, String> forceCascadeToDict(Boolean forceCascade)
@@ -40,7 +40,7 @@ namespace lmBoxClient.RestController
         public static Decimal CheckedParseDecimal(String source, String propertyName)
         {
             Decimal val;
-            if (Decimal.TryParse(source, NumberStyles.AllowDecimalPoint, lmBoxNumberFormat, out val))
+            if (Decimal.TryParse(source, NumberStyles.AllowDecimalPoint, LmBoxNumberFormat, out val))
             {
                 return val;
             }
@@ -54,7 +54,7 @@ namespace lmBoxClient.RestController
         {
             if (source.HasValue)
             {
-                return source.Value.ToString("F2", lmBoxNumberFormat);
+                return source.Value.ToString("F2", LmBoxNumberFormat);
             }
             else
             {

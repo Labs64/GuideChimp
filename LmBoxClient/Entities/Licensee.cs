@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace lmBoxClient.Entities
+namespace LmBoxClient.Entities
 {
     /// <summary>
-    /// Represents Licensee. See lmBoxAPI JavaDoc for details:
+    /// Represents Licensee. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
     /// </summary>
     public class Licensee : BaseEntity
     {
         /// <summary>
-        /// The number of the product licensed to this licensee. See lmBoxAPI JavaDoc for details:
+        /// The number of the product licensed to this licensee. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
         /// </summary>
         public String productNumber { get; set; }
 
         /// <summary>
-        /// Custom properties of the licensee. See lmBoxAPI JavaDoc for details:
+        /// Custom properties of the licensee. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
         /// </summary>
         public Dictionary<String, String> licenseeProperties { get; private set; }

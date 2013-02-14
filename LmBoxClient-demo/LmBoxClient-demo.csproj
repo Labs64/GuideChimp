@@ -8,8 +8,8 @@
     <ProjectGuid>{C198E53C-4C42-4A68-98FF-52620E9C493A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>lmBoxClient</RootNamespace>
-    <AssemblyName>lmBoxClient-demo</AssemblyName>
+    <RootNamespace>LmBoxClient</RootNamespace>
+    <AssemblyName>LmBoxClient-demo</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>lmBoxClient.lmBoxClient_demo</StartupObject>
+    <StartupObject>LmBoxClient.LmBoxClient_demo</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,16 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="lmBoxClient-demo.cs">
+    <Compile Include="LmBoxClient-demo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConsoleWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lmBoxClient\lmBoxClient.csproj">
+    <ProjectReference Include="..\lmBoxClient\LmBoxClient.csproj">
       <Project>{6506D713-D1BA-4B0C-8021-9C5076E9DFE2}</Project>
-      <Name>lmBoxClient</Name>
+      <Name>LmBoxClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

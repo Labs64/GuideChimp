@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient;
-using lmBoxClient.Entities;
+using LmBoxClient;
+using LmBoxClient.Entities;
 using System.Net;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
-    class lmBoxClient_demo
+    class LmBoxClient_demo
     {
         static void Main(string[] args)
         {
@@ -45,7 +45,7 @@ namespace lmBoxClient
                 product = ProductService.get(context, demoProductNumber);
                 ConsoleWriter.WriteEntity("Got product:", product);
 
-                List<Product> products = ProductService.list(context);
+                List<Product> products = ProductService.list(context, null);
                 ConsoleWriter.WriteList("Got the following products:", products);
 
                 Product updateProduct = new Product();
@@ -56,13 +56,13 @@ namespace lmBoxClient
                 ProductService.delete(context, demoProductNumber, true);
                 ConsoleWriter.WriteMsg("Deleted Product!");
 
-                products = ProductService.list(context);
+                products = ProductService.list(context, null);
                 ConsoleWriter.WriteList("Got the following Products:", products);
 
                 product = ProductService.create(context, newProduct);
                 ConsoleWriter.WriteEntity("Added product again:", product);
 
-                products = ProductService.list(context);
+                products = ProductService.list(context, null);
                 ConsoleWriter.WriteList("Got the following Products:", products);
 
                 #endregion
@@ -207,7 +207,7 @@ namespace lmBoxClient
             }
             catch (LmBoxException e)
             {
-                Console.WriteLine("Got lmBox exception:");
+                Console.WriteLine("Got LmBox exception:");
                 Console.WriteLine(e);
             }
             catch (Exception e)
@@ -224,7 +224,7 @@ namespace lmBoxClient
                 }
                 catch (LmBoxException e)
                 {
-                    Console.WriteLine("Got lmBox exception during cleanup:");
+                    Console.WriteLine("Got LmBox exception during cleanup:");
                     Console.WriteLine(e);
                 }
                 catch (Exception e)

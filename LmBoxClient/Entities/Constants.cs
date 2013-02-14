@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace lmBoxClient.Entities
+namespace LmBoxClient.Entities
 {
     public class Constants
     {
@@ -12,7 +12,6 @@ namespace lmBoxClient.Entities
         internal const String ACTIVE = "active";
         internal const String NUMBER = "number";
         internal const String NAME = "name";
-        internal const String VERSION = "version";
         internal const String CASCADE = "forceCascade";
         internal const String PRICE = "price";
         internal const String CURRENCY = "currency";
@@ -68,6 +67,13 @@ namespace lmBoxClient.Entities
         public class Transaction
         {
             internal const String TRANSACTION_NUMBER = "transactionNumber";
+        }
+
+        public class Token
+        {
+            internal const String ENDPOINT_PATH = "token";
+            internal const String TYPE_NAME = "Token";
+            internal const String LICENSEE_NUMBER = "tokenNumber";
         }
 
         public class ValidationResult

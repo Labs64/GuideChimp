@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.RestController;
-using lmBoxClient.Entities;
+using LmBoxClient.RestController;
+using LmBoxClient.Entities;
 using System.Data;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
     /// <summary>
-    /// C# representation of the Licensee Service. See lmBoxAPI JavaDoc for details:
+    /// C# representation of the Licensee Service. See LmBoxAPI JavaDoc for details:
     /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
     /// </summary>
     public class LicenseeService
     {
         /// <summary>
-        /// Creates new licensee object with given properties. See lmBoxAPI JavaDoc for details:
+        /// Creates new licensee object with given properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
         public static Licensee create(Context context, String productNumber, Licensee newLicensee)
@@ -26,7 +26,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Gets licensee by its number. See lmBoxAPI JavaDoc for details:
+        /// Gets licensee by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
         public static Licensee get(Context context, String number)
@@ -36,12 +36,18 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Returns all licensees of a vendor. See lmBoxAPI JavaDoc for details:
+        /// Returns all licensees of a vendor. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
-        public static List<Licensee> list(Context context)
+        public static List<Licensee> list(Context context, String filter)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH, null);
+            Dictionary<String, String> parameters = new Dictionary<String, String>();
+            if (filter != null && filter.Length > 0) 
+            {
+                parameters.Add("filter", filter);
+            } 
+
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH, parameters);
 
             List<Licensee> licensees = new List<Licensee>();
             foreach (item i in output.items)
@@ -52,7 +58,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Updates licensee properties. See lmBoxAPI JavaDoc for details:
+        /// Updates licensee properties. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
         public static Licensee update(Context context, String number, Licensee updateLicensee)
@@ -63,7 +69,7 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Deletes licensee. See lmBoxAPI JavaDoc for details:
+        /// Deletes licensee. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
         public static void delete(Context context, String number, Boolean forceCascade)
@@ -72,12 +78,18 @@ namespace lmBoxClient
         }
 
         /// <summary>
-        /// Validates active licenses of the licensee. See lmBoxAPI JavaDoc for details:
+        /// Validates active licenses of the licensee. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
         /// </summary>
-        public static ValidationResult validate(Context context, String number)
+        public static ValidationResult validate(Context context, String number, String productNumber)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH + "/" + number + "/validate", null);
+            Dictionary<String, String> parameters = new Dictionary<String, String>();
+            if (productNumber != null || productNumber.Length > 0) 
+            {
+                parameters.Add("productNumber", productNumber);
+            } 
+
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Licensee.ENDPOINT_PATH + "/" + number + "/validate", parameters);
             return new ValidationResult(output);
         }
 

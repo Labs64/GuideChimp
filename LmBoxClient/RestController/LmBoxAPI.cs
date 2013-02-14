@@ -5,9 +5,9 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Text;
 using System.Web;
-using lmBoxClient.Entities;
+using LmBoxClient.Entities;
 
-namespace lmBoxClient.RestController
+namespace LmBoxClient.RestController
 {
     class LmBoxAPI
     {
@@ -62,7 +62,7 @@ namespace lmBoxClient.RestController
             }
 
             HttpWebRequest request = WebRequest.Create(context.baseUrl + Constants.REST_API_PATH + "/" + path + urlParam) as HttpWebRequest;
-            request.UserAgent = "lmBox C# Client";
+            request.UserAgent = "LmBox C# Client";
             switch (method)
             {
                 case Method.GET: request.Method = "GET"; break;
@@ -110,7 +110,7 @@ namespace lmBoxClient.RestController
             }
             catch (WebException ex)
             {
-                #region HTTP and lmBox errors conversion to Exception
+                #region HTTP and LmBox errors conversion to Exception
                 String plainTextResponse = null;
                 using (HttpWebResponse response = ex.Response as HttpWebResponse)
                 {
@@ -133,7 +133,7 @@ namespace lmBoxClient.RestController
                     }
                 }
                 StringBuilder messages = new StringBuilder();
-                messages.AppendLine("Bad request to the lmBoxAPI:");
+                messages.AppendLine("Bad request to the LmBoxAPI:");
                 if (responsePayload != null)
                 {
                     foreach (info i in responsePayload.infos)
@@ -153,8 +153,8 @@ namespace lmBoxClient.RestController
 
         private static lmbox deserialize(Stream responseStream)
         {
-            XmlSerializer lmBoxSerializer = new XmlSerializer(typeof(lmbox));
-            return lmBoxSerializer.Deserialize(responseStream) as lmbox;
+            XmlSerializer LmBoxSerializer = new XmlSerializer(typeof(lmbox));
+            return LmBoxSerializer.Deserialize(responseStream) as lmbox;
         }
     }
 }

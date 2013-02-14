@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lmBoxClient.Entities;
+using LmBoxClient.Entities;
 
-namespace lmBoxClient
+namespace LmBoxClient
 {
     class ConsoleWriter
     {
