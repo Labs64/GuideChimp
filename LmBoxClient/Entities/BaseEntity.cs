@@ -39,7 +39,7 @@ namespace LmBoxClient.Entities
             }
         }
 
-        public virtual String ToString()
+        public override String ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(Constants.NUMBER);
