@@ -29,6 +29,7 @@ namespace LmBoxClient
             String demoLicenseTemplate1_Currency = "EUR";
             String demoLicenseTemplate1_TimeVolume = "5"; // days
             Boolean demoLicenseTemplate1_Automatic = true;
+            Boolean demoLicenseTemplate1_Hidden = true;
 
             String demoLicenseeNumber = "I001demo";
 
@@ -110,6 +111,7 @@ namespace LmBoxClient
                 newLicenseTemplate.currency = demoLicenseTemplate1_Currency;
                 newLicenseTemplate.licenseTemplateProperties[Constants.License.PROP_TIME_VOLUME] = demoLicenseTemplate1_TimeVolume;
                 newLicenseTemplate.automatic = demoLicenseTemplate1_Automatic;
+                newLicenseTemplate.hidden = demoLicenseTemplate1_Hidden;
                 ConsoleWriter.WriteEntity("Adding license template:", newLicenseTemplate);
                 LicenseTemplate licenseTemplate = LicenseTemplateService.create(context, demoProductModuleNumber, newLicenseTemplate);
                 ConsoleWriter.WriteEntity("Added license template:", licenseTemplate);
@@ -122,7 +124,8 @@ namespace LmBoxClient
 
                 LicenseTemplate updateLicenseTemplate = new LicenseTemplate();
                 updateLicenseTemplate.active = true;
-                updateLicenseTemplate.automatic = true; // workaround: at the moment not specified booleans treated as "false"
+                updateLicenseTemplate.automatic = demoLicenseTemplate1_Automatic; // workaround: at the moment not specified booleans treated as "false"
+                updateLicenseTemplate.hidden = demoLicenseTemplate1_Hidden; // workaround: at the moment not specified booleans treated as "false"
                 licenseTemplate = LicenseTemplateService.update(context, demoLicenseTemplate1_Number, updateLicenseTemplate);
                 ConsoleWriter.WriteEntity("Updated license template:", licenseTemplate);
 
