@@ -54,7 +54,7 @@
     <Compile Include="ConsoleWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lmBoxClient\LmBoxClient.csproj">
+    <ProjectReference Include="..\LmBoxClient\LmBoxClient.csproj">
       <Project>{6506D713-D1BA-4B0C-8021-9C5076E9DFE2}</Project>
       <Name>LmBoxClient</Name>
     </ProjectReference>
