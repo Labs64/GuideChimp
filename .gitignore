@@ -3,7 +3,7 @@ bin
 obj
 *.suo
 *.user
-lmBoxClient/lmBoxClient.xml
+LmBoxClient/LmBoxClient.xml
 
 # mstest test results
 TestResults
