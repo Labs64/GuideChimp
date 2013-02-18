@@ -9,23 +9,26 @@ namespace LmBoxClient
 {
     public class TokenService
     {
-        /// <summary>
-        /// Creates new token for the given token type and token parameters.. See LmBoxAPI JavaDoc for details:
-        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/TokenService.html
-        /// </summary>
-        public static Token create(Context context, Token newToken)
-        {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.Token.ENDPOINT_PATH, newToken.ToDictionary());
-            return new Token(output.items[0]);
-        }
+
 
         /// <summary>
-        /// Gets token by its number. See LmBoxAPI JavaDoc for details:
+        /// Genarates token by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/TokenService.html
         /// </summary>
-        public static Token get(Context context, String number)
+        public static Token generate(Context context, String tokenType, String licenseeNumber)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Token.ENDPOINT_PATH + "/" + number, null);
+            Dictionary<String, String> parameters = new Dictionary<String, String>();
+            if (tokenType == null)
+            {
+                tokenType = Constants.Token.TYPE_DEFAULT;
+            }
+            parameters.Add("tokenType", tokenType);
+            if (licenseeNumber != null && licenseeNumber.Length > 0 && tokenType.Equals(Constants.Token.TYPE_SHOP))
+            {
+                parameters.Add("licenseeNumber", licenseeNumber);
+            }
+
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Token.ENDPOINT_PATH, parameters);
             return new Token(output.items[0]);
         }
     }

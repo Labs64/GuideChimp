@@ -14,7 +14,7 @@ namespace LmBoxClient
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; }; // Trust the self-signed certificate at lmbox.labs64.com.
             Context context = new Context();
-            context.baseUrl = "http://localhost:28080";
+            context.baseUrl = "https://lmbox.labs64.com";
             context.username = "demo";
             context.password = "demo";
 
@@ -36,6 +36,8 @@ namespace LmBoxClient
 
             String demoLicenseNumber = "L001demoTV";
             String demoLicenseNumberFeature = "L001demoF";
+
+            String demoTokenType = "DEFAULT";
 
             try
             {
@@ -218,6 +220,20 @@ namespace LmBoxClient
 
                 #endregion 
 
+                #region ****************** PaymentMethod
+
+                List<PaymentMethod> paymentMethods = PaymentMethodService.list(context);
+                ConsoleWriter.WriteList("Got the following payment methods:", paymentMethods);
+
+                #endregion
+
+                #region ****************** Token
+
+                Token token = TokenService.generate(context, demoTokenType, null);
+                ConsoleWriter.WriteEntity("Got the following token:", token);
+
+                #endregion
+
                 /*
                 #region ****************** Validate
 
@@ -246,17 +262,6 @@ namespace LmBoxClient
                 {
                     // Cleanup - delete test product with all its related items
                     ProductService.delete(context, demoProductNumber, true);
-
-                    List<License> licenses = LicenseService.list(context, null);
-                    ConsoleWriter.WriteList("Got the following license templates:", licenses);
-                    List<Licensee> licensees = LicenseeService.list(context, null);
-                    ConsoleWriter.WriteList("Got the following licensees:", licensees);
-                    List<LicenseTemplate> licenseTemplates = LicenseTemplateService.list(context, null);
-                    ConsoleWriter.WriteList("Got the following license templates:", licenseTemplates);
-                    List<ProductModule> productModules = ProductModuleService.list(context, null);
-                    ConsoleWriter.WriteList("Got the following ProductModules:", productModules);
-                    List<Product> products = ProductService.list(context, null);
-                    ConsoleWriter.WriteList("Got the following Products:", products);
                 }
                 catch (LmBoxException e)
                 {

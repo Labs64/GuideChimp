@@ -74,6 +74,8 @@ namespace LmBoxClient.Entities
             internal const String ENDPOINT_PATH = "token";
             internal const String TYPE_NAME = "Token";
             internal const String TOKEN_NUMBER = "tokenNumber";
+            internal const String TYPE_DEFAULT = "DEFAULT";
+            internal const String TYPE_SHOP = "SHOP";
         }
 
         public class PaymentMethod
