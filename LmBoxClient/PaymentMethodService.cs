@@ -7,7 +7,7 @@ using LmBoxClient.Entities;
 
 namespace LmBoxClient
 {
-    class PaymentMethodService
+    public class PaymentMethodService
     {
 
         /// <summary>

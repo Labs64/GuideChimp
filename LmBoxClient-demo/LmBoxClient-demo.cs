@@ -14,7 +14,7 @@ namespace LmBoxClient
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; }; // Trust the self-signed certificate at lmbox.labs64.com.
             Context context = new Context();
-            context.baseUrl = "https://lmbox.labs64.com";
+            context.baseUrl = "http://localhost:28080";
             context.username = "demo";
             context.password = "demo";
 
@@ -22,7 +22,7 @@ namespace LmBoxClient
             String demoProductModuleNumber = "M001demo";
             String demoLicensingModel = "TimeEvaluation";
 
-            String demoLicenseTemplate1_Number = "E001demo";
+            String demoLicenseTemplate1_Number = "E001demoTV";
             String demoLicenseTemplate1_Name = "Demo Evaluation Period";
             String demoLicenseTemplate1_Type = "TIMEVOLUME";
             Decimal demoLicenseTemplate1_Price = 12.50M;
@@ -31,10 +31,22 @@ namespace LmBoxClient
             Boolean demoLicenseTemplate1_Automatic = true;
             Boolean demoLicenseTemplate1_Hidden = true;
 
+
             String demoLicenseeNumber = "I001demo";
+
+            String demoLicenseNumber = "L001demoTV";
+            String demoLicenseNumberFeature = "L001demoF";
 
             try
             {
+
+                List<String> licenseTypes = UtilityService.listLicenseTypes(context);
+                ConsoleWriter.WriteList("Licensing Models:", licenseTypes);
+
+                List<String> licensingModels = UtilityService.listLicensingModels(context);
+                ConsoleWriter.WriteList("Licensing Types:", licensingModels);
+
+
                 #region ****************** Product
 
                 Product newProduct = new Product();
@@ -129,11 +141,22 @@ namespace LmBoxClient
                 licenseTemplate = LicenseTemplateService.update(context, demoLicenseTemplate1_Number, updateLicenseTemplate);
                 ConsoleWriter.WriteEntity("Updated license template:", licenseTemplate);
 
-                // TODO: delete
+                LicenseTemplateService.delete(context, demoLicenseTemplate1_Number, true);
+                ConsoleWriter.WriteMsg("Deleted LicenseTemplate!");
+
+                licenseTemplates = LicenseTemplateService.list(context, null);
+                ConsoleWriter.WriteList("Got the following license templates:", licenseTemplates);
+
+                licenseTemplate = LicenseTemplateService.create(context, demoProductModuleNumber, newLicenseTemplate);
+                ConsoleWriter.WriteEntity("Added license template again:", licenseTemplate);
+
+                licenseTemplates = LicenseTemplateService.list(context, null);
+                ConsoleWriter.WriteList("Got the following license templates:", licenseTemplates);
+
 
                 #endregion
 
-                /*
+
                 #region ****************** Licensee
 
                 Licensee newLicensee = new Licensee();
@@ -141,13 +164,13 @@ namespace LmBoxClient
                 Licensee licensee = LicenseeService.create(context, demoProductNumber, newLicensee);
                 ConsoleWriter.WriteEntity("Added licensee:", licensee);
 
-                List<Licensee> licensees = LicenseeService.list(context);
+                List<Licensee> licensees = LicenseeService.list(context, null);
                 ConsoleWriter.WriteList("Got the following licensees:", licensees);
 
                 LicenseeService.delete(context, demoLicenseeNumber, true);
                 ConsoleWriter.WriteMsg("Deleted licensee!");
 
-                licensees = LicenseeService.list(context);
+                licensees = LicenseeService.list(context, null);
                 ConsoleWriter.WriteList("Got the following licensees:", licensees);
 
                 licensee = LicenseeService.create(context, demoProductNumber, newLicensee);
@@ -161,51 +184,50 @@ namespace LmBoxClient
                 licensee = LicenseeService.update(context, demoLicenseeNumber, updateLicensee);
                 ConsoleWriter.WriteEntity("Updated licensee:", licensee);
 
-                licensees = LicenseeService.list(context);
+                licensees = LicenseeService.list(context, null);
                 ConsoleWriter.WriteList("Got the following licensees:", licensees);
 
                 #endregion
 
+                
                 #region ****************** License
-                License defaultLicense = new License();
-                defaultLicense.number = "L011";
-                License addedDLicense = LicenseService.create(context, demoLicenseeNumber, demoLicenseTemplate1_Number, null, defaultLicense);
-                ConsoleWriter.WriteEntity("Added default license:", addedDLicense);
+                License newLicense = new License();
+                newLicense.number = demoLicenseNumber;
+                License license = LicenseService.create(context, demoLicenseeNumber, demoLicenseTemplate1_Number, null, newLicense);
+                ConsoleWriter.WriteEntity("Added license:", license);
 
-                License gotLicense = LicenseService.get(context, "L011");
-                ConsoleWriter.WriteEntity("Got default license:", gotLicense);
+                List<License> licenses = LicenseService.list(context, null);
+                ConsoleWriter.WriteList("Got the following license templates:", licenses);
+
+                LicenseService.delete(context, demoLicenseNumber);
+                Console.WriteLine("Deleted license");
+
+                licenses = LicenseService.list(context, null);
+                ConsoleWriter.WriteList("Got the following license templates:", licenses);
+
+                license = LicenseService.create(context, demoLicenseeNumber, demoLicenseTemplate1_Number, null, newLicense);
+                ConsoleWriter.WriteEntity("Added license again:", license);
+
+                license = LicenseService.get(context, demoLicenseNumber);
+                ConsoleWriter.WriteEntity("Got license:", license);
 
                 License updateLicense = new License();
                 updateLicense.licenseProperties.Add("Updated property name", "Updated value");
-                License upLicense = LicenseService.update(context, "L011", null, updateLicense);
-                ConsoleWriter.WriteEntity("Updated default license:", upLicense);
+                license = LicenseService.update(context, demoLicenseNumber, null, updateLicense);
+                ConsoleWriter.WriteEntity("Updated license:", license);
 
-                List<License> licenses = LicenseService.list(context);
-                Console.WriteLine("Got the following licenses:");
-                foreach (License license in licenses)
-                {
-                    Console.WriteLine(license.ToString());
-                }
-                Console.WriteLine("");
+                #endregion 
 
-                licenses = LicenseService.list(context);
-                Console.WriteLine("Got the following licenses after add:");
-                foreach (License license in licenses)
-                {
-                    Console.WriteLine(license.ToString());
-                }
-                Console.WriteLine("");
-
-                LicenseService.delete(context, "L011");
-                Console.WriteLine("Deleted default license!");
-                Console.WriteLine("");
-                #endregion
-
+                /*
                 #region ****************** Validate
-                ValidationResult validationResult = LicenseeService.validate(context, demoLicenseeNumber);
+
+
+
+                ValidationResult validationResult = LicenseeService.validate(context, demoLicenseeNumber, demoProductNumber);
                 ConsoleWriter.WriteEntity("Validation result for created licensee:", validationResult);
                 #endregion
                 */
+                
 
             }
             catch (LmBoxException e)
@@ -224,6 +246,17 @@ namespace LmBoxClient
                 {
                     // Cleanup - delete test product with all its related items
                     ProductService.delete(context, demoProductNumber, true);
+
+                    List<License> licenses = LicenseService.list(context, null);
+                    ConsoleWriter.WriteList("Got the following license templates:", licenses);
+                    List<Licensee> licensees = LicenseeService.list(context, null);
+                    ConsoleWriter.WriteList("Got the following licensees:", licensees);
+                    List<LicenseTemplate> licenseTemplates = LicenseTemplateService.list(context, null);
+                    ConsoleWriter.WriteList("Got the following license templates:", licenseTemplates);
+                    List<ProductModule> productModules = ProductModuleService.list(context, null);
+                    ConsoleWriter.WriteList("Got the following ProductModules:", productModules);
+                    List<Product> products = ProductService.list(context, null);
+                    ConsoleWriter.WriteList("Got the following Products:", products);
                 }
                 catch (LmBoxException e)
                 {

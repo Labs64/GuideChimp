@@ -68,6 +68,7 @@
     <Compile Include="RestController\LmBoxAPI.cs" />
     <Compile Include="TokenService.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="UtilityService.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

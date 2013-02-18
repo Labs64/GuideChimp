@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LmBoxClient.Entities
 {
-    class PaymentMethod : BaseEntity
+    public class PaymentMethod : BaseEntity
     {
         /// <summary>
         /// Custom properties of the licensee. See LmBoxAPI JavaDoc for details:

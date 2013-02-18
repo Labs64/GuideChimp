@@ -22,6 +22,11 @@ namespace LmBoxClient
         {
             newLicense.licenseeNumber = licenseeNumber;
             newLicense.licenseTemplateNumber = licenseTemplateNumber;
+            string transactionOldValue;
+            if (newLicense.licenseProperties.TryGetValue(Constants.Transaction.TRANSACTION_NUMBER, out transactionOldValue))
+            {
+                newLicense.licenseProperties.Remove(Constants.Transaction.TRANSACTION_NUMBER);
+            }
             newLicense.licenseProperties.Add(Constants.Transaction.TRANSACTION_NUMBER, transactionNumber);
             lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.License.ENDPOINT_PATH, newLicense.ToDictionary());
             return new License(output.items[0]);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LmBoxClient.Entities
 {
-    class Token : BaseEntity
+    public class Token : BaseEntity
     {
         /// <summary>
         /// Custom properties of the licensee. See LmBoxAPI JavaDoc for details:

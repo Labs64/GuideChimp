@@ -7,7 +7,7 @@ using LmBoxClient.Entities;
 
 namespace LmBoxClient
 {
-    class TokenService
+    public class TokenService
     {
         /// <summary>
         /// Creates new token for the given token type and token parameters.. See LmBoxAPI JavaDoc for details:

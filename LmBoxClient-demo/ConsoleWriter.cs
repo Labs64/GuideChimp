@@ -30,5 +30,15 @@ namespace LmBoxClient
             }
             Console.WriteLine("");
         }
+
+        public static void WriteList(String msg, List<String> entitiesList) 
+        {
+            Console.WriteLine(msg);
+            foreach (String entity in entitiesList)
+            {
+                Console.WriteLine(entity);
+            }
+            Console.WriteLine("");
+        }
     }
 }
