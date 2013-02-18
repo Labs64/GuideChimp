@@ -73,7 +73,23 @@ namespace LmBoxClient.Entities
         {
             internal const String ENDPOINT_PATH = "token";
             internal const String TYPE_NAME = "Token";
-            internal const String LICENSEE_NUMBER = "tokenNumber";
+            internal const String TOKEN_NUMBER = "tokenNumber";
+        }
+
+        public class PaymentMethod
+        {
+            internal const String ENDPOINT_PATH = "paymentmethod";
+            internal const String TYPE_NAME = "PaymentMethod";
+            internal const String TOKEN_NUMBER = "paymentMethodNumber";
+        }
+
+        public class Utility
+        {
+            internal const String ENDPOINT_PATH = "utility";
+            internal const String LICENSING_MODELS = "licensingModels";
+            internal const String LICENSING_MODELS_PROPERTIES = "LicensingModelProperties";
+            internal const String LICENSE_TYPES = "licenseTypes";
+            internal const String LICENSE_TYPE = "LicenseType";
         }
 
         public class ValidationResult

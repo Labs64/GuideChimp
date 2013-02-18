@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\LicenseTemplate.cs" />
+    <Compile Include="Entities\PaymentMethod.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="LicenseTemplateService.cs" />
+    <Compile Include="PaymentMethodService.cs" />
     <Compile Include="ProductModuleService.cs" />
     <Compile Include="Entities\ProductModule.cs" />
     <Compile Include="Entities\Product.cs" />

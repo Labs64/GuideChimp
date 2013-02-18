@@ -10,8 +10,8 @@ namespace LmBoxClient
     class TokenService
     {
         /// <summary>
-        /// Creates new licensee object with given properties. See LmBoxAPI JavaDoc for details:
-        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// Creates new token for the given token type and token parameters.. See LmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/TokenService.html
         /// </summary>
         public static Token create(Context context, Token newToken)
         {
@@ -20,8 +20,8 @@ namespace LmBoxClient
         }
 
         /// <summary>
-        /// Gets licensee by its number. See LmBoxAPI JavaDoc for details:
-        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/LicenseeService.html
+        /// Gets token by its number. See LmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/TokenService.html
         /// </summary>
         public static Token get(Context context, String number)
         {
