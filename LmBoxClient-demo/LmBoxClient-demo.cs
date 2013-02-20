@@ -22,22 +22,22 @@ namespace LmBoxClient
             String demoProductModuleNumber = "M001demo";
             String demoLicensingModel = "TimeEvaluation";
 
-            String demoLicenseTemplate1_Number = "E001demoTV";
+            String demoLicenseTemplate1_Number = "E001demo";
             String demoLicenseTemplate1_Name = "Demo Evaluation Period";
-            String demoLicenseTemplate1_Type = "TIMEVOLUME";
+            String demoLicenseTemplate1_Type = "FEATURE";
             Decimal demoLicenseTemplate1_Price = 12.50M;
             String demoLicenseTemplate1_Currency = "EUR";
-            String demoLicenseTemplate1_TimeVolume = "5"; // days
-            Boolean demoLicenseTemplate1_Automatic = true;
-            Boolean demoLicenseTemplate1_Hidden = true;
+            //String demoLicenseTemplate1_TimeVolume = "5"; // days
+            Boolean demoLicenseTemplate1_Automatic = false;
+            Boolean demoLicenseTemplate1_Hidden = false;
 
 
             String demoLicenseeNumber = "I001demo";
 
             String demoLicenseNumber = "L001demoTV";
-            String demoLicenseNumberFeature = "L001demoF";
 
-            String demoTokenType = "DEFAULT";
+            String demoTokenType = "SHOP";
+
 
             try
             {
@@ -123,7 +123,7 @@ namespace LmBoxClient
                 newLicenseTemplate.licenseType = demoLicenseTemplate1_Type;
                 newLicenseTemplate.price = demoLicenseTemplate1_Price;
                 newLicenseTemplate.currency = demoLicenseTemplate1_Currency;
-                newLicenseTemplate.licenseTemplateProperties[Constants.License.PROP_TIME_VOLUME] = demoLicenseTemplate1_TimeVolume;
+                //newLicenseTemplate.licenseTemplateProperties[Constants.License.PROP_TIME_VOLUME] = demoLicenseTemplate1_TimeVolume;
                 newLicenseTemplate.automatic = demoLicenseTemplate1_Automatic;
                 newLicenseTemplate.hidden = demoLicenseTemplate1_Hidden;
                 ConsoleWriter.WriteEntity("Adding license template:", newLicenseTemplate);
@@ -227,22 +227,20 @@ namespace LmBoxClient
 
                 #endregion
 
-                #region ****************** Token
-
-                Token token = TokenService.generate(context, demoTokenType, null);
-                ConsoleWriter.WriteEntity("Got the following token:", token);
-
-                #endregion
-
-                /*
                 #region ****************** Validate
-
-
 
                 ValidationResult validationResult = LicenseeService.validate(context, demoLicenseeNumber, demoProductNumber);
                 ConsoleWriter.WriteEntity("Validation result for created licensee:", validationResult);
                 #endregion
-                */
+
+                #region ****************** Token
+
+                Token token = TokenService.generate(context, demoTokenType, demoLicenseeNumber);
+                ConsoleWriter.WriteEntity("Got the following token:", token);
+
+                #endregion
+
+                
                 
 
             }
