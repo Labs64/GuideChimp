@@ -28,7 +28,7 @@ namespace LmBoxClient
                 parameters.Add("licenseeNumber", licenseeNumber);
             }
 
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.GET, Constants.Token.ENDPOINT_PATH, parameters);
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.Token.ENDPOINT_PATH, parameters);
             return new Token(output.items[0]);
         }
     }
