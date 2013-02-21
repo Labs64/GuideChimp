@@ -27,7 +27,6 @@ namespace LmBoxClient
             String demoLicenseTemplate1_Type = "FEATURE";
             Decimal demoLicenseTemplate1_Price = 12.50M;
             String demoLicenseTemplate1_Currency = "EUR";
-            //String demoLicenseTemplate1_TimeVolume = "5"; // days
             Boolean demoLicenseTemplate1_Automatic = false;
             Boolean demoLicenseTemplate1_Hidden = false;
 
@@ -123,7 +122,6 @@ namespace LmBoxClient
                 newLicenseTemplate.licenseType = demoLicenseTemplate1_Type;
                 newLicenseTemplate.price = demoLicenseTemplate1_Price;
                 newLicenseTemplate.currency = demoLicenseTemplate1_Currency;
-                //newLicenseTemplate.licenseTemplateProperties[Constants.License.PROP_TIME_VOLUME] = demoLicenseTemplate1_TimeVolume;
                 newLicenseTemplate.automatic = demoLicenseTemplate1_Automatic;
                 newLicenseTemplate.hidden = demoLicenseTemplate1_Hidden;
                 ConsoleWriter.WriteEntity("Adding license template:", newLicenseTemplate);

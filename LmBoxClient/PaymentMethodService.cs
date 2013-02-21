@@ -7,21 +7,25 @@ using LmBoxClient.Entities;
 
 namespace LmBoxClient
 {
+    /// <summary>
+    /// C# representation of the ProductModule Service. See LmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/PaymentMethodService.html
+    /// </summary>
     public class PaymentMethodService
     {
 
         /// <summary>
-        /// Creates new token for the given token type and token parameters.. See LmBoxAPI JavaDoc for details:
+        /// Updates payment method with the given number.. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/PaymentMethodService.html
         /// </summary>
-        public static PaymentMethod update(Context context, PaymentMethod newPaymentMethod)
+        public static PaymentMethod update(Context context, String number, PaymentMethod newPaymentMethod)
         {
-            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.PaymentMethod.ENDPOINT_PATH, newPaymentMethod.ToDictionary());
+            lmbox output = LmBoxAPI.request(context, LmBoxAPI.Method.POST, Constants.PaymentMethod.ENDPOINT_PATH + "/" + number, newPaymentMethod.ToDictionary());
             return new PaymentMethod(output.items[0]);
         }
 
         /// <summary>
-        /// Gets token by its number. See LmBoxAPI JavaDoc for details:
+        /// Gets payment method by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/PaymentMethodService.html
         /// </summary>
         public static PaymentMethod get(Context context, String number)

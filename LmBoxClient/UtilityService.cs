@@ -7,6 +7,9 @@ using LmBoxClient.Entities;
 
 namespace LmBoxClient
 {
+    /// <summary>
+    /// C# representation of the Utility Service.
+    /// </summary>
     public class UtilityService
     {
         /// <summary>

@@ -5,11 +5,15 @@ using System.Text;
 
 namespace LmBoxClient.Entities
 {
+    /// <summary>
+    /// Represents Token. See LmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Token.html
+    /// </summary>
     public class Token : BaseEntity
     {
         /// <summary>
-        /// Custom properties of the licensee. See LmBoxAPI JavaDoc for details:
-        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
+        /// Custom properties of token. See LmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Token.html
         /// </summary>
         public Dictionary<String, String> tokenProperties { get; private set; }
 

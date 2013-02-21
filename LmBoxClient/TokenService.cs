@@ -7,10 +7,12 @@ using LmBoxClient.Entities;
 
 namespace LmBoxClient
 {
+    /// <summary>
+    /// C# representation of the Token Service. See LmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/TokenService.html
+    /// </summary>
     public class TokenService
     {
-
-
         /// <summary>
         /// Genarates token by its number. See LmBoxAPI JavaDoc for details:
         /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/core/service/TokenService.html

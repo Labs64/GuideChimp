@@ -5,11 +5,15 @@ using System.Text;
 
 namespace LmBoxClient.Entities
 {
+    /// <summary>
+    /// Represents Payment Method. See LmBoxAPI JavaDoc for details:
+    /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/PaymentMethod.html
+    /// </summary>
     public class PaymentMethod : BaseEntity
     {
         /// <summary>
-        /// Custom properties of the licensee. See LmBoxAPI JavaDoc for details:
-        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/Licensee.html
+        /// Custom properties of the payment method. See LmBoxAPI JavaDoc for details:
+        /// http://lmbox.labs64.com/javadoc/index.html?com/labs64/lmbox/common/domain/entity/PaymentMethod.html
         /// </summary>
         public Dictionary<String, String> paymentMethodProperties { get; private set; }
 
