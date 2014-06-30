@@ -1,6 +1,7 @@
-LmBoxClient-csharp
-==================
+DEPRECATED - check out new version https://github.com/Labs64/NetLicensingClient-csharp
 
-C# wrapper for RESTful LmBoxAPI - http://www.labs64.com/confluence/x/s4GJ
+# LmBoxClient-csharp
+
+C# wrapper for RESTful LmBoxAPI - https://www.labs64.de/confluence/x/pwCo
 
 Visit LmBox at http://lmbox.labs64.com/
