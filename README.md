@@ -1,4 +1,4 @@
-DEPRECATED - check out new version https://github.com/Labs64/NetLicensingClient-csharp
+*DEPRECATED - check out new version https://github.com/Labs64/NetLicensingClient-csharp*
 
 # LmBoxClient-csharp
 
