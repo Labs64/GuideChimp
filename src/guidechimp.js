@@ -1,38 +1,117 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Resources;
+// Constants
+import Constants from './Constants';
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("LmBoxClient-demo")]
-[assembly: AssemblyDescription("Demo program demonstrates usage of LmBoxAPI in C#")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Labs64 GmbH")]
-[assembly: AssemblyProduct("LmBoxClient-demo")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+// VO
+import Context from './vo/Context';
+import Page from './vo/Page';
+import ValidationParameters from './vo/ValidationParameters';
+import ValidationResults from './vo/ValidationResults';
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+// Services
+import Service from './services/Service';
+import LicenseeService from './services/LicenseeService';
+import LicenseService from './services/LicenseService';
+import LicenseTemplateService from './services/LicenseTemplateService';
+import PaymentMethodService from './services/PaymentMethodService';
+import ProductModuleService from './services/ProductModuleService';
+import ProductService from './services/ProductService';
+import TokenService from './services/TokenService';
+import TransactionService from './services/TransactionService';
+import UtilityService from './services/UtilityService';
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("add0899f-a6e4-4466-a520-ae93b662a3ab")]
+// Entities
+import BaseEntity from './entities/BaseEntity';
+import Country from './entities/Country';
+import License from './entities/License';
+import Licensee from './entities/Licensee';
+import LicenseTemplate from './entities/LicenseTemplate';
+import PaymentMethod from './entities/PaymentMethod';
+import Product from './entities/Product';
+import ProductDiscount from './entities/ProductDiscount';
+import ProductModule from './entities/ProductModule';
+import Token from './entities/Token';
+import Transaction from './entities/Transaction';
+import LicenseTransactionJoin from './entities/LicenseTransactionJoin';
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.0.0")]
-[assembly: AssemblyFileVersion("0.9.0.0")]
-[assembly: NeutralResourcesLanguageAttribute("en")]
+// Converters
+import itemToCountry from './converters/itemToCountry';
+import itemToLicense from './converters/itemToLicense';
+import itemToLicensee from './converters/itemToLicensee';
+import itemToLicenseTemplate from './converters/itemToLicenseTemplate';
+import itemToObject from './converters/itemToObject';
+import itemToPaymentMethod from './converters/itemToPaymentMethod';
+import itemToProduct from './converters/itemToProduct';
+import itemToProductModule from './converters/itemToProductModule';
+import itemToToken from './converters/itemToToken';
+import itemToTransaction from './converters/itemToTransaction';
+
+// Utils
+import CastsUtils from './util/CastsUtils';
+import CheckUtils from './util/CheckUtils';
+import FilterUtils from './util/FilterUtils';
+
+// Errors
+import NlicError from './errors/NlicError';
+
+// Create the default instance to be exported
+const NetLicensing = {
+    // Constants
+    Constants,
+
+    // Expose VO
+    Context,
+    Page,
+    ValidationParameters,
+    ValidationResults,
+
+    // Expose Services
+    Service,
+    LicenseeService,
+    LicenseService,
+    LicenseTemplateService,
+    PaymentMethodService,
+    ProductModuleService,
+    ProductService,
+    TokenService,
+    TransactionService,
+    UtilityService,
+
+    // Expose Entities
+    BaseEntity,
+    Country,
+    License,
+    Licensee,
+    LicenseTemplate,
+    PaymentMethod,
+    Product,
+    ProductDiscount,
+    ProductModule,
+    Token,
+    Transaction,
+    LicenseTransactionJoin,
+
+    // Expose Converters
+    itemToCountry,
+    itemToLicense,
+    itemToLicensee,
+    itemToLicenseTemplate,
+    itemToObject,
+    itemToPaymentMethod,
+    itemToProduct,
+    itemToProductModule,
+    itemToToken,
+    itemToTransaction,
+
+    // Expose Utils
+    CastsUtils,
+    CheckUtils,
+    FilterUtils,
+
+    // Errors
+    NlicError,
+};
+
+module.exports = NetLicensing;
+
+// Allow use of default import syntax in TypeScript
+module.exports.default = NetLicensing;
