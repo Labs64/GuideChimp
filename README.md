@@ -8,19 +8,27 @@
 
 # Guide Chimp
 
-Deliver the perfect product experience & simplify user onboarding with step by step interactive walkthroughs.
+Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
 ## What can you do with Guide Chimp?
 
-- User experience: Implement engaging and personalised guides to walk users through your system.
-- User onboarding: Successfully onboard your users from day one with an intuitive step by step walkthroughs.
-- Employee Training: Improve your employees' productivity by providing an efficient and interactive training system.
+- <strong>User Experience:</strong> Implement engaging and personalised guides to walk users through your system.
+- <strong>User Onboarding:</strong> Successfully onboard your users from day one with an intuitive step by step walkthroughs.
+- <strong>Feature Adoption:</strong> Introduce and highlight new features with personalized guides.
+- <strong>In-product Messaging:</strong> Engage right segment of your users at the right time and increase conversion
+- <strong>Employee Training:</strong> Improve your employees' productivity by providing an efficient and interactive training system.
 
 Many world-top companies are using our Open-source Library to boost their user experience.
 
 ## Features
 
-- Seamless integration with any web app
+- Seamless integration with any web app.
+- Guide Chimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
+- Let Guide Chimp look like an integral part of your software product by configuring its look & feel.
+- Guide Chimp works well with tools you already use (e.g. WordPress, Confluence, Medium, etc.).
+- Tooltips: Help, Info, Hotspot, Beacon, Labels and more styles
+- Tours: Flows, Walkthroughs, Guides, Tutorials
+- Support of Single Page Applications build with Angular, Vue.js, React, etc.
 
 
 ## How to Use
@@ -50,7 +58,7 @@ $ npm install guidechimp
 ```
 
 
-### 3) Manual installation
+### 3) Manual Installation
 
 We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update Guide Chimp when new versions are released. Nonetheless, if you prefer to integrate Guide Chimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
 
@@ -66,6 +74,8 @@ Please visit Guide Chimp [Wiki](https://github.com/usablica/guidechimp/wiki).
 
 
 ## Demo
+
+See Guide Chimp in action in the product walkthrough, showcases and real-world examples below:
 
 - [NetLicensing UI](https://ui.netlicensing.io) Guided Tour
 
