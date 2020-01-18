@@ -10,19 +10,31 @@
 
 Deliver the perfect product experience & simplify user onboarding with step by step interactive walkthroughs.
 
+## What can you do with Guide Chimp?
+
+- User experience: Implement engaging and personalised guides to walk users through your system.
+- User onboarding: Successfully onboard your users from day one with an intuitive step by step walkthroughs.
+- Employee Training: Improve your employees' productivity by providing an efficient and interactive training system.
+
+Many world-top companies are using our Open-source Library to boost their user experience.
+
+## Features
+
+- Seamless integration with any web app
+
 
 ## How to Use
 
 In order to use Guide Chimp, you must include the compiled and minified JavaScript file in your project. There are multiple options for including these pre-compiled files, also known as a distribution, in your website or application.
 
 
-### Using from a CDN
+### 1) Using from a CDN
 
 - jsDelivr - http://www.jsdelivr.com/projects/guidechimp
 - cdnjs - https://cdnjs.com/libraries/guidechimp
 
 
-### Installing with Node.js / npm
+### 2) Installing with Node.js / npm
 
 Guide Chimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Add the following to your `package.json` file and then run `npm install`:
 ```
@@ -38,7 +50,7 @@ $ npm install guidechimp
 ```
 
 
-### Manual installation
+### 3) Manual installation
 
 We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update Guide Chimp when new versions are released. Nonetheless, if you prefer to integrate Guide Chimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
 
@@ -62,12 +74,12 @@ Please visit Guide Chimp [Wiki](https://github.com/usablica/guidechimp/wiki).
 ## How to Contribute
 
 Everyone is welcome to contribute to this project!
-Feel free to contribute with pull requests, bug reports or enhancement suggestions.
+Feel free to [contribute](CONTRIBUTING.md) with pull requests, bug reports or enhancement suggestions.
 
 ---
 
 Guide Chimp is maintained by Labs64.
-[Contact](https://www.labs64.com/contact/) us for web app consulting, development, and training for your project.
+[Contact](https://www.labs64.com/contact/) us for web app consulting, development, and training for your project or book a demo.
 
 
 ## Bugs and Feedback
