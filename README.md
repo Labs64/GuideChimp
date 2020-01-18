@@ -1,9 +1,9 @@
 <a href="https://netlicensing.io"><p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-logo-transparent.png"  alt="Guide Chimp"></p></a>
 
 <p align="center">
-[![Build Status](https://travis-ci.org/Labs64/NetLicensingClient-javascript.svg?branch=master)](https://travis-ci.org/Labs64/NetLicensingClient-javascript)
-[![npm version](https://badge.fury.io/js/netlicensing-client.svg)](https://badge.fury.io/js/netlicensing-client)
-[![](https://data.jsdelivr.com/v1/package/npm/netlicensing-client/badge)](https://www.jsdelivr.com/package/npm/netlicensing-client)
+<a href="https://travis-ci.org/Labs64/guidechimp"><img src="https://travis-ci.org/Labs64/guidechimp.svg" alt="Build Status"></a>
+<a href="https://badge.fury.io/js/netlicensing-client"><img src="https://badge.fury.io/js/netlicensing-client.svg" alt="Build Status"></a>
+<a href="https://www.jsdelivr.com/package/npm/netlicensing-client"><img src="https://data.jsdelivr.com/v1/package/npm/netlicensing-client/badge" alt="Build Status"></a>
 </p>
 
 # Guide Chimp
