@@ -1,0 +1,117 @@
+{
+    "name": "netlicensing-client",
+    "version": "1.2.19",
+    "description": "JavaScript Wrapper for Labs64 NetLicensing RESTful API",
+    "keywords": [
+        "labs64",
+        "netlicensing",
+        "licensing",
+        "licensing-as-a-service",
+        "license",
+        "license-management",
+        "software-license",
+        "client",
+        "restful",
+        "restful-api",
+        "javascript",
+        "wrapper",
+        "api",
+        "client"
+    ],
+    "author": "Labs64 GmbH",
+    "homepage": "https://netlicensing.io/",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Labs64/NetLicensingClient-javascript"
+    },
+    "bugs": {
+        "url": "https://github.com/Labs64/NetLicensingClient-javascript/issues"
+    },
+    "license": "Apache-2.0",
+    "main": "dist/netlicensing-client.js",
+    "contributors": [
+        {
+            "name": "Ready Brown",
+            "email": "ready.brown@hotmail.de",
+            "url": "https://github.com/r-brown"
+        },
+        {
+            "name": "Viacheslav Rudkovskiy",
+            "email": "viachaslau.rudkovski@labs64.de",
+            "url": "https://github.com/v-rudkovskiy"
+        },
+        {
+            "name": "Andrei Yushkevich",
+            "email": "yushkevich@me.com",
+            "url": "https://github.com/yushkevich"
+        }
+    ],
+    "scripts": {
+        "build": "node build/build.js",
+        "release": "npm run build && npm run test",
+        "dev": "webpack --progress --colors --watch --config build/webpack.dev.conf.js",
+        "test": "karma start test/karma.conf.js --single-run",
+        "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
+        "lint": "eslint --ext .js,.vue src test"
+    },
+    "dependencies": {
+        "axios": "^0.19",
+        "es6-promise": "^4.2.8",
+        "karma-firefox-launcher": "^1.2.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.5.5",
+        "@babel/plugin-proposal-class-properties": "^7.5.5",
+        "@babel/plugin-proposal-decorators": "^7.4.4",
+        "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
+        "@babel/plugin-proposal-function-sent": "^7.5.0",
+        "@babel/plugin-proposal-json-strings": "^7.2.0",
+        "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+        "@babel/plugin-proposal-throw-expressions": "^7.2.0",
+        "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+        "@babel/plugin-syntax-import-meta": "^7.2.0",
+        "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+        "@babel/plugin-transform-runtime": "^7.5.5",
+        "@babel/preset-env": "^7.5.5",
+        "@babel/runtime": "^7.5.5",
+        "axios-mock-adapter": "^1.17.0",
+        "babel-eslint": "^10.0.3",
+        "babel-loader": "^8.0.6",
+        "chalk": "^2.4.2",
+        "eslint": "^5.16.0",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-friendly-formatter": "^4.0.1",
+        "eslint-import-resolver-webpack": "^0.11.1",
+        "eslint-loader": "^2.2.1",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-jasmine": "^2.10.1",
+        "faker": "^4.1.0",
+        "is-docker": "^2.0.0",
+        "jasmine": "^3.4.0",
+        "jasmine-core": "^3.4.0",
+        "karma": "^3.1.4",
+        "karma-babel-preprocessor": "^8.0.1",
+        "karma-chrome-launcher": "^3.1.0",
+        "karma-jasmine": "^2.0.1",
+        "karma-sourcemap-loader": "^0.3.7",
+        "karma-spec-reporter": "0.0.32",
+        "karma-webpack": "^4.0.2",
+        "lodash": "^4.17.15",
+        "ora": "^3.4.0",
+        "query-string": "^6.8.2",
+        "rimraf": "^3.0.0",
+        "uglifyjs-webpack-plugin": "^1.3.0",
+        "webpack": "^4.39.3",
+        "webpack-cli": "^3.3.7",
+        "webpack-merge": "^4.2.2"
+    },
+    "engines": {
+        "node": ">= 6.0.0",
+        "npm": ">= 3.0.0"
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not ie <= 10"
+    ]
+}
