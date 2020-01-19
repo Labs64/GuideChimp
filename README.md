@@ -1,4 +1,4 @@
-<a href="https://netlicensing.io"><p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-logo-transparent.png"  alt="Guide Chimp"></p></a>
+<a href="https://netlicensing.io"><p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-logo-transparent.png"  alt="GuideChimp"></p></a>
 
 <p align="center">
 <a href="https://travis-ci.org/Labs64/guidechimp"><img src="https://travis-ci.org/Labs64/guidechimp.svg" alt="Build Status"></a>
@@ -6,11 +6,11 @@
 <a href="https://www.jsdelivr.com/package/npm/netlicensing-client"><img src="https://data.jsdelivr.com/v1/package/npm/netlicensing-client/badge" alt="Build Status"></a>
 </p>
 
-# Guide Chimp
+# GuideChimp
 
 Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
-## What can you do with Guide Chimp?
+## What can you do with GuideChimp?
 
 - <strong>User Experience:</strong> Implement engaging and personalised guides to walk users through your system.
 - <strong>User Onboarding:</strong> Successfully onboard your users from day one with an intuitive step by step walkthroughs.
@@ -23,9 +23,9 @@ Many world-top companies are using our Open-source Library to boost their user e
 ## Features
 
 - Seamless integration with any web app.
-- Guide Chimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
-- Let Guide Chimp look like an integral part of your software product by configuring its look & feel.
-- Guide Chimp works well with tools you already use (e.g. WordPress, Confluence, Medium, etc.).
+- GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
+- Let GuideChimp look like an integral part of your software product by configuring its look & feel.
+- GuideChimp works well with tools you already use (e.g. WordPress, Confluence, Medium, etc.).
 - Tooltips: Help, Info, Hotspot, Beacon, Labels and more styles
 - Tours: Flows, Walkthroughs, Guides, Tutorials
 - Support of Single Page Applications build with Angular, Vue.js, React, etc.
@@ -33,7 +33,7 @@ Many world-top companies are using our Open-source Library to boost their user e
 
 ## How to Use
 
-In order to use Guide Chimp, you must include the compiled and minified JavaScript file in your project. There are multiple options for including these pre-compiled files, also known as a distribution, in your website or application.
+In order to use GuideChimp, you must include the compiled and minified JavaScript file in your project. There are multiple options for including these pre-compiled files, also known as a distribution, in your website or application.
 
 
 ### 1) Using from a CDN
@@ -44,7 +44,7 @@ In order to use Guide Chimp, you must include the compiled and minified JavaScri
 
 ### 2) Installing with Node.js / npm
 
-Guide Chimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Add the following to your `package.json` file and then run `npm install`:
+GuideChimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Add the following to your `package.json` file and then run `npm install`:
 ```
 "dependencies": {
     "guidechimp": "x.y.z"
@@ -60,7 +60,7 @@ $ npm install guidechimp
 
 ### 3) Manual Installation
 
-We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update Guide Chimp when new versions are released. Nonetheless, if you prefer to integrate Guide Chimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
+We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update GuideChimp when new versions are released. Nonetheless, if you prefer to integrate GuideChimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
 
 Include the compiled files in your page:
 ```
@@ -70,12 +70,12 @@ Include the compiled files in your page:
 
 ## Documentation
 
-Please visit Guide Chimp [Wiki](https://github.com/usablica/guidechimp/wiki).
+Please visit GuideChimp [Wiki](https://github.com/usablica/guidechimp/wiki).
 
 
 ## Demo
 
-See Guide Chimp in action in the product walkthrough, showcases and real-world examples below:
+See GuideChimp in action in the product walkthrough, showcases and real-world examples below:
 
 - [NetLicensing UI](https://ui.netlicensing.io) Guided Tour
 
@@ -88,7 +88,7 @@ Feel free to [contribute](CONTRIBUTING.md) with pull requests, bug reports or en
 
 ---
 
-Guide Chimp is maintained by Labs64.
+GuideChimp is maintained by Labs64.
 [Contact](https://www.labs64.com/contact/) us for web app consulting, development, and training for your project or book a demo.
 
 
@@ -99,6 +99,6 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ## License
 
-Guide Chimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/netlicensing/) or the [GNU Affero General Public License v3.0](LICENSE).
-The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the AGPLv3 license, you are required to release the source code of any program that you distribute that uses Guide Chimp.
+GuideChimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/netlicensing/) or the [GNU Affero General Public License v3.0](LICENSE).
+The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the AGPLv3 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
