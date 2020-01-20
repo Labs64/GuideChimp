@@ -14,7 +14,6 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm test
-      - run: npm run test-for-travis
 
   publish-npm:
     needs: build
@@ -39,7 +38,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-          scope: '@your-github-username'
+          scope: '@Labs64'
       - run: npm ci
       - run: npm publish
         env:
