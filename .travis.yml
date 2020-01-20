@@ -16,7 +16,7 @@ after_success:
 jobs:
   include:
   - stage: npm release
-    node_js: 8
+    node_js: 12
     script:
     - if [ -n "$TRAVIS_TAG" ]; then echo "Deploying version ${TRAVIS_TAG} to npm...";
       fi
