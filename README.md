@@ -107,21 +107,22 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 ## Privacy Policy & GDPR
 
-This plugin integrating components of an external service – [Labs64 NetLicensing](https://netlicensing.io) (processor). Labs64 NetLicensing is an online license management service provider. License validation requests are processed using plugin or theme developer (controller) NetLicensing account.
+This library integrating components of an external service – [Labs64 NetLicensing](https://netlicensing.io) *(processor)*. Labs64 NetLicensing is an *Online License Management* service provider. License validation requests are processed using library developer *(controller)* NetLicensing account.
 
-By using this plugin validation requests will be sent to the Labs64 NetLicensing in order to verify valid use of the plugin or theme. Personal data may be transferred with these requests such as Unique Identifiers, Plugin and Theme Details, WordPress Instance Name, Domain Name, System Details of the data subject.
+By using this library validation requests will be sent to the Labs64 NetLicensing in order to verify valid use of the library. Personal data may be transferred with these requests such as Unique Identifiers, Configuration Details, Website Instance Name, Domain Name, System Details of the data subject.
 
 The European operating company of Labs64 NetLicensing is:
 ```
 Labs64 GmbH
 Radlkoferstr. 2
 81373 Munich, Germany
-Labs64 NetLicensing website: NetLicensing.IO
+Website: NetLicensing.IO
+EMail: netlicensing@labs64.com
 ```
 
 The applicable data protection provisions of Labs64 NetLicensing may be retrieved under Labs64 [Privacy Policy](https://www.labs64.com/legal/privacy-policy/).
 
-We strongly encourage you to comply with General Data Protection Regulation (GDPR) while developing your plugins and themes and interfacing with Labs64 NetLicensing Services.
+We strongly encourage you to comply with General Data Protection Regulation (GDPR) while developing your applicatons and interfacing with Labs64 NetLicensing Services.
 
 For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://netlicensing.io/wiki/privacy-center).
 
