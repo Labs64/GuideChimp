@@ -26,13 +26,13 @@
         "flow"
     ],
     "author": "Labs64 GmbH",
-    "homepage": "https://io.labs64.com/guidechimp/",
+    "homepage": "https://io.labs64.com/GuideChimp/",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Labs64/guidechimp"
+        "url": "https://github.com/Labs64/GuideChimp"
     },
     "bugs": {
-        "url": "https://github.com/Labs64/guidechimp/issues"
+        "url": "https://github.com/Labs64/GuideChimp/issues"
     },
     "license": "AGPLv3",
     "main": "dist/guidechimp.js",
