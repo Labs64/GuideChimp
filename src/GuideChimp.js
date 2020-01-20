@@ -1,8 +1,8 @@
 export default class GuideChimp {
     /**
-     *
-     * @param {Object} tour excursion tour steps
-     * @param {Object} options objects of options
+     * Initialize GuideChimp.
+     * @param {Object} tour tour steps
+     * @param {Object} options tour options
      */
     constructor(tour, options = {}) {
         this.currentStep = null;
@@ -49,7 +49,7 @@ export default class GuideChimp {
     }
 
     /**
-     * Sets all given options.
+     * Set all tour options.
      * @param {Object} options objects of options.
      * @returns {this}
      */
@@ -59,7 +59,7 @@ export default class GuideChimp {
     }
 
     /**
-     * Creates a copy of this excursion, with the same tour and options.
+     * Create a copy of the tour.
      * @returns {this}
      */
     clone() {

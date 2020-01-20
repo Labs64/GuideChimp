@@ -148,9 +148,9 @@ var GuideChimp =
 /*#__PURE__*/
 function () {
   /**
-   *
-   * @param {Object} tour excursion tour steps
-   * @param {Object} options objects of options
+   * Initialize GuideChimp.
+   * @param {Object} tour tour steps
+   * @param {Object} options tour options
    */
   function GuideChimp(tour) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -200,7 +200,7 @@ function () {
       return this.tour;
     }
     /**
-     * Sets all given options.
+     * Set all tour options.
      * @param {Object} options objects of options.
      * @returns {this}
      */
@@ -212,7 +212,7 @@ function () {
       return this;
     }
     /**
-     * Creates a copy of this excursion, with the same tour and options.
+     * Create a copy of the tour.
      * @returns {this}
      */
 
