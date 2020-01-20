@@ -16,6 +16,7 @@ jobs:
       - run: npm test
 
   publish-npm:
+    name: npm token ${{secrets.npm_token}}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +31,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   publish-gpr:
+    name: gh token ${{secrets.GITHUB_TOKEN}}
     needs: build
     runs-on: ubuntu-latest
     steps:
