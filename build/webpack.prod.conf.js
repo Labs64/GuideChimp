@@ -1,11 +1,10 @@
 const merge = require('webpack-merge');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webWebpackConfig = require('./webpack.web.conf');
-const nodeWebpackConfig = require('./webpack.node.conf');
 
 const webpackConfig = {
     mode: 'production',
-    devtool: '#source-map',
+    devtool: 'source-map',
     performance: { hints: false },
     optimization: {
         minimizer: [
@@ -23,4 +22,4 @@ const webpackConfig = {
     },
 };
 
-module.exports = [merge(webWebpackConfig, webpackConfig), merge(nodeWebpackConfig, webpackConfig)];
+module.exports = [merge(webWebpackConfig, webpackConfig)];

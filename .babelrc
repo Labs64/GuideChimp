@@ -48,6 +48,7 @@
                 "@babel/preset-env"
             ],
             "plugins": [
+                "@babel/plugin-transform-runtime",
                 "istanbul",
                 [
                     "@babel/plugin-proposal-decorators",

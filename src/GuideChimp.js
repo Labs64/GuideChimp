@@ -1,117 +1,68 @@
-// Constants
-import Constants from './Constants';
+export default class GuideChimp {
+    /**
+     *
+     * @param {Object} tour excursion tour steps
+     * @param {Object} options objects of options
+     */
+    constructor(tour, options = {}) {
+        this.currentStep = null;
+        this.currentStepNumber = 0;
+        this.options = {};
+        this.tour = {};
 
-// VO
-import Context from './vo/Context';
-import Page from './vo/Page';
-import ValidationParameters from './vo/ValidationParameters';
-import ValidationResults from './vo/ValidationResults';
+        // events listeners
+        this.listeners = [];
 
-// Services
-import Service from './services/Service';
-import LicenseeService from './services/LicenseeService';
-import LicenseService from './services/LicenseService';
-import LicenseTemplateService from './services/LicenseTemplateService';
-import PaymentMethodService from './services/PaymentMethodService';
-import ProductModuleService from './services/ProductModuleService';
-import ProductService from './services/ProductService';
-import TokenService from './services/TokenService';
-import TransactionService from './services/TransactionService';
-import UtilityService from './services/UtilityService';
+        // set options
+        this.setOptions(options);
 
-// Entities
-import BaseEntity from './entities/BaseEntity';
-import Country from './entities/Country';
-import License from './entities/License';
-import Licensee from './entities/Licensee';
-import LicenseTemplate from './entities/LicenseTemplate';
-import PaymentMethod from './entities/PaymentMethod';
-import Product from './entities/Product';
-import ProductDiscount from './entities/ProductDiscount';
-import ProductModule from './entities/ProductModule';
-import Token from './entities/Token';
-import Transaction from './entities/Transaction';
-import LicenseTransactionJoin from './entities/LicenseTransactionJoin';
+        // set tour
+        this.setTour(tour);
 
-// Converters
-import itemToCountry from './converters/itemToCountry';
-import itemToLicense from './converters/itemToLicense';
-import itemToLicensee from './converters/itemToLicensee';
-import itemToLicenseTemplate from './converters/itemToLicenseTemplate';
-import itemToObject from './converters/itemToObject';
-import itemToPaymentMethod from './converters/itemToPaymentMethod';
-import itemToProduct from './converters/itemToProduct';
-import itemToProductModule from './converters/itemToProductModule';
-import itemToToken from './converters/itemToToken';
-import itemToTransaction from './converters/itemToTransaction';
+        this.boot();
+    }
 
-// Utils
-import CastsUtils from './util/CastsUtils';
-import CheckUtils from './util/CheckUtils';
-import FilterUtils from './util/FilterUtils';
+    /**
+     * Called after construction, this hook allows you to add some extra setup
+     * logic without having to override the constructor
+     */
+    // eslint-disable-next-line class-methods-use-this
+    boot() {
+    }
 
-// Errors
-import NlicError from './errors/NlicError';
+    /**
+     * Set tour.
+     * @param tour excursion tour steps.
+     * @returns {GuideChimp}
+     */
+    setTour(tour) {
+        this.tour = { ...tour };
+        return this;
+    }
 
-// Create the default instance to be exported
-const NetLicensing = {
-    // Constants
-    Constants,
+    /**
+     * Get tour.
+     * @returns {Object}
+     */
+    getTour() {
+        return this.tour;
+    }
 
-    // Expose VO
-    Context,
-    Page,
-    ValidationParameters,
-    ValidationResults,
+    /**
+     * Sets all given options.
+     * @param {Object} options objects of options.
+     * @returns {this}
+     */
+    setOptions(options) {
+        this.options = { ...options };
+        return this;
+    }
 
-    // Expose Services
-    Service,
-    LicenseeService,
-    LicenseService,
-    LicenseTemplateService,
-    PaymentMethodService,
-    ProductModuleService,
-    ProductService,
-    TokenService,
-    TransactionService,
-    UtilityService,
-
-    // Expose Entities
-    BaseEntity,
-    Country,
-    License,
-    Licensee,
-    LicenseTemplate,
-    PaymentMethod,
-    Product,
-    ProductDiscount,
-    ProductModule,
-    Token,
-    Transaction,
-    LicenseTransactionJoin,
-
-    // Expose Converters
-    itemToCountry,
-    itemToLicense,
-    itemToLicensee,
-    itemToLicenseTemplate,
-    itemToObject,
-    itemToPaymentMethod,
-    itemToProduct,
-    itemToProductModule,
-    itemToToken,
-    itemToTransaction,
-
-    // Expose Utils
-    CastsUtils,
-    CheckUtils,
-    FilterUtils,
-
-    // Errors
-    NlicError,
-};
-
-module.exports = NetLicensing;
-
-// Allow use of default import syntax in TypeScript
-module.exports.default = NetLicensing;
+    /**
+     * Creates a copy of this excursion, with the same tour and options.
+     * @returns {this}
+     */
+    clone() {
+        return new GuideChimp(this.getTour(), this.options);
+    }
+}

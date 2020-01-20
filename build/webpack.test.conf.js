@@ -4,7 +4,7 @@ const baseWebpackConfig = require('./webpack.base.conf');
 
 const webpackConfig = merge(baseWebpackConfig, {
     mode: 'development',
-    devtool: '#inline-source-map',
+    devtool: 'inline-source-map',
 });
 
 module.exports = webpackConfig;
