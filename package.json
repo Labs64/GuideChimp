@@ -76,7 +76,7 @@
         "eslint-import-resolver-webpack": "^0.12.1",
         "eslint-loader": "^3.0.3",
         "eslint-plugin-import": "^2.20.0",
-        "eslint-plugin-jasmine": "^3.0.0",
+        "eslint-plugin-jasmine": "^4.1.0",
         "is-docker": "^2.0.0",
         "jasmine": "^3.5.0",
         "jasmine-core": "^3.5.0",
