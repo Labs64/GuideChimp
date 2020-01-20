@@ -13,7 +13,17 @@
         "tour-guide-app",
         "javascript",
         "tour",
-        "tours"
+        "tours",
+        "user-experience",
+        "onboarding",
+        "feature-adoption",
+        "employee-training",
+        "tooltips",
+        "beacon",
+        "hint",
+        "hotspot",
+        "walkthrough",
+        "flow"
     ],
     "author": "Labs64 GmbH",
     "homepage": "https://io.labs64.com/guidechimp/",
