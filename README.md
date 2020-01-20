@@ -2,8 +2,8 @@
 
 <p align="center">
 <a href="https://travis-ci.org/Labs64/guidechimp"><img src="https://travis-ci.org/Labs64/guidechimp.svg" alt="Build Status"></a>
-<a href="https://badge.fury.io/js/netlicensing-client"><img src="https://badge.fury.io/js/netlicensing-client.svg" alt="Build Status"></a>
-<a href="https://www.jsdelivr.com/package/npm/netlicensing-client"><img src="https://data.jsdelivr.com/v1/package/npm/netlicensing-client/badge" alt="Build Status"></a>
+<a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="Build Status"></a>
+<a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="Build Status"></a>
 </p>
 
 # GuideChimp
