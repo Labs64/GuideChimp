@@ -1,4 +1,4 @@
-<a href="https://netlicensing.io"><p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-logo-transparent.png"  alt="GuideChimp"></p></a>
+<a href="https://io.labs64.com/GuideChimp/"><p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-logo-transparent.png"  alt="GuideChimp"></p></a>
 
 <p align="center">
 <a href="https://github.com/Labs64/GuideChimp/actions?query=workflow%3A%22GuideChimp+CI%22"><img src="https://github.com/Labs64/GuideChimp/workflows/GuideChimp%20CI/badge.svg" alt="Build Status"></a>
@@ -100,6 +100,31 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ## License
 
-GuideChimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/netlicensing/) or the [GNU Affero General Public License v3.0](LICENSE).
+GuideChimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/website/) or the [GNU Affero General Public License v3.0](LICENSE).
 The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the AGPLv3 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
+
+
+## Privacy Policy & GDPR
+
+This plugin integrating components of an external service – [Labs64 NetLicensing](https://netlicensing.io) (processor). Labs64 NetLicensing is an online license management service provider. License validation requests are processed using plugin or theme developer (controller) NetLicensing account.
+
+By using this plugin validation requests will be sent to the Labs64 NetLicensing in order to verify valid use of the plugin or theme. Personal data may be transferred with these requests such as Unique Identifiers, Plugin and Theme Details, WordPress Instance Name, Domain Name, System Details of the data subject.
+
+The European operating company of Labs64 NetLicensing is:
+Labs64 GmbH
+Radlkoferstr. 2
+81373 Munich, Germany
+Labs64 NetLicensing website: [NetLicensing.IO](https://netlicensing.io)
+
+The applicable data protection provisions of Labs64 NetLicensing may be retrieved under Labs64 [Privacy Policy](https://www.labs64.com/legal/privacy-policy/).
+
+We strongly encourage you to comply with General Data Protection Regulation (GDPR) while developing your plugins and themes and interfacing with Labs64 NetLicensing Services.
+
+For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://netlicensing.io/wiki/privacy-center).
+
+### Controller’s Responsibilities
+
+The controller is the principal party for data collection responsibilities. These responsibilities include collecting individual’s consent, storing of the data, managing consent-revoking, enabling the right to access, etc.
+
+If an individual revokes consent, the controller will be responsible for initiating this request. Therefore, on receipt of this request, it will be responsible to remove the revoked data through NetLicensing vendor account.
