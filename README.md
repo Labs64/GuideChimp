@@ -112,10 +112,12 @@ This plugin integrating components of an external service – [Labs64 NetLicensi
 By using this plugin validation requests will be sent to the Labs64 NetLicensing in order to verify valid use of the plugin or theme. Personal data may be transferred with these requests such as Unique Identifiers, Plugin and Theme Details, WordPress Instance Name, Domain Name, System Details of the data subject.
 
 The European operating company of Labs64 NetLicensing is:
+```
 Labs64 GmbH
 Radlkoferstr. 2
 81373 Munich, Germany
-Labs64 NetLicensing website: [NetLicensing.IO](https://netlicensing.io)
+Labs64 NetLicensing website: NetLicensing.IO
+```
 
 The applicable data protection provisions of Labs64 NetLicensing may be retrieved under Labs64 [Privacy Policy](https://www.labs64.com/legal/privacy-policy/).
 
