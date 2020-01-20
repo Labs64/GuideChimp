@@ -11,7 +11,7 @@ script:
 - npm run test-for-travis
 after_success:
 - env
-- test "${TRAVIS_NODE_VERSION}" == "8" && test "${TRAVIS_TEST_RESULT}" == "0" && npm run build
+- test "${TRAVIS_NODE_VERSION}" == "12" && test "${TRAVIS_TEST_RESULT}" == "0" && npm run build
 - ls -la dist/
 jobs:
   include:
