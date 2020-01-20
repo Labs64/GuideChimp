@@ -19,7 +19,7 @@ Deliver the perfect product experience, improve digital product adoption, boost 
 - <strong>In-product Messaging:</strong> Engage right segment of your users at the right time and increase conversion
 - <strong>Employee Training:</strong> Improve your employees' productivity by providing an efficient and interactive training system.
 
-Many world-top companies are using our Open-source Library to boost their user experience.
+The world's smartest companies using our GuideChimp to boost their user experience.
 
 ## Features
 
@@ -29,7 +29,7 @@ Many world-top companies are using our Open-source Library to boost their user e
 - GuideChimp works well with tools you already use (e.g. WordPress, Confluence, Medium, etc.).
 - Tooltips: Help, Info, Hotspot, Beacon, Labels and more styles
 - Tours: Flows, Walkthroughs, Guides, Tutorials
-- Support of Single Page Applications build with Angular, Vue.js, React, etc.
+- Support of *Single Page Applications* build with Angular, Vue.js, React, etc.
 
 
 ## How to Use
