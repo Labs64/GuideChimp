@@ -20,9 +20,9 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm ci
+        npm run test-for-travis
         npm run build --if-present
         npm test
-        npm test-for-travis
         ls -la dist/
       env:
         CI: true
