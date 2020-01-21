@@ -1,5 +1,5 @@
 ---
-title: How to Install
+title: How to Install GuideChimp
 updated: 2019-11-11 11:11
 ---
 
