@@ -1,0 +1,8 @@
+---
+layout: null
+---
+
+sitemap: {{ "/sitemap.xml" | prepend: site.baseurl | prepend: site.url }}
+
+user-agent: EmailCollector
+disallow: /
