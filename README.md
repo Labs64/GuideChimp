@@ -9,6 +9,8 @@
 
 # GuideChimp
 
+[![Join the chat at https://gitter.im/Labs64/GuideChimp](https://badges.gitter.im/Labs64/GuideChimp.svg)](https://gitter.im/Labs64/GuideChimp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
 ## What can you do with GuideChimp?
