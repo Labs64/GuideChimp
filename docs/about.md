@@ -1,10 +1,8 @@
 ---
 layout: page
-title: About
+title: GuideChimp
 ---
 
-Hello.
+Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
-This will be your About page. Anything about you, it should be written here in details. You may describe your bio here like who you are, what you do, your intention, social site hyperlinks and how people can contact you, etc.
-
-**Less is more..**
+[See more at GitHub...](https://github.com/Labs64/GuideChimp)

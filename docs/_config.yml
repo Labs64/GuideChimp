@@ -6,7 +6,7 @@ logo_url:           https://avatars3.githubusercontent.com/u/1461983
 
 # Site Settings
 url:                https://io.labs64.com
-baseurl:            /GuideChimp/
+baseurl:            /GuideChimp
 permalink:          /:title # Post permalink
 timezone:           Europe/Berlin # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 mathjax:            true  # enables support for mathjax - set to 'false' to disable
