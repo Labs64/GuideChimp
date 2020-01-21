@@ -2,7 +2,7 @@
 
 	{% if page.url == '/index.html' or page.url == '/' %}
 		{% assign link = '/about' %}
-		{% assign prompt = 'About site.title' %}
+		{% assign prompt = 'About {{ site.title }}' %}
 	{% else %}
 		{% assign link = '/' %}
 		{% assign prompt = 'Back to Index' %}
