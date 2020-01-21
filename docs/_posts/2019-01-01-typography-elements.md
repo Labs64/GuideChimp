@@ -7,7 +7,7 @@ updated: 2019-01-01 01:01
 
 ## Typography Elements in One
 
-Let's start with a informative paragraph. **This text is bolded.** But not this one! _How about italic text?_ Cool right? Ok, let's **_combine_** them together. Yeah, that's right! I have code to highlight, so `ThisIsMyCode()`. What a nice! Good people will hyperlink away, so [here we go](#) or [http://www.example.com](http://www.example.com).
+Let's start with a informative paragraph. **This text is bolded.** But not this one! _How about italic text?_ Cool right? Ok, let's **_combine_** them together. Yeah, that's right! I have code to highlight, so `ThisIsMyCode()`. What a nice! Good people will hyperlink away, so [here we go](#) or [https://netlicensing.io/wiki/](https://netlicensing.io/wiki/).
 
 <div class="divider"></div>
 
@@ -128,11 +128,11 @@ ___
 
 ### YouTube Embedded Iframe
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/n1a7o44WxNo" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://youtu.be/SEgABQ52EcA" frameborder="0" allowfullscreen></iframe>
 
 ### Image
 
-![Minion](http://octodex.github.com/images/minion.png)
+![Pricing Table & Memebership Plans](https://miro.medium.com/max/2880/1*yez9PRJDzlxjRPMyFAw_0g.png)
 
 [^1]: Footnote number one yeah baby! Long sentence test of footnote to see how the words are wrapping between each other. Might overflowww!
 [^2]: A footnote you can link to - [click here!](#)
