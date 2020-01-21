@@ -5,11 +5,10 @@
 <a href="https://travis-ci.org/Labs64/guidechimp"><img src="https://travis-ci.org/Labs64/guidechimp.svg" alt="Build Status"></a>
 <a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="Build Status"></a>
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="Build Status"></a>
+<a href="https://gitter.im/Labs64/GuideChimp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://badges.gitter.im/Labs64/GuideChimp.svg" alt="Join the chat at https://gitter.im/Labs64/GuideChimp"></a>
 </p>
 
 # GuideChimp
-
-[![Join the chat at https://gitter.im/Labs64/GuideChimp](https://badges.gitter.im/Labs64/GuideChimp.svg)](https://gitter.im/Labs64/GuideChimp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
