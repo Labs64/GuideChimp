@@ -100,8 +100,8 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ## License
 
-GuideChimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/website/) or the [GNU Affero General Public License v3.0](LICENSE).
-The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the AGPLv3 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
+GuideChimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/website/) or the [European Union Public License 1.2](LICENSE).
+The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the EUPL-1.2 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
 
 

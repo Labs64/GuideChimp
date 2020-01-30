@@ -37,7 +37,7 @@
     "bugs": {
         "url": "https://github.com/Labs64/GuideChimp/issues"
     },
-    "license": "AGPL-3.0",
+    "license": "EUPL-1.2",
     "main": "dist/guidechimp.js",
     "contributors": [
         {
