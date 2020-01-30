@@ -78,7 +78,7 @@ Please visit GuideChimp [Wiki](https://github.com/usablica/guidechimp/wiki).
 
 See GuideChimp in action in the product walkthrough, showcases and real-world examples below:
 
-- [NetLicensing UI](https://ui.netlicensing.io) Guided Tour
+- [NetLicensing UI](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) Guided Tour
 
 <p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-magnifier.png"  alt="NetLicensing UI Guided Tour"></p>
 
