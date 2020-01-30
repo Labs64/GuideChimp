@@ -10,11 +10,6 @@ const webpackConfig = {
         minimizer: [
             new UglifyJsPlugin({
                 include: /\.min\.js$/,
-                uglifyOptions: {
-                    compress: {
-                        warnings: false,
-                    },
-                },
                 sourceMap: true,
                 parallel: true,
             }),

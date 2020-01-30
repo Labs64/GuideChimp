@@ -1,8 +1,8 @@
 const path = require('path');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
-const pkg = require('../package.json');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const namespace = 'NetLicensing';
+const name = 'GuideChimp';
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir);
@@ -13,10 +13,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].js',
-        library: namespace,
-        libraryTarget: 'umd',
-        umdNamedDefine: true,
-        globalObject: 'this',
+        library: name,
+        libraryTarget: 'var',
     },
     resolve: {
         extensions: ['.js', '.json'],
@@ -27,6 +25,24 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: true,
+                        },
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                        }
+                    },
+                    'sass-loader',
+                ],
+            },
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
@@ -44,4 +60,9 @@ module.exports = {
             },
         ],
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+        }),
+    ],
 };
