@@ -2,7 +2,6 @@
 
 <p align="center">
 <a href="https://github.com/Labs64/GuideChimp/actions?query=workflow%3A%22GuideChimp+CI%22"><img src="https://github.com/Labs64/GuideChimp/workflows/GuideChimp%20CI/badge.svg" alt="Build Status"></a>
-<a href="https://travis-ci.org/Labs64/guidechimp"><img src="https://travis-ci.org/Labs64/guidechimp.svg" alt="Build Status"></a>
 <a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="Build Status"></a>
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="Build Status"></a>
 <a href="https://gitter.im/Labs64/GuideChimp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://badges.gitter.im/Labs64/GuideChimp.svg" alt="Join the chat at https://gitter.im/Labs64/GuideChimp"></a>
