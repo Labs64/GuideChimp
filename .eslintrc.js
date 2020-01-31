@@ -32,5 +32,6 @@ module.exports = {
         'max-len': ['error', 120, { ignoreComments: true }],
         'vue/no-template-key': 'off',
         'object-curly-newline': ["error", { "consistent": true }],
+        'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
     },
 };

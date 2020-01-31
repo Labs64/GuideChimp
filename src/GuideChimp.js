@@ -290,17 +290,25 @@ export default class GuideChimp {
                 (this.tour) ? `[data-guidechimp=${this.tour}]` : '[data-guidechimp]',
             );
 
-            this.steps = Array.from(tourStepsEl).map((el, i) => {
-                const stepNumber = parseInt(el.getAttribute('data-guidechimp-number') || i, 10);
-                const title = el.getAttribute('data-guidechimp-title');
-                const description = el.getAttribute('data-guidechimp-description');
-                const position = el.getAttribute('data-guidechimp-position');
-                const interaction = (el.getAttribute('data-guidechimp-interaction') !== 'false');
+            this.steps = Array.from(tourStepsEl).map((element, i) => {
+                const step = parseInt(element.getAttribute('data-guidechimp-step') || i, 10);
+                const title = element.getAttribute('data-guidechimp-title');
+                const description = element.getAttribute('data-guidechimp-description');
+                const position = element.getAttribute('data-guidechimp-position');
+                const interaction = (element.getAttribute('data-guidechimp-interaction') !== 'false');
 
-                return { el, number: stepNumber, title, description, position, interaction };
+                return { element, number: step, title, description, position, interaction };
             });
         } else if (Array.isArray(this.tour) && this.tour.length) {
-            this.steps = this.tour.map((v, i) => ({ ...v, number: v.number || i }));
+            this.steps = this.tour.map((v, i) => {
+                let { element } = v;
+
+                if (typeof element === 'string') {
+                    element = document.querySelector(element);
+                }
+
+                return { ...v, element, step: v.step || i };
+            });
         }
 
         if (!this.steps.length) {
@@ -309,10 +317,10 @@ export default class GuideChimp {
 
         // sort steps by number
         this.steps.sort((a, b) => {
-            if (a.number < b.number) {
+            if (a.step < b.step) {
                 return -1;
             }
-            if (a.number > b.number) {
+            if (a.step > b.step) {
                 return 1;
             }
             return 0;
@@ -358,7 +366,7 @@ export default class GuideChimp {
 
         this.step = toStep;
 
-        let { el } = this.step;
+        let { element: el } = this.step;
         const { position, buttons } = this.step;
 
         if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
@@ -422,6 +430,12 @@ export default class GuideChimp {
 
 
     async stop() {
+        const stepIndex = this.steps.indexOf(this.step);
+
+        if (stepIndex === this.steps.length - 1) {
+            await this.emit('complete', this);
+        }
+
         await this.emit('stop', this);
 
         this.step = null;
@@ -1146,12 +1160,17 @@ export default class GuideChimp {
             if (v instanceof HTMLElement) {
                 customButtonsLayer.appendChild(v);
             } else {
-                const { tag = 'button', title = '', class: className = '', click = null } = v;
+                const { tag = 'button', title = '', class: className, onClick } = v;
                 const customButton = document.createElement(tag);
 
                 customButton.innerHTML = title;
-                customButton.className = className;
-                customButton.onclick = click;
+                if (className) {
+                    customButton.className = className;
+                }
+
+                if (onClick) {
+                    customButton.onclick = onClick;
+                }
 
                 customButtonsLayer.appendChild(customButton);
             }
@@ -1409,7 +1428,7 @@ export default class GuideChimp {
             : document.body.querySelector(`.${this.constructor.getHighlightLayerClass()}`);
 
         if (highlightLayer) {
-            this.setLayerPosition(highlightLayer, this.step.el);
+            this.setLayerPosition(highlightLayer, this.step.element);
         }
 
         const controlLayer = this.cache.has('controlLayer')
@@ -1417,7 +1436,7 @@ export default class GuideChimp {
             : document.body.querySelector(`.${this.constructor.getControlLayerClass()}`);
 
         if (controlLayer) {
-            this.setLayerPosition(controlLayer, this.step.el);
+            this.setLayerPosition(controlLayer, this.step.element);
         }
 
         const interactionLayer = this.cache.has('interactionLayer')
@@ -1425,7 +1444,7 @@ export default class GuideChimp {
             : document.body.querySelector(`.${this.constructor.getInteractionLayerClass()}`);
 
         if (interactionLayer) {
-            this.setLayerPosition(interactionLayer, this.step.el);
+            this.setLayerPosition(interactionLayer, this.step.element);
         }
 
         const tooltipLayer = this.cache.has('tooltipLayer')
@@ -1433,7 +1452,7 @@ export default class GuideChimp {
             : document.body.querySelector(`.${this.constructor.getTooltipLayerClass()}`);
 
         if (tooltipLayer) {
-            this.setTooltipLayerPosition(tooltipLayer, this.step.el, this.step.position);
+            this.setTooltipLayerPosition(tooltipLayer, this.step.element, this.step.position);
         }
 
         return this;

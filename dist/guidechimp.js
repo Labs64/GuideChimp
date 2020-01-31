@@ -344,15 +344,15 @@ function () {
 
                 if (!this.tour || typeof this.tour === 'string') {
                   tourStepsEl = document.querySelectorAll(this.tour ? "[data-guidechimp=".concat(this.tour, "]") : '[data-guidechimp]');
-                  this.steps = Array.from(tourStepsEl).map(function (el, i) {
-                    var stepNumber = parseInt(el.getAttribute('data-guidechimp-number') || i, 10);
-                    var title = el.getAttribute('data-guidechimp-title');
-                    var description = el.getAttribute('data-guidechimp-description');
-                    var position = el.getAttribute('data-guidechimp-position');
-                    var interaction = el.getAttribute('data-guidechimp-interaction') !== 'false';
+                  this.steps = Array.from(tourStepsEl).map(function (element, i) {
+                    var step = parseInt(element.getAttribute('data-guidechimp-step') || i, 10);
+                    var title = element.getAttribute('data-guidechimp-title');
+                    var description = element.getAttribute('data-guidechimp-description');
+                    var position = element.getAttribute('data-guidechimp-position');
+                    var interaction = element.getAttribute('data-guidechimp-interaction') !== 'false';
                     return {
-                      el: el,
-                      number: stepNumber,
+                      element: element,
+                      number: step,
                       title: title,
                       description: description,
                       position: position,
@@ -361,8 +361,15 @@ function () {
                   });
                 } else if (Array.isArray(this.tour) && this.tour.length) {
                   this.steps = this.tour.map(function (v, i) {
+                    var element = v.element;
+
+                    if (typeof element === 'string') {
+                      element = document.querySelector(element);
+                    }
+
                     return _objectSpread({}, v, {
-                      number: v.number || i
+                      element: element,
+                      step: v.step || i
                     });
                   });
                 }
@@ -377,11 +384,11 @@ function () {
               case 9:
                 // sort steps by number
                 this.steps.sort(function (a, b) {
-                  if (a.number < b.number) {
+                  if (a.step < b.step) {
                     return -1;
                   }
 
-                  if (a.number > b.number) {
+                  if (a.step > b.step) {
                     return 1;
                   }
 
@@ -471,7 +478,7 @@ function () {
               case 41:
                 this.stopPreloader();
                 this.step = toStep;
-                el = this.step.el;
+                el = this.step.element;
                 _this$step = this.step, position = _this$step.position, buttons = _this$step.buttons;
 
                 if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
@@ -583,14 +590,26 @@ function () {
       var _stop = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee5() {
+        var stepIndex;
         return _regenerator.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                _context5.next = 2;
+                stepIndex = this.steps.indexOf(this.step);
+
+                if (!(stepIndex === this.steps.length - 1)) {
+                  _context5.next = 4;
+                  break;
+                }
+
+                _context5.next = 4;
+                return this.emit('complete', this);
+
+              case 4:
+                _context5.next = 6;
                 return this.emit('stop', this);
 
-              case 2:
+              case 6:
                 this.step = null;
                 this.steps = [];
 
@@ -613,7 +632,7 @@ function () {
                 this.cache.clear();
                 return _context5.abrupt("return", this);
 
-              case 14:
+              case 18:
               case "end":
                 return _context5.stop();
             }
@@ -1288,14 +1307,19 @@ function () {
               tag = _v$tag === void 0 ? 'button' : _v$tag,
               _v$title = v.title,
               title = _v$title === void 0 ? '' : _v$title,
-              _v$class = v.class,
-              className = _v$class === void 0 ? '' : _v$class,
-              _v$click = v.click,
-              click = _v$click === void 0 ? null : _v$click;
+              className = v.class,
+              onClick = v.onClick;
           var customButton = document.createElement(tag);
           customButton.innerHTML = title;
-          customButton.className = className;
-          customButton.onclick = click;
+
+          if (className) {
+            customButton.className = className;
+          }
+
+          if (onClick) {
+            customButton.onclick = onClick;
+          }
+
           customButtonsLayer.appendChild(customButton);
         }
       });
@@ -1557,25 +1581,25 @@ function () {
       var highlightLayer = this.cache.has('highlightLayer') ? this.cache.get('highlightLayer') : document.body.querySelector(".".concat(this.constructor.getHighlightLayerClass()));
 
       if (highlightLayer) {
-        this.setLayerPosition(highlightLayer, this.step.el);
+        this.setLayerPosition(highlightLayer, this.step.element);
       }
 
       var controlLayer = this.cache.has('controlLayer') ? this.cache.get('controlLayer') : document.body.querySelector(".".concat(this.constructor.getControlLayerClass()));
 
       if (controlLayer) {
-        this.setLayerPosition(controlLayer, this.step.el);
+        this.setLayerPosition(controlLayer, this.step.element);
       }
 
       var interactionLayer = this.cache.has('interactionLayer') ? this.cache.get('interactionLayer') : document.body.querySelector(".".concat(this.constructor.getInteractionLayerClass()));
 
       if (interactionLayer) {
-        this.setLayerPosition(interactionLayer, this.step.el);
+        this.setLayerPosition(interactionLayer, this.step.element);
       }
 
       var tooltipLayer = this.cache.has('tooltipLayer') ? this.cache.get('tooltipLayer') : document.body.querySelector(".".concat(this.constructor.getTooltipLayerClass()));
 
       if (tooltipLayer) {
-        this.setTooltipLayerPosition(tooltipLayer, this.step.el, this.step.position);
+        this.setTooltipLayerPosition(tooltipLayer, this.step.element, this.step.position);
       }
 
       return this;
