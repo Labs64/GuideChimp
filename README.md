@@ -44,9 +44,9 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Support of extra-large tooltip description texts
 - Ability to set callback ("onBeforeChange", "onAfterChange") functions for each step in the tour
 - Lightweight (~ 35KB) and good performance
-- **Last but not least:** Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
+- **Last But Not Least:** Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
 
-<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-magnifier.png"  alt="NetLicensing UI Guided Tour"></p>
+<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-licensing-models-tour.png"  alt="NetLicensing Licensing Models Tour"></p>
 
 
 ## How to Use
@@ -57,7 +57,7 @@ In order to use GuideChimp, you must include the compiled and minified JavaScrip
 ### 1) Using from a CDN
 
 - jsDelivr - https://www.jsdelivr.com/package/npm/guidechimp
-- cdnjs - https://cdnjs.com/libraries/guidechimp => *TODO*
+- cdnjs - https://cdnjs.com/libraries/guidechimp
 
 
 ### 2) Installing with Node.js / npm
@@ -96,7 +96,7 @@ Please visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki).
 
 See GuideChimp in action in the product walkthrough, showcases and real-world examples below:
 
-- [NetLicensing Website](https://netlicensing.io/licensing-models/?guidechimp=on) Licensing Models sample tour
+- [NetLicensing Website](https://netlicensing.io/licensing-models/?guidechimp=on) - Licensing Models Sample Tour
 - [NetLicensing UI](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) Guided Tour
 
 
