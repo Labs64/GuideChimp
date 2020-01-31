@@ -251,7 +251,7 @@ export default class GuideChimp {
      */
     async start(number = 0, useIndex = true) {
         // emit start event
-        await this.emit('start', this);
+        await this.emit('onStart', this);
 
         const isStarted = await this.go(number, useIndex);
 
@@ -287,7 +287,7 @@ export default class GuideChimp {
         // if tour is empty or is string, looks for steps among the data attributes
         if (!this.tour || typeof this.tour === 'string') {
             const tourStepsEl = document.querySelectorAll(
-                (this.tour) ? `[data-guidechimp=${this.tour}]` : '[data-guidechimp]',
+                (this.tour) ? `[data-guidechimp-${this.tour}]` : '[data-guidechimp]',
             );
 
             this.steps = Array.from(tourStepsEl).map((element, i) => {
@@ -433,10 +433,10 @@ export default class GuideChimp {
         const stepIndex = this.steps.indexOf(this.step);
 
         if (stepIndex === this.steps.length - 1) {
-            await this.emit('complete', this);
+            await this.emit('onComplete', this);
         }
 
-        await this.emit('stop', this);
+        await this.emit('onStop', this);
 
         this.step = null;
         this.steps = [];
