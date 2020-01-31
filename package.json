@@ -44,6 +44,11 @@
             "name": "Labs64",
             "email": "info@labs64.de",
             "url": "https://github.com/Labs64"
+        },
+        {
+            "name": "Rudkovskiy Viascheslav",
+            "email": "xraskolx@gmail.com",
+            "url": "https://github.com/v-rudkovskiy"
         }
     ],
     "scripts": {
