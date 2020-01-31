@@ -30,6 +30,23 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Tooltips: Help, Info, Hotspot, Beacon, Labels and more styles
 - Tours: Flows, Walkthroughs, Guides, Tutorials
 - Support of *Single Page Applications* build with Angular, Vue.js, React, etc.
+- Tooltip auto-positioning on an element
+- Easy styling through SCSS and clean CSS
+- Tour steps can be defined in two ways: HTML elements data attributes and JavaScript object properties
+- Library installation possible through HTML and es6 import
+- Use multiple listeners on tour events
+- Ability to add steps on-the-fly / programmatically
+- Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event
+- Ability to define custom action buttons
+- Flexibility and modularity; GuideChimp is designed as a JS class, so you can easily inherit from it and change / add custom methods
+- Improved usability - pagination, navigation and progress bar
+- HTML code can be also used in the tooltip text
+- Support of extra-large tooltip description texts
+- Ability to set callback ("onBeforeChange", "onAfterChange") functions for each step in the tour
+- Lightweight (~ 35KB) and good performance
+- **Last but not least:** Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
+
+<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-magnifier.png"  alt="NetLicensing UI Guided Tour"></p>
 
 
 ## How to Use
@@ -65,8 +82,8 @@ We strongly recommend that you use either a CDN or a package manager like npm. T
 
 Include the compiled files in your page:
 ```
-<script src="//cdn.jsdelivr.net/npm/guidechimp/dist/guidechimp.min.js"></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/guidechimp/dist/guidechimp.min.css">
+<script src="path/guidechimp.min.js"></script>
+<link rel="stylesheet" href="path/guidechimp.min.css">
 ```
 
 
@@ -82,7 +99,6 @@ See GuideChimp in action in the product walkthrough, showcases and real-world ex
 - [NetLicensing Website](https://netlicensing.io/licensing-models/?guidechimp=on) Licensing Models sample tour
 - [NetLicensing UI](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) Guided Tour
 
-<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-magnifier.png"  alt="NetLicensing UI Guided Tour"></p>
 
 ## How to Contribute
 
