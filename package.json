@@ -28,8 +28,9 @@
         "walkthrough",
         "flow"
     ],
+    "license": "Apache-2.0",
     "author": "Labs64 GmbH",
-    "homepage": "https://io.labs64.com/GuideChimp/",
+    "homepage": "https://github.com/Labs64/GuideChimp/wiki",
     "repository": {
         "type": "git",
         "url": "https://github.com/Labs64/GuideChimp"
@@ -37,8 +38,6 @@
     "bugs": {
         "url": "https://github.com/Labs64/GuideChimp/issues"
     },
-    "license": "Apache-2.0",
-    "main": "dist/guidechimp.js",
     "contributors": [
         {
             "name": "Labs64",
@@ -51,6 +50,11 @@
             "url": "https://github.com/v-rudkovskiy"
         }
     ],
+    "main": "dist/guidechimp.js",
+    "files": [
+        "dist",
+        "index.js"
+    ],
     "scripts": {
         "build": "node build/build.js",
         "release": "npm run build && npm run test",
@@ -59,7 +63,8 @@
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
         "lint": "eslint --ext .js,.vue src test"
     },
-    "dependencies": {},
+    "dependencies": {
+    },
     "devDependencies": {
         "@babel/core": "^7.8.4",
         "@babel/preset-env": "^7.8.4",
