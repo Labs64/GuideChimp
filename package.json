@@ -1,6 +1,6 @@
 {
     "name": "guidechimp",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "description": "Deliver the perfect product experience & simplify user onboarding with step by step interactive walkthroughs.",
     "keywords": [
         "labs64",
@@ -62,8 +62,7 @@
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
         "lint": "eslint --ext .js,.vue src test"
     },
-    "dependencies": {
-    },
+    "dependencies": {},
     "devDependencies": {
         "@babel/core": "^7.8.4",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
