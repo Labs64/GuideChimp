@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2020 Labs64
  *
- * This source code is licensed under the EUPL-1.2 license
+ * This source code is licensed under the Apache License 2.0 license
  * located in the LICENSE file in the project root folder.
  */
 
