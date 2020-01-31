@@ -236,7 +236,7 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
-  padding: 0 10px 0 10px;
+  padding: 0 5px 0 5px;
 
   &.gc-hidden {
     display: none;
@@ -248,7 +248,7 @@
   overflow-y: auto;
   max-height: 200px;
   margin-bottom: 20px;
-  padding: 0 10px 0 10px;
+  padding: 0 5px 0 5px;
   text-align: justify;
   scroll-behavior: smooth;
 
@@ -259,6 +259,7 @@
 
 .gc-custom-buttons {
   margin-bottom: 20px;
+  padding: 0 5px 0 5px;
 
   &.gc-hidden {
     display: none;
@@ -268,7 +269,7 @@
 .gc-navigation {
   display: flex;
   justify-content: space-between;
-  padding: 20px 0 10px 0;
+  padding: 20px 10px 10px 10px;
 }
 
 .gc-navigation-prev,

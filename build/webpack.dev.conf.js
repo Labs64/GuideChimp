@@ -1,10 +1,8 @@
 const merge = require('webpack-merge');
-const webWebpackConfig = require('./webpack.web.conf');
+const baseWebpackConfig = require('./webpack.base.conf');
 
-const webpackConfig = merge(webWebpackConfig, {
+module.exports = merge(baseWebpackConfig, {
     mode: 'development',
     devtool: '#source-map',
 });
-
-module.exports = webpackConfig;
 

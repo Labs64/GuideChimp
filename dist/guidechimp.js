@@ -1,5 +1,14 @@
-var GuideChimp =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["GuideChimp"] = factory();
+	else
+		root["GuideChimp"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -254,7 +263,7 @@ function () {
                 number = _args.length > 0 && _args[0] !== undefined ? _args[0] : 0;
                 useIndex = _args.length > 1 && _args[1] !== undefined ? _args[1] : true;
                 _context.next = 4;
-                return this.emit('start', this);
+                return this.emit('onStart', this);
 
               case 4:
                 _context.next = 6;
@@ -343,7 +352,7 @@ function () {
                 this.steps = []; // if tour is empty or is string, looks for steps among the data attributes
 
                 if (!this.tour || typeof this.tour === 'string') {
-                  tourStepsEl = document.querySelectorAll(this.tour ? "[data-guidechimp=".concat(this.tour, "]") : '[data-guidechimp]');
+                  tourStepsEl = document.querySelectorAll(this.tour ? "[data-guidechimp-".concat(this.tour, "]") : '[data-guidechimp]');
                   this.steps = Array.from(tourStepsEl).map(function (element, i) {
                     var step = parseInt(element.getAttribute('data-guidechimp-step') || i, 10);
                     var title = element.getAttribute('data-guidechimp-title');
@@ -603,11 +612,11 @@ function () {
                 }
 
                 _context5.next = 4;
-                return this.emit('complete', this);
+                return this.emit('onComplete', this);
 
               case 4:
                 _context5.next = 6;
-                return this.emit('stop', this);
+                return this.emit('onStop', this);
 
               case 6:
                 this.step = null;
@@ -2727,9 +2736,8 @@ module.exports = _createClass;
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
-    if(false) { var cssReload; }
-  
 
 /***/ })
 /******/ ]);
+});
 //# sourceMappingURL=guidechimp.js.map
