@@ -158,8 +158,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /**
  * Copyright (C) 2020 Labs64
  *
- * This source code is licensed under the AGPLv3 license located in the
- * LICENSE file in the project root folder.
+ * This source code is licensed under the EUPL-1.2 license
+ * located in the LICENSE file in the project root folder.
  */
 var GuideChimp =
 /*#__PURE__*/
