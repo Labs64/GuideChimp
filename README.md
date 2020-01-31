@@ -65,7 +65,8 @@ We strongly recommend that you use either a CDN or a package manager like npm. T
 
 Include the compiled files in your page:
 ```
-<script src="path/to/guidechimp.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/guidechimp/dist/guidechimp.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/guidechimp/dist/guidechimp.min.css">
 ```
 
 
