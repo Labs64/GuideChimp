@@ -52,8 +52,7 @@
     ],
     "main": "dist/guidechimp.js",
     "files": [
-        "dist",
-        "index.js"
+        "dist"
     ],
     "scripts": {
         "build": "node build/build.js",
