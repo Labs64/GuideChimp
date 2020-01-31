@@ -57,7 +57,6 @@ In order to use GuideChimp, you must include the compiled and minified JavaScrip
 ### 1) Using from a CDN
 
 - jsDelivr - https://www.jsdelivr.com/package/npm/guidechimp
-- cdnjs - https://cdnjs.com/libraries/guidechimp
 
 
 ### 2) Installing with Node.js / npm
