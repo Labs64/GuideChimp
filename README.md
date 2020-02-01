@@ -97,6 +97,7 @@ See GuideChimp in action in the product walkthrough, showcases and real-world ex
 
 - [NetLicensing Website](https://netlicensing.io/licensing-models/?guidechimp=on) - Licensing Models Sample Tour
 - [NetLicensing UI](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) Guided Tour
+- [GuideChimp Tour Example](https://codepen.io/netlicensing/full/QWwXRoQ) at CodePen
 
 
 ## How to Contribute
