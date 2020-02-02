@@ -57,6 +57,9 @@
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
         "lint": "eslint --ext .js,.vue src test"
     },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
     "dependencies": {},
     "devDependencies": {
         "@babel/core": "^7.8.4",
