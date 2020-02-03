@@ -278,26 +278,29 @@ export default class GuideChimp {
         const fromStep = { ...this.step };
         let toStep = null;
 
-        if (this.step && this.step.number === number) {
+        // skip if this step is already displayed
+        const isSameStep = (useIndex)
+            ? (this.steps.indexOf(this.step) === number)
+            : (this.step && this.step.number === number);
+
+        if (isSameStep) {
             return false;
         }
 
         this.steps = [];
-
         // if tour is empty or is string, looks for steps among the data attributes
         if (!this.tour || typeof this.tour === 'string') {
-            const tourStepsEl = document.querySelectorAll(
-                (this.tour) ? `[data-guidechimp=${this.tour}]` : '[data-guidechimp]',
-            );
+            const attrPrefix = (this.tour) ? `guidechimp-${this.tour}` : 'guidechimp';
+            const tourStepsEl = document.querySelectorAll(`[${attrPrefix}]`);
 
             this.steps = Array.from(tourStepsEl).map((element, i) => {
-                const step = parseInt(element.getAttribute('data-guidechimp-step') || i, 10);
-                const title = element.getAttribute('data-guidechimp-title');
-                const description = element.getAttribute('data-guidechimp-description');
-                const position = element.getAttribute('data-guidechimp-position');
-                const interaction = (element.getAttribute('data-guidechimp-interaction') !== 'false');
+                const step = parseInt(element.getAttribute(`${attrPrefix}-step`) || i, 10);
+                const title = element.getAttribute(`${attrPrefix}-title`);
+                const description = element.getAttribute(`${attrPrefix}-description`);
+                const position = element.getAttribute(`${attrPrefix}-position`);
+                const interaction = (element.getAttribute(`${attrPrefix}-interaction`) !== 'false');
 
-                return { element, number: step, title, description, position, interaction };
+                return { element, step, title, description, position, interaction };
             });
         } else if (Array.isArray(this.tour) && this.tour.length) {
             this.steps = this.tour.map((v, i) => {
@@ -328,11 +331,9 @@ export default class GuideChimp {
 
         for (let i = 0; i < this.steps.length; i++) {
             const step = this.steps[i];
+            const isToStep = (useIndex) ? (i === number) : (step.number === number);
 
-            if (useIndex && (i === number)) {
-                toStep = step;
-                break;
-            } else if (step.number === number) {
+            if (isToStep) {
                 toStep = step;
                 break;
             }
@@ -417,15 +418,21 @@ export default class GuideChimp {
     }
 
     async previous() {
-        return (this.step)
-            ? this.go((this.steps.indexOf(this.step) - 1), true)
-            : false;
+        if (this.step) {
+            const prevStepIndex = (this.steps.indexOf(this.step) - 1);
+            return (prevStepIndex > -1) ? this.go(prevStepIndex, true) : false;
+        }
+
+        return false;
     }
 
     async next() {
-        return (this.step)
-            ? this.go((this.steps.indexOf(this.step) + 1), true)
-            : false;
+        if (this.step) {
+            const nextStepIndex = (this.steps.indexOf(this.step) + 1);
+            return (nextStepIndex < this.steps.length) ? this.go(nextStepIndex, true) : false;
+        }
+
+        return false;
     }
 
 
@@ -691,13 +698,13 @@ export default class GuideChimp {
             alignment = (availableAlignments.length) ? availableAlignments[0] : 'middle';
         }
 
-        tooltipLayer.removeAttribute('gc-position');
-        tooltipLayer.removeAttribute('gc-alignment');
+        tooltipLayer.removeAttribute('guidechimp-position');
+        tooltipLayer.removeAttribute('guidechimp-alignment');
 
-        tooltipLayer.setAttribute('gc-position', position);
+        tooltipLayer.setAttribute('guidechimp-position', position);
 
         if (alignment) {
-            tooltipLayer.setAttribute('gc-alignment', alignment);
+            tooltipLayer.setAttribute('guidechimp-alignment', alignment);
         }
 
         switch (position) {
@@ -1293,7 +1300,9 @@ export default class GuideChimp {
             if ((stepIndex === this.steps.length - 1) || this.steps.length === 1) {
                 navigationNextEl.classList.add(this.constructor.getHiddenClass());
             } else {
-                navigationNextEl.onclick = () => this.go(stepIndex + 1, true);
+                navigationNextEl.onclick = () => {
+                    this.go(stepIndex + 1, true);
+                };
             }
         }
 

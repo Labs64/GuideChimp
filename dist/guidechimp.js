@@ -316,9 +316,12 @@ function () {
         var useIndex,
             fromStep,
             toStep,
+            isSameStep,
+            attrPrefix,
             tourStepsEl,
             i,
             step,
+            isToStep,
             _toStep,
             onBeforeChange,
             onAfterChange,
@@ -339,29 +342,32 @@ function () {
               case 0:
                 useIndex = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : true;
                 fromStep = _objectSpread({}, this.step);
-                toStep = null;
+                toStep = null; // skip if this step is already displayed
 
-                if (!(this.step && this.step.number === number)) {
-                  _context2.next = 5;
+                isSameStep = useIndex ? this.steps.indexOf(this.step) === number : this.step && this.step.number === number;
+
+                if (!isSameStep) {
+                  _context2.next = 6;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 5:
+              case 6:
                 this.steps = []; // if tour is empty or is string, looks for steps among the data attributes
 
                 if (!this.tour || typeof this.tour === 'string') {
-                  tourStepsEl = document.querySelectorAll(this.tour ? "[data-guidechimp=".concat(this.tour, "]") : '[data-guidechimp]');
+                  attrPrefix = this.tour ? "guidechimp-".concat(this.tour) : 'guidechimp';
+                  tourStepsEl = document.querySelectorAll("[".concat(attrPrefix, "]"));
                   this.steps = Array.from(tourStepsEl).map(function (element, i) {
-                    var step = parseInt(element.getAttribute('data-guidechimp-step') || i, 10);
-                    var title = element.getAttribute('data-guidechimp-title');
-                    var description = element.getAttribute('data-guidechimp-description');
-                    var position = element.getAttribute('data-guidechimp-position');
-                    var interaction = element.getAttribute('data-guidechimp-interaction') !== 'false';
+                    var step = parseInt(element.getAttribute("".concat(attrPrefix, "-step")) || i, 10);
+                    var title = element.getAttribute("".concat(attrPrefix, "-title"));
+                    var description = element.getAttribute("".concat(attrPrefix, "-description"));
+                    var position = element.getAttribute("".concat(attrPrefix, "-position"));
+                    var interaction = element.getAttribute("".concat(attrPrefix, "-interaction")) !== 'false';
                     return {
                       element: element,
-                      number: step,
+                      step: step,
                       title: title,
                       description: description,
                       position: position,
@@ -384,13 +390,13 @@ function () {
                 }
 
                 if (this.steps.length) {
-                  _context2.next = 9;
+                  _context2.next = 10;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 9:
+              case 10:
                 // sort steps by number
                 this.steps.sort(function (a, b) {
                   if (a.step < b.step) {
@@ -405,86 +411,78 @@ function () {
                 });
                 i = 0;
 
-              case 11:
+              case 12:
                 if (!(i < this.steps.length)) {
-                  _context2.next = 24;
+                  _context2.next = 21;
                   break;
                 }
 
                 step = this.steps[i];
+                isToStep = useIndex ? i === number : step.number === number;
 
-                if (!(useIndex && i === number)) {
+                if (!isToStep) {
                   _context2.next = 18;
                   break;
                 }
 
                 toStep = step;
-                return _context2.abrupt("break", 24);
+                return _context2.abrupt("break", 21);
 
               case 18:
-                if (!(step.number === number)) {
-                  _context2.next = 21;
-                  break;
-                }
-
-                toStep = step;
-                return _context2.abrupt("break", 24);
-
-              case 21:
                 i++;
-                _context2.next = 11;
+                _context2.next = 12;
                 break;
 
-              case 24:
+              case 21:
                 if (toStep) {
-                  _context2.next = 26;
+                  _context2.next = 23;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 26:
+              case 23:
                 this.resetElementsHighlighting();
                 this.showOverlayLayer();
                 this.startPreloader();
                 _toStep = toStep, onBeforeChange = _toStep.onBeforeChange, onAfterChange = _toStep.onAfterChange;
-                _context2.next = 32;
+                _context2.next = 29;
                 return this.emit('onBeforeChange', this, fromStep, toStep);
 
-              case 32:
+              case 29:
                 results = _context2.sent;
 
                 if (!results.some(function (r) {
                   return r === false;
                 })) {
-                  _context2.next = 35;
+                  _context2.next = 32;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 35:
+              case 32:
                 if (!onBeforeChange) {
-                  _context2.next = 41;
+                  _context2.next = 38;
                   break;
                 }
 
-                _context2.next = 38;
+                _context2.next = 35;
                 return Promise.resolve().then(function () {
                   return onBeforeChange(_this, fromStep, toStep);
                 });
 
-              case 38:
+              case 35:
                 _context2.t0 = _context2.sent;
 
                 if (!(_context2.t0 === false)) {
-                  _context2.next = 41;
+                  _context2.next = 38;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 41:
+              case 38:
                 this.stopPreloader();
                 this.step = toStep;
                 el = this.step.element;
@@ -527,7 +525,7 @@ function () {
 
                 return _context2.abrupt("return", true);
 
-              case 72:
+              case 69:
               case "end":
                 return _context2.stop();
             }
@@ -547,13 +545,23 @@ function () {
       var _previous = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee3() {
+        var prevStepIndex;
         return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                return _context3.abrupt("return", this.step ? this.go(this.steps.indexOf(this.step) - 1, true) : false);
+                if (!this.step) {
+                  _context3.next = 3;
+                  break;
+                }
 
-              case 1:
+                prevStepIndex = this.steps.indexOf(this.step) - 1;
+                return _context3.abrupt("return", prevStepIndex > -1 ? this.go(prevStepIndex, true) : false);
+
+              case 3:
+                return _context3.abrupt("return", false);
+
+              case 4:
               case "end":
                 return _context3.stop();
             }
@@ -573,13 +581,23 @@ function () {
       var _next = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee4() {
+        var nextStepIndex;
         return _regenerator.default.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                return _context4.abrupt("return", this.step ? this.go(this.steps.indexOf(this.step) + 1, true) : false);
+                if (!this.step) {
+                  _context4.next = 3;
+                  break;
+                }
 
-              case 1:
+                nextStepIndex = this.steps.indexOf(this.step) + 1;
+                return _context4.abrupt("return", nextStepIndex < this.steps.length ? this.go(nextStepIndex, true) : false);
+
+              case 3:
+                return _context4.abrupt("return", false);
+
+              case 4:
               case "end":
                 return _context4.stop();
             }
@@ -889,12 +907,12 @@ function () {
         alignment = availableAlignments.length ? availableAlignments[0] : 'middle';
       }
 
-      tooltipLayer.removeAttribute('gc-position');
-      tooltipLayer.removeAttribute('gc-alignment');
-      tooltipLayer.setAttribute('gc-position', position);
+      tooltipLayer.removeAttribute('guidechimp-position');
+      tooltipLayer.removeAttribute('guidechimp-alignment');
+      tooltipLayer.setAttribute('guidechimp-position', position);
 
       if (alignment) {
-        tooltipLayer.setAttribute('gc-alignment', alignment);
+        tooltipLayer.setAttribute('guidechimp-alignment', alignment);
       }
 
       switch (position) {
@@ -1442,7 +1460,7 @@ function () {
           navigationNextEl.classList.add(this.constructor.getHiddenClass());
         } else {
           navigationNextEl.onclick = function () {
-            return _this7.go(stepIndex + 1, true);
+            _this7.go(stepIndex + 1, true);
           };
         }
       }
