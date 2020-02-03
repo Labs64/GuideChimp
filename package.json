@@ -1,6 +1,6 @@
 {
     "name": "guidechimp",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "description": "Deliver the perfect product experience & simplify user onboarding with step by step interactive walkthroughs.",
     "keywords": [
         "guide",
@@ -56,9 +56,6 @@
         "test": "karma start test/karma.conf.js --single-run",
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
         "lint": "eslint --ext .js,.vue src test"
-    },
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
     },
     "dependencies": {},
     "devDependencies": {
