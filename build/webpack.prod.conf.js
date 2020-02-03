@@ -1,8 +1,9 @@
 const merge = require('webpack-merge');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const webWebpackConfig = require('./webpack.web.conf');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const baseWebpackConfig = require('./webpack.base.conf');
 
-const webpackConfig = {
+module.exports = merge(baseWebpackConfig, {
     mode: 'production',
     devtool: 'source-map',
     performance: { hints: false },
@@ -13,8 +14,9 @@ const webpackConfig = {
                 sourceMap: true,
                 parallel: true,
             }),
+            new OptimizeCSSAssetsPlugin({
+                assetNameRegExp: /\.min\.css$/g,
+            }),
         ],
     },
-};
-
-module.exports = [merge(webWebpackConfig, webpackConfig)];
+});

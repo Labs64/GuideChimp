@@ -1,8 +1,9 @@
 const path = require('path');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const pkg = require('../package.json');
 
-const name = 'GuideChimp';
+const { name } = pkg;
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir);
@@ -10,11 +11,15 @@ function resolve(dir) {
 
 module.exports = {
     context: path.resolve(__dirname, '../'),
+    entry: {
+        [name]: './src',
+        [`${name}.min`]: './src',
+    },
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].js',
-        library: name,
-        libraryTarget: 'var',
+        library: 'GuideChimp',
+        libraryTarget: 'umd',
     },
     resolve: {
         extensions: ['.js', '.json'],
@@ -30,9 +35,6 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: true,
-                        },
                     },
                     {
                         loader: 'css-loader',
