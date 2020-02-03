@@ -57,9 +57,12 @@
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
         "lint": "eslint --ext .js,.vue src test"
     },
-    "dependencies": {},
+    "dependencies": {
+    },
     "devDependencies": {
         "@babel/core": "^7.8.4",
+        "@babel/runtime": "^7.8.4",
+        "@babel/preset-env": "^7.8.4",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
         "@babel/plugin-proposal-decorators": "^7.8.3",
         "@babel/plugin-proposal-export-namespace-from": "^7.8.3",
@@ -71,8 +74,6 @@
         "@babel/plugin-syntax-import-meta": "^7.8.3",
         "@babel/plugin-transform-modules-commonjs": "^7.8.3",
         "@babel/plugin-transform-runtime": "^7.8.3",
-        "@babel/preset-env": "^7.8.4",
-        "@babel/runtime": "^7.8.4",
         "babel-eslint": "^10.0.3",
         "babel-loader": "^8.0.6",
         "chalk": "^3.0.0",
