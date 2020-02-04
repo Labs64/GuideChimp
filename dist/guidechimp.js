@@ -227,7 +227,7 @@ function () {
   }, {
     key: "setOptions",
     value: function setOptions(options) {
-      this.options = _objectSpread({}, options);
+      this.options = _objectSpread({}, this.constructor.getDefaultOptions(), {}, options);
       return this;
     }
     /**
@@ -237,7 +237,7 @@ function () {
   }, {
     key: "getOptions",
     value: function getOptions() {
-      return _objectSpread({}, this.constructor.getDefaultOptions(), {}, this.options);
+      return this.options;
     }
     /**
      * Start tour
@@ -274,7 +274,7 @@ function () {
 
                 if (isStarted) {
                   // turn on keyboard navigation
-                  if (this.getOptions().useKeyboard) {
+                  if (this.options.useKeyboard) {
                     window.addEventListener('keydown', this.getOnKeyDownListener(), true);
                   } // on window resize
 
@@ -317,7 +317,6 @@ function () {
             fromStep,
             toStep,
             isSameStep,
-            dataAttrPrefix,
             tourStepsEl,
             i,
             step,
@@ -341,32 +340,50 @@ function () {
             switch (_context2.prev = _context2.next) {
               case 0:
                 useIndex = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : true;
+
+                if (!(!this.tour || !this.tour.length)) {
+                  _context2.next = 3;
+                  break;
+                }
+
+                return _context2.abrupt("return", false);
+
+              case 3:
                 fromStep = _objectSpread({}, this.step);
                 toStep = null; // skip if this step is already displayed
 
                 isSameStep = useIndex ? this.steps.indexOf(this.step) === number : this.step && this.step.number === number;
 
                 if (!isSameStep) {
-                  _context2.next = 6;
+                  _context2.next = 8;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 6:
+              case 8:
                 this.steps = []; // if tour is empty or is string, looks for steps among the data attributes
 
-                if (!this.tour || typeof this.tour === 'string') {
-                  dataAttrPrefix = this.tour ? "data-guidechimp-".concat(this.tour) : 'data-guidechimp';
-                  tourStepsEl = document.querySelectorAll("[".concat(dataAttrPrefix, "]"));
-                  this.steps = Array.from(tourStepsEl).map(function (element, i) {
-                    var step = parseInt(element.getAttribute("".concat(dataAttrPrefix, "-step")) || i, 10);
-                    var title = element.getAttribute("".concat(dataAttrPrefix, "-title"));
-                    var description = element.getAttribute("".concat(dataAttrPrefix, "-description"));
-                    var position = element.getAttribute("".concat(dataAttrPrefix, "-position"));
-                    var interaction = element.getAttribute("".concat(dataAttrPrefix, "-interaction")) !== 'false';
+                if (typeof this.tour === 'string') {
+                  tourStepsEl = Array.from(document.querySelectorAll("[data-guidechimp-tour*='".concat(this.tour, "']"))); // filter steps by tour name
+
+                  tourStepsEl = tourStepsEl.filter(function (v) {
+                    var tours = v.getAttribute('data-guidechimp-tour').split(',');
+                    return tours.includes(_this.tour);
+                  });
+                  this.steps = tourStepsEl.map(function (el, i) {
+                    var step = parseInt(el.getAttribute("data-guidechimp-".concat(_this.tour, "-step")) || el.getAttribute('data-guidechimp-step') || i, 10);
+                    var title = el.getAttribute("data-guidechimp-".concat(_this.tour, "-title")) || el.getAttribute('data-guidechimp-title');
+                    var description = el.getAttribute("data-guidechimp-".concat(_this.tour, "-description")) || el.getAttribute('data-guidechimp-description');
+                    var position = el.getAttribute("data-guidechimp-".concat(_this.tour, "-position")) || el.getAttribute('data-guidechimp-position');
+                    var interaction = el.getAttribute("data-guidechimp-".concat(_this.tour, "-interaction")) || el.getAttribute('data-guidechimp-interaction');
+
+                    if (typeof interaction === 'string') {
+                      interaction = interaction === 'true';
+                    }
+
                     return {
-                      element: element,
+                      element: el,
                       step: step,
                       title: title,
                       description: description,
@@ -374,7 +391,7 @@ function () {
                       interaction: interaction
                     };
                   });
-                } else if (Array.isArray(this.tour) && this.tour.length) {
+                } else if (Array.isArray(this.tour)) {
                   this.steps = this.tour.map(function (v, i) {
                     var element = v.element;
 
@@ -390,13 +407,13 @@ function () {
                 }
 
                 if (this.steps.length) {
-                  _context2.next = 10;
+                  _context2.next = 12;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 10:
+              case 12:
                 // sort steps by number
                 this.steps.sort(function (a, b) {
                   if (a.step < b.step) {
@@ -411,9 +428,9 @@ function () {
                 });
                 i = 0;
 
-              case 12:
+              case 14:
                 if (!(i < this.steps.length)) {
-                  _context2.next = 21;
+                  _context2.next = 23;
                   break;
                 }
 
@@ -421,68 +438,68 @@ function () {
                 isToStep = useIndex ? i === number : step.number === number;
 
                 if (!isToStep) {
-                  _context2.next = 18;
+                  _context2.next = 20;
                   break;
                 }
 
                 toStep = step;
-                return _context2.abrupt("break", 21);
+                return _context2.abrupt("break", 23);
 
-              case 18:
+              case 20:
                 i++;
-                _context2.next = 12;
+                _context2.next = 14;
                 break;
 
-              case 21:
+              case 23:
                 if (toStep) {
-                  _context2.next = 23;
+                  _context2.next = 25;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 23:
+              case 25:
                 this.resetElementsHighlighting();
                 this.showOverlayLayer();
                 this.startPreloader();
                 _toStep = toStep, onBeforeChange = _toStep.onBeforeChange, onAfterChange = _toStep.onAfterChange;
-                _context2.next = 29;
+                _context2.next = 31;
                 return this.emit('onBeforeChange', this, fromStep, toStep);
 
-              case 29:
+              case 31:
                 results = _context2.sent;
 
                 if (!results.some(function (r) {
                   return r === false;
                 })) {
-                  _context2.next = 32;
+                  _context2.next = 34;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 32:
+              case 34:
                 if (!onBeforeChange) {
-                  _context2.next = 38;
+                  _context2.next = 40;
                   break;
                 }
 
-                _context2.next = 35;
+                _context2.next = 37;
                 return Promise.resolve().then(function () {
                   return onBeforeChange(_this, fromStep, toStep);
                 });
 
-              case 35:
+              case 37:
                 _context2.t0 = _context2.sent;
 
                 if (!(_context2.t0 === false)) {
-                  _context2.next = 38;
+                  _context2.next = 40;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 38:
+              case 40:
                 this.stopPreloader();
                 this.step = toStep;
                 el = this.step.element;
@@ -525,7 +542,7 @@ function () {
 
                 return _context2.abrupt("return", true);
 
-              case 69:
+              case 71:
               case "end":
                 return _context2.stop();
             }
@@ -792,8 +809,7 @@ function () {
         return this;
       }
 
-      var _this$getOptions = this.getOptions(),
-          padding = _this$getOptions.padding;
+      var padding = this.options.padding;
 
       var _this$constructor$get = this.constructor.getElementOffset(el),
           width = _this$constructor$get.width,
@@ -837,8 +853,8 @@ function () {
           elWidth = _el$getBoundingClient3.width,
           elHeight = _el$getBoundingClient3.height;
 
-      elWidth += this.getOptions().padding;
-      elHeight += this.getOptions().padding;
+      elWidth += this.options.padding;
+      elHeight += this.options.padding;
 
       var _tooltipLayer$getBoun = tooltipLayer.getBoundingClientRect(),
           tooltipWidth = _tooltipLayer$getBoun.width,
@@ -876,8 +892,8 @@ function () {
         position = positionPriority[0];
 
         if (positionPriority.length) {
-          if (positionPriority.includes(this.getOptions().position)) {
-            position = this.getOptions().position;
+          if (positionPriority.includes(this.options.position)) {
+            position = this.options.position;
           }
 
           if (positionPriority.includes(preferredPosition)) {
@@ -1061,7 +1077,7 @@ function () {
       if (!overlayLayer) {
         overlayLayer = document.createElement('div');
         overlayLayer.className = this.constructor.getOverlayLayerClass();
-        overlayLayer.onclick = this.getOptions().exitOverlay ? function () {
+        overlayLayer.onclick = this.options.exitOverlay ? function () {
           return _this3.stop();
         } : null;
         document.body.appendChild(overlayLayer);
@@ -1146,12 +1162,10 @@ function () {
       }
 
       interactionLayer.className = this.constructor.getInteractionLayerClass();
+      var interaction = this.options.interaction;
 
-      var _this$getOptions2 = this.getOptions(),
-          interaction = _this$getOptions2.interaction;
-
-      if (this.step) {
-        interaction = this.step.interaction || interaction;
+      if (this.step && typeof this.step.interaction === 'boolean') {
+        interaction = this.step.interaction;
       } // disable interaction
 
 
@@ -1251,7 +1265,7 @@ function () {
 
       progressbarEl.className = this.constructor.getProgressbarClass();
 
-      if (!this.getOptions().showProgressbar) {
+      if (!this.options.showProgressbar) {
         progressbarEl.classList.add(this.constructor.getHiddenClass());
       }
 
@@ -1385,7 +1399,7 @@ function () {
 
       paginationLayer.className = this.constructor.getPaginationLayerClass();
 
-      if (!this.getOptions().showPagination || this.steps.length < 2) {
+      if (!this.options.showPagination || this.steps.length < 2) {
         paginationLayer.classList.add(this.constructor.getHiddenClass());
       }
 

@@ -232,7 +232,7 @@ export default class GuideChimp {
      * @return {this}
      */
     setOptions(options) {
-        this.options = { ...options };
+        this.options = { ...this.constructor.getDefaultOptions(), ...options };
         return this;
     }
 
@@ -240,7 +240,7 @@ export default class GuideChimp {
      * Get tour options
      */
     getOptions() {
-        return { ...this.constructor.getDefaultOptions(), ...this.options };
+        return this.options;
     }
 
     /**
@@ -257,7 +257,7 @@ export default class GuideChimp {
 
         if (isStarted) {
             // turn on keyboard navigation
-            if (this.getOptions().useKeyboard) {
+            if (this.options.useKeyboard) {
                 window.addEventListener('keydown', this.getOnKeyDownListener(), true);
             }
 
@@ -275,6 +275,10 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async go(number, useIndex = true) {
+        if (!this.tour || !this.tour.length) {
+            return false;
+        }
+
         const fromStep = { ...this.step };
         let toStep = null;
 
@@ -289,20 +293,39 @@ export default class GuideChimp {
 
         this.steps = [];
         // if tour is empty or is string, looks for steps among the data attributes
-        if (!this.tour || typeof this.tour === 'string') {
-            const dataAttrPrefix = (this.tour) ? `data-guidechimp-${this.tour}` : 'data-guidechimp';
-            const tourStepsEl = document.querySelectorAll(`[${dataAttrPrefix}]`);
+        if (typeof this.tour === 'string') {
+            let tourStepsEl = Array.from(document.querySelectorAll(`[data-guidechimp-tour*='${this.tour}']`));
 
-            this.steps = Array.from(tourStepsEl).map((element, i) => {
-                const step = parseInt(element.getAttribute(`${dataAttrPrefix}-step`) || i, 10);
-                const title = element.getAttribute(`${dataAttrPrefix}-title`);
-                const description = element.getAttribute(`${dataAttrPrefix}-description`);
-                const position = element.getAttribute(`${dataAttrPrefix}-position`);
-                const interaction = (element.getAttribute(`${dataAttrPrefix}-interaction`) !== 'false');
-
-                return { element, step, title, description, position, interaction };
+            // filter steps by tour name
+            tourStepsEl = tourStepsEl.filter((v) => {
+                const tours = v.getAttribute('data-guidechimp-tour').split(',');
+                return tours.includes(this.tour);
             });
-        } else if (Array.isArray(this.tour) && this.tour.length) {
+
+            this.steps = tourStepsEl.map((el, i) => {
+                const step = parseInt(
+                    el.getAttribute(`data-guidechimp-${this.tour}-step`)
+                    || el.getAttribute('data-guidechimp-step')
+                    || i,
+                    10,
+                );
+                const title = el.getAttribute(`data-guidechimp-${this.tour}-title`)
+                    || el.getAttribute('data-guidechimp-title');
+                const description = el.getAttribute(`data-guidechimp-${this.tour}-description`)
+                    || el.getAttribute('data-guidechimp-description');
+                const position = el.getAttribute(`data-guidechimp-${this.tour}-position`)
+                    || el.getAttribute('data-guidechimp-position');
+
+                let interaction = el.getAttribute(`data-guidechimp-${this.tour}-interaction`)
+                    || el.getAttribute('data-guidechimp-interaction');
+
+                if (typeof interaction === 'string') {
+                    interaction = (interaction === 'true');
+                }
+
+                return { element: el, step, title, description, position, interaction };
+            });
+        } else if (Array.isArray(this.tour)) {
             this.steps = this.tour.map((v, i) => {
                 let { element } = v;
 
@@ -585,7 +608,7 @@ export default class GuideChimp {
             return this;
         }
 
-        let { padding } = this.getOptions();
+        let { padding } = this.options;
 
         const { width, height, top, left } = this.constructor.getElementOffset(el);
 
@@ -628,8 +651,8 @@ export default class GuideChimp {
 
         let { width: elWidth, height: elHeight } = el.getBoundingClientRect();
 
-        elWidth += this.getOptions().padding;
-        elHeight += this.getOptions().padding;
+        elWidth += this.options.padding;
+        elHeight += this.options.padding;
 
         const { width: tooltipWidth, height: tooltipHeight } = tooltipLayer.getBoundingClientRect();
 
@@ -666,8 +689,8 @@ export default class GuideChimp {
             position = positionPriority[0];
 
             if (positionPriority.length) {
-                if (positionPriority.includes(this.getOptions().position)) {
-                    position = this.getOptions().position;
+                if (positionPriority.includes(this.options.position)) {
+                    position = this.options.position;
                 }
 
                 if (positionPriority.includes(preferredPosition)) {
@@ -869,7 +892,7 @@ export default class GuideChimp {
         if (!overlayLayer) {
             overlayLayer = document.createElement('div');
             overlayLayer.className = this.constructor.getOverlayLayerClass();
-            overlayLayer.onclick = (this.getOptions().exitOverlay) ? () => this.stop() : null;
+            overlayLayer.onclick = (this.options.exitOverlay) ? () => this.stop() : null;
             document.body.appendChild(overlayLayer);
         }
 
@@ -965,10 +988,10 @@ export default class GuideChimp {
 
         interactionLayer.className = this.constructor.getInteractionLayerClass();
 
-        let { interaction } = this.getOptions();
+        let { interaction } = this.options;
 
-        if (this.step) {
-            interaction = this.step.interaction || interaction;
+        if (this.step && typeof this.step.interaction === 'boolean') {
+            interaction = this.step.interaction;
         }
 
         // disable interaction
@@ -1081,7 +1104,7 @@ export default class GuideChimp {
 
         progressbarEl.className = this.constructor.getProgressbarClass();
 
-        if (!this.getOptions().showProgressbar) {
+        if (!this.options.showProgressbar) {
             progressbarEl.classList.add(this.constructor.getHiddenClass());
         }
 
@@ -1225,7 +1248,7 @@ export default class GuideChimp {
 
         paginationLayer.className = this.constructor.getPaginationLayerClass();
 
-        if (!this.getOptions().showPagination || this.steps.length < 2) {
+        if (!this.options.showPagination || this.steps.length < 2) {
             paginationLayer.classList.add(this.constructor.getHiddenClass());
         }
 
