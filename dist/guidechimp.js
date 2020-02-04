@@ -393,14 +393,7 @@ function () {
                   });
                 } else if (Array.isArray(this.tour)) {
                   this.steps = this.tour.map(function (v, i) {
-                    var element = v.element;
-
-                    if (typeof element === 'string') {
-                      element = document.querySelector(element);
-                    }
-
                     return _objectSpread({}, v, {
-                      element: element,
                       step: v.step || i
                     });
                   });
@@ -505,6 +498,10 @@ function () {
                 el = this.step.element;
                 _this$step = this.step, position = _this$step.position, buttons = _this$step.buttons;
 
+                if (typeof el === 'string') {
+                  el = document.querySelector(el);
+                }
+
                 if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
                   el = this.showFakeElement();
                 }
@@ -542,7 +539,7 @@ function () {
 
                 return _context2.abrupt("return", true);
 
-              case 71:
+              case 72:
               case "end":
                 return _context2.stop();
             }

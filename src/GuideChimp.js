@@ -326,15 +326,7 @@ export default class GuideChimp {
                 return { element: el, step, title, description, position, interaction };
             });
         } else if (Array.isArray(this.tour)) {
-            this.steps = this.tour.map((v, i) => {
-                let { element } = v;
-
-                if (typeof element === 'string') {
-                    element = document.querySelector(element);
-                }
-
-                return { ...v, element, step: v.step || i };
-            });
+            this.steps = this.tour.map((v, i) => ({ ...v, step: v.step || i }));
         }
 
         if (!this.steps.length) {
@@ -392,6 +384,10 @@ export default class GuideChimp {
 
         let { element: el } = this.step;
         const { position, buttons } = this.step;
+
+        if (typeof el === 'string') {
+            el = document.querySelector(el);
+        }
 
         if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
             el = this.showFakeElement();
