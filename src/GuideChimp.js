@@ -211,7 +211,7 @@ export default class GuideChimp {
     /**
      * Set tour name or steps
      * @param tour
-     * @return {GuideChimp}
+     * @return {this}
      */
     setTour(tour) {
         this.tour = (Array.isArray(tour)) ? [...tour] : tour;
@@ -229,7 +229,7 @@ export default class GuideChimp {
     /**
      * Set tour options
      * @param options
-     * @return {GuideChimp}
+     * @return {this}
      */
     setOptions(options) {
         this.options = { ...options };
@@ -290,15 +290,15 @@ export default class GuideChimp {
         this.steps = [];
         // if tour is empty or is string, looks for steps among the data attributes
         if (!this.tour || typeof this.tour === 'string') {
-            const attrPrefix = (this.tour) ? `guidechimp-${this.tour}` : 'guidechimp';
-            const tourStepsEl = document.querySelectorAll(`[${attrPrefix}]`);
+            const dataAttrPrefix = (this.tour) ? `data-guidechimp-${this.tour}` : 'data-guidechimp';
+            const tourStepsEl = document.querySelectorAll(`[${dataAttrPrefix}]`);
 
             this.steps = Array.from(tourStepsEl).map((element, i) => {
-                const step = parseInt(element.getAttribute(`${attrPrefix}-step`) || i, 10);
-                const title = element.getAttribute(`${attrPrefix}-title`);
-                const description = element.getAttribute(`${attrPrefix}-description`);
-                const position = element.getAttribute(`${attrPrefix}-position`);
-                const interaction = (element.getAttribute(`${attrPrefix}-interaction`) !== 'false');
+                const step = parseInt(element.getAttribute(`${dataAttrPrefix}-step`) || i, 10);
+                const title = element.getAttribute(`${dataAttrPrefix}-title`);
+                const description = element.getAttribute(`${dataAttrPrefix}-description`);
+                const position = element.getAttribute(`${dataAttrPrefix}-position`);
+                const interaction = (element.getAttribute(`${dataAttrPrefix}-interaction`) !== 'false');
 
                 return { element, step, title, description, position, interaction };
             });
@@ -698,13 +698,16 @@ export default class GuideChimp {
             alignment = (availableAlignments.length) ? availableAlignments[0] : 'middle';
         }
 
-        tooltipLayer.removeAttribute('guidechimp-position');
-        tooltipLayer.removeAttribute('guidechimp-alignment');
+        const dataPositionAttr = 'data-guidechimp-position';
+        const dataAlignmentAttr = 'data-guidechimp-alignment';
 
-        tooltipLayer.setAttribute('guidechimp-position', position);
+        tooltipLayer.removeAttribute(dataPositionAttr);
+        tooltipLayer.removeAttribute(dataAlignmentAttr);
+
+        tooltipLayer.setAttribute(dataPositionAttr, position);
 
         if (alignment) {
-            tooltipLayer.setAttribute('guidechimp-alignment', alignment);
+            tooltipLayer.setAttribute(dataAlignmentAttr, alignment);
         }
 
         switch (position) {

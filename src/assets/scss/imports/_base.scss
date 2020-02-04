@@ -77,20 +77,20 @@
   background-color: white;
   box-shadow: 0 1px 10px rgba(0, 0, 0, .4);
 
-  &[guidechimp-position='top'] {
+  &[data-guidechimp-position='top'] {
     margin-bottom: 10px;
   }
 
-  &[guidechimp-position='left'] {
+  &[data-guidechimp-position='left'] {
     margin-top: 5px;
     margin-right: 10px;
   }
 
-  &[guidechimp-position='right'] {
+  &[data-guidechimp-position='right'] {
     margin-left: 10px;
   }
 
-  &[guidechimp-position='bottom'] {
+  &[data-guidechimp-position='bottom'] {
     margin-top: 10px;
   }
 }
@@ -100,48 +100,48 @@
   content: '';
   border: 5px solid transparent;
 
-  .gc-tooltip[guidechimp-position='top'] & {
+  .gc-tooltip[data-guidechimp-position='top'] & {
     bottom: -10px;
     border-top-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='top'][guidechimp-alignment='right'] & {
+  .gc-tooltip[data-guidechimp-position='top'][data-guidechimp-alignment='right'] & {
     right: 10px;
     bottom: -10px;
     border-top-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='top'][guidechimp-alignment='middle'] & {
+  .gc-tooltip[data-guidechimp-position='top'][data-guidechimp-alignment='middle'] & {
     bottom: -10px;
     left: 50%;
     margin-left: -5px;
     border-top-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='left'] & {
+  .gc-tooltip[data-guidechimp-position='left'] & {
     top: 10px;
     right: -10px;
     border-left-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='right'] & {
+  .gc-tooltip[data-guidechimp-position='right'] & {
     top: 10px;
     left: -10px;
     border-right-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='bottom'] & {
+  .gc-tooltip[data-guidechimp-position='bottom'] & {
     top: -10px;
     border-bottom-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='bottom'][guidechimp-alignment='right'] & {
+  .gc-tooltip[data-guidechimp-position='bottom'][data-guidechimp-alignment='right'] & {
     top: -10px;
     right: 10px;
     border-bottom-color: white;
   }
 
-  .gc-tooltip[guidechimp-position='bottom'][guidechimp-alignment='middle'] & {
+  .gc-tooltip[data-guidechimp-position='bottom'][data-guidechimp-alignment='middle'] & {
     top: -10px;
     left: 50%;
     margin-left: -5px;
@@ -204,7 +204,7 @@
     border-radius: 2px 2px 0 0;
   }
 
-  .gc-tooltip[guidechimp-position='bottom'] & {
+  .gc-tooltip[data-guidechimp-position='bottom'] & {
     top: auto;
     bottom: 0;
     border-radius: 0 0 0 2px;

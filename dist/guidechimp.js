@@ -202,7 +202,7 @@ function () {
     /**
      * Set tour name or steps
      * @param tour
-     * @return {GuideChimp}
+     * @return {this}
      */
     value: function setTour(tour) {
       this.tour = Array.isArray(tour) ? (0, _toConsumableArray2.default)(tour) : tour;
@@ -221,7 +221,7 @@ function () {
     /**
      * Set tour options
      * @param options
-     * @return {GuideChimp}
+     * @return {this}
      */
 
   }, {
@@ -317,7 +317,7 @@ function () {
             fromStep,
             toStep,
             isSameStep,
-            attrPrefix,
+            dataAttrPrefix,
             tourStepsEl,
             i,
             step,
@@ -357,14 +357,14 @@ function () {
                 this.steps = []; // if tour is empty or is string, looks for steps among the data attributes
 
                 if (!this.tour || typeof this.tour === 'string') {
-                  attrPrefix = this.tour ? "guidechimp-".concat(this.tour) : 'guidechimp';
-                  tourStepsEl = document.querySelectorAll("[".concat(attrPrefix, "]"));
+                  dataAttrPrefix = this.tour ? "data-guidechimp-".concat(this.tour) : 'data-guidechimp';
+                  tourStepsEl = document.querySelectorAll("[".concat(dataAttrPrefix, "]"));
                   this.steps = Array.from(tourStepsEl).map(function (element, i) {
-                    var step = parseInt(element.getAttribute("".concat(attrPrefix, "-step")) || i, 10);
-                    var title = element.getAttribute("".concat(attrPrefix, "-title"));
-                    var description = element.getAttribute("".concat(attrPrefix, "-description"));
-                    var position = element.getAttribute("".concat(attrPrefix, "-position"));
-                    var interaction = element.getAttribute("".concat(attrPrefix, "-interaction")) !== 'false';
+                    var step = parseInt(element.getAttribute("".concat(dataAttrPrefix, "-step")) || i, 10);
+                    var title = element.getAttribute("".concat(dataAttrPrefix, "-title"));
+                    var description = element.getAttribute("".concat(dataAttrPrefix, "-description"));
+                    var position = element.getAttribute("".concat(dataAttrPrefix, "-position"));
+                    var interaction = element.getAttribute("".concat(dataAttrPrefix, "-interaction")) !== 'false';
                     return {
                       element: element,
                       step: step,
@@ -907,12 +907,14 @@ function () {
         alignment = availableAlignments.length ? availableAlignments[0] : 'middle';
       }
 
-      tooltipLayer.removeAttribute('guidechimp-position');
-      tooltipLayer.removeAttribute('guidechimp-alignment');
-      tooltipLayer.setAttribute('guidechimp-position', position);
+      var dataPositionAttr = 'data-guidechimp-position';
+      var dataAlignmentAttr = 'data-guidechimp-alignment';
+      tooltipLayer.removeAttribute(dataPositionAttr);
+      tooltipLayer.removeAttribute(dataAlignmentAttr);
+      tooltipLayer.setAttribute(dataPositionAttr, position);
 
       if (alignment) {
-        tooltipLayer.setAttribute('guidechimp-alignment', alignment);
+        tooltipLayer.setAttribute(dataAlignmentAttr, alignment);
       }
 
       switch (position) {
