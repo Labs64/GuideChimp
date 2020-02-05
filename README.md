@@ -118,7 +118,7 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ## License
 
-GuideChimp is made available under [Commercial License](https://www.labs64.com/legal/terms-of-service/website/) or the [Apache License 2.0](LICENSE).
+GuideChimp is made available under the [Apache License 2.0](LICENSE) or [Commercial License](https://www.labs64.com/legal/terms-of-service/website/).
 The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the Apache License 2.0 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
 
@@ -131,8 +131,10 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 | Remove Attribution | :heavy_multiplication_x: | :white_check_mark: |
 | Extensions | :heavy_multiplication_x: | :white_check_mark: |
 | Customization | :heavy_multiplication_x: | :white_check_mark: |
-| Warranty  | :heavy_multiplication_x: | :white_check_mark: |
 | Support  | :heavy_multiplication_x: | :white_check_mark: |
+| --- | --- | --- |
+| Get It  | - | [Contact us](https://netlicensing.io/contact/) |
+
 
 ## Privacy Policy & GDPR
 
