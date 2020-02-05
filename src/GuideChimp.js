@@ -2,7 +2,8 @@
  * Copyright (C) 2020 Labs64
  *
  * This source code is licensed under the Apache License 2.0 license
- * located in the LICENSE file in the project root folder.
+ * located in the LICENSE file and
+ * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
  */
 
 export default class GuideChimp {
