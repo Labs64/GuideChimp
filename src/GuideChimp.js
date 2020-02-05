@@ -1189,8 +1189,8 @@ export default class GuideChimp {
             if (v instanceof HTMLElement) {
                 customButtonsLayer.appendChild(v);
             } else {
-                const { tag = 'button', title = '', class: className, onClick } = v;
-                const customButton = document.createElement(tag);
+                const { tagName = 'button', title = '', class: className, onClick } = v;
+                const customButton = document.createElement(tagName);
 
                 customButton.innerHTML = title;
                 if (className) {

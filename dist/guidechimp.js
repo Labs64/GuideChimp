@@ -1343,13 +1343,13 @@ function () {
         if (v instanceof HTMLElement) {
           customButtonsLayer.appendChild(v);
         } else {
-          var _v$tag = v.tag,
-              tag = _v$tag === void 0 ? 'button' : _v$tag,
+          var _v$tagName = v.tagName,
+              tagName = _v$tagName === void 0 ? 'button' : _v$tagName,
               _v$title = v.title,
               title = _v$title === void 0 ? '' : _v$title,
               className = v.class,
               onClick = v.onClick;
-          var customButton = document.createElement(tag);
+          var customButton = document.createElement(tagName);
           customButton.innerHTML = title;
 
           if (className) {
