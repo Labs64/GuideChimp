@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Labs64
+ * Copyright (C) 2020 Labs64 GmbH
  *
  * This source code is licensed under the Apache License 2.0 license
  * located in the LICENSE file and
