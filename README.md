@@ -126,12 +126,12 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 |  | Open Source | Commercial |
 | --- | --- | --- |
-| Commercial Use | x | x |
-| Attribution | x | - |
-| Extensions | - | x |
-| Customization | - | x |
-| Warranty  | - | x |
-| Support  | - | x |
+| Commercial use | :white_check_mark: | :white_check_mark: |
+| Attribution | :white_check_mark: | :heavy_multiplication_x: |
+| Extensions | :heavy_multiplication_x: | :white_check_mark: |
+| Customization | :heavy_multiplication_x: | :white_check_mark: |
+| Warranty  | :heavy_multiplication_x: | :white_check_mark: |
+| Support  | :heavy_multiplication_x: | :white_check_mark: |
 
 ## Privacy Policy & GDPR
 
