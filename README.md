@@ -122,6 +122,16 @@ GuideChimp is made available under [Commercial License](https://www.labs64.com/l
 The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the Apache License 2.0 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
 
+### Usage
+
+|  | Open Source | Commercial |
+| --- | --- | --- |
+| Commercial Use | x | x |
+| Attribution | x | - |
+| Extensions | - | x |
+| Customization | - | x |
+| Warranty  | - | x |
+| Support  | - | x |
 
 ## Privacy Policy & GDPR
 
