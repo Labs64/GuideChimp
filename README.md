@@ -132,7 +132,7 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 | Extensions | :heavy_multiplication_x: | :white_check_mark: |
 | Customization | :heavy_multiplication_x: | :white_check_mark: |
 | Support  | :heavy_multiplication_x: | :white_check_mark: |
-| --- | --- | --- |
+|  | --- | --- |
 | Get It | [How To](https://github.com/Labs64/GuideChimp/wiki/Install) | [Contact Us](https://netlicensing.io/contact/) |
 
 
