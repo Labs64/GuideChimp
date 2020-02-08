@@ -7,11 +7,9 @@
 <a href="https://gitter.im/Labs64/GuideChimp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://badges.gitter.im/Labs64/GuideChimp.svg" alt="Join the chat at https://gitter.im/Labs64/GuideChimp"></a>
 </p>
 
-# GuideChimp
-
 Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
-## What can you do with GuideChimp?
+# What can you do with GuideChimp?
 
 <p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-stage-04-shadow.png"  alt="GuideChimp"></p>
 
@@ -23,7 +21,7 @@ Deliver the perfect product experience, improve digital product adoption, boost 
 
 The world's smartest companies using our GuideChimp to boost their user experience.
 
-## Features
+# Features
 
 - Seamless integration with any web app.
 - GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
@@ -51,17 +49,17 @@ The world's smartest companies using our GuideChimp to boost their user experien
 <p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-licensing-models-tour.gif"  alt="NetLicensing Licensing Models Tour"></p>
 
 
-## How to Use
+# How to Use
 
 In order to use GuideChimp, you must include the compiled and minified JavaScript file in your project. There are multiple options for including these pre-compiled files, also known as a distribution, in your website or application.
 
 
-### 1) Using from a CDN
+## 1) Using from a CDN
 
 - jsDelivr - https://www.jsdelivr.com/package/npm/guidechimp
 
 
-### 2) Installing with Node.js / npm
+## 2) Installing with Node.js / npm
 
 GuideChimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Add the following to your `package.json` file and then run `npm install`:
 ```
@@ -77,7 +75,7 @@ $ npm install guidechimp
 ```
 
 
-### 3) Manual Installation
+## 3) Manual Installation
 
 We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update GuideChimp when new versions are released. Nonetheless, if you prefer to integrate GuideChimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
 
@@ -88,12 +86,12 @@ Include the compiled files in your page:
 ```
 
 
-## Documentation
+# Documentation
 
 Please visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki).
 
 
-## Demo
+# Demo
 
 See GuideChimp in action in the product walkthrough, showcases and real-world examples below:
 
@@ -102,7 +100,7 @@ See GuideChimp in action in the product walkthrough, showcases and real-world ex
 - [GuideChimp Tour Examples](https://codepen.io/collection/DyPkzY) at CodePen
 
 
-## How to Contribute
+# How to Contribute
 
 Everyone is welcome to contribute to this project!
 Feel free to [contribute](CONTRIBUTING.md) with pull requests, bug reports or enhancement suggestions.
@@ -113,18 +111,18 @@ GuideChimp is maintained by Labs64.
 [Contact](https://www.labs64.com/contact/) us for web app consulting, development, and training for your project or book a demo.
 
 
-## Bugs and Feedback
+# Bugs and Feedback
 
 For bugs, questions and discussions please use the [GitHub Issues](https://github.com/Labs64/guidechimp/issues).
 
 
-## License
+# License
 
 GuideChimp is made available under the [Apache License 2.0](LICENSE) or [Commercial License](https://www.labs64.com/legal/terms-of-service/website/).
 The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the Apache License 2.0 license, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
 
-### Terms of Use
+## Terms of Use
 
 |  | Open Source | Commercial |
 | --- | --- | --- |
@@ -138,7 +136,7 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 |  | [Start Now](https://github.com/Labs64/GuideChimp/wiki/Install) | [Contact Us](https://netlicensing.io/contact/) |
 
 
-## Privacy Policy & GDPR
+# Privacy Policy & GDPR
 
 This library integrating components of an external service – [Labs64 NetLicensing](https://netlicensing.io) *(processor)*. Labs64 NetLicensing is an *Online License Management* service provider. License validation requests are processed using library developer *(controller)* NetLicensing account.
 
@@ -159,7 +157,7 @@ We strongly encourage you to comply with General Data Protection Regulation (GDP
 
 For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://netlicensing.io/wiki/privacy-center).
 
-### Controller’s Responsibilities
+## Controller’s Responsibilities
 
 The controller is the principal party for data collection responsibilities. These responsibilities include collecting individual’s consent, storing of the data, managing consent-revoking, enabling the right to access, etc.
 
