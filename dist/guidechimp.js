@@ -119,11 +119,12 @@ var _GuideChimp = _interopRequireDefault(__webpack_require__(2));
 
 __webpack_require__(13);
 
-/* ============
- * Main Class
- * ============
+/**
+ * Copyright (C) 2020 Labs64 GmbH
  *
- * Last but not least, we import the main class.
+ * This source code is licensed under the Apache License 2.0 license
+ * located in the LICENSE file and
+ * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
  */
 
 /* ============
@@ -165,10 +166,11 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
- * Copyright (C) 2020 Labs64
+ * Copyright (C) 2020 Labs64 GmbH
  *
  * This source code is licensed under the Apache License 2.0 license
- * located in the LICENSE file in the project root folder.
+ * located in the LICENSE file and
+ * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
  */
 var GuideChimp =
 /*#__PURE__*/
