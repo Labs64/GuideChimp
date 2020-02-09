@@ -16,7 +16,7 @@ Deliver the perfect product experience, improve digital product adoption, boost 
 - <strong>User Experience:</strong> Implement engaging and personalised guides to walk users through your system.
 - <strong>User Onboarding:</strong> Successfully onboard your users from day one with an intuitive step by step walkthroughs.
 - <strong>Feature Adoption:</strong> Introduce and highlight new features with personalized guides.
-- <strong>In-product Messaging:</strong> Engage right segment of your users at the right time and increase conversion.
+- <strong>In-product Messaging:</strong> Engage the right segment of your users at the right time and increase conversion.
 - <strong>Employee Training:</strong> Improve your employees' productivity by providing an efficient and interactive training system.
 
 The world's smartest companies using our GuideChimp to boost their user experience.
