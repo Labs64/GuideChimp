@@ -87,10 +87,10 @@ import 'guidechimp/dist/guidechimp.min.css';
 
 We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update GuideChimp when new versions are released. Nonetheless, if you prefer to integrate GuideChimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
 
-Include the compiled files in your page:
+Include the compiled files in your HTML page:
 ```html
-<script src="path/guidechimp.min.js"></script>
-<link rel="stylesheet" href="path/guidechimp.min.css">
+<script src="guidechimp/dist/guidechimp.min.js"></script>
+<link rel="stylesheet" href="guidechimp/dist/guidechimp.min.css">
 ```
 
 
