@@ -59,10 +59,10 @@ In order to use GuideChimp, you must include the compiled and minified JavaScrip
 - jsDelivr - https://www.jsdelivr.com/package/npm/guidechimp
 
 
-## 2) Install as Node.js / npm module
+## 2) Install as Node.js/npm Module
 
 GuideChimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Add the following to your `package.json` file and then run `npm install`:
-```
+```json
 "dependencies": {
     "guidechimp": "x.y.z"
 }
@@ -70,11 +70,11 @@ GuideChimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Ad
 
 or execute following command in your Node.js environment:
 
-```
+```bash
 $ npm install guidechimp
 ```
 
-## 3) Install as ES6 module
+## 3) Install as ES6 Module
 
 If you are using ES6 modules, import the library and CSS file:
 
