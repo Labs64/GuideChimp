@@ -46,7 +46,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Lightweight (~ 35KB) and good performance
 - **Last But Not Least:** :point_up: Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
 
-<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-licensing-models-tour.gif"  alt="NetLicensing Licensing Models Tour"></p>
+<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-licensing-models-tour.gif"  alt="Labs64 NetLicensing - Licensing Models Tour"></p>
 
 
 # How to Use
