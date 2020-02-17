@@ -16,4 +16,13 @@ import GuideChimp from './GuideChimp';
  */
 import './assets/scss/style.scss';
 
-module.exports = GuideChimp;
+const guideChimp = (...args) => new GuideChimp(...args);
+
+guideChimp.prototype = GuideChimp.prototype;
+
+guideChimp.extend = (plugin, ...args) => {
+    plugin(GuideChimp, guideChimp, ...args);
+    return guideChimp;
+};
+
+module.exports = guideChimp;

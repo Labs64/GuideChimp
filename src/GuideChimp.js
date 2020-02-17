@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * Copyright (C) 2020 Labs64 GmbH
  *
@@ -5,6 +6,9 @@
  * located in the LICENSE file and
  * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
  */
+
+// global cache
+const cache = new Map();
 
 export default class GuideChimp {
     /**
@@ -19,12 +23,22 @@ export default class GuideChimp {
         this.tour = null;
         this.options = {};
 
-        this.listeners = [];
+        this.cache = cache;
 
-        this.cache = new Map();
+        this.listeners = [];
 
         this.setOptions(options);
         this.setTour(tour);
+
+        this.init();
+    }
+
+    /**
+     * Called after construction, this hook allows you to add some extra setup
+     * logic without having to override the constructor.
+     */
+    init() {
+
     }
 
     /**
@@ -44,8 +58,8 @@ export default class GuideChimp {
         };
     }
 
-    static getFakeElementClass() {
-        return 'gc-fake';
+    static getDefaultElementClass() {
+        return 'gc-default';
     }
 
     static getHighlightElementClass() {
@@ -259,11 +273,11 @@ export default class GuideChimp {
         if (isStarted) {
             // turn on keyboard navigation
             if (this.options.useKeyboard) {
-                window.addEventListener('keydown', this.getOnKeyDownListener(), true);
+                this.setUpOnKeydownListener();
             }
 
             // on window resize
-            window.addEventListener('resize', this.getOnWindowResizeListener(), true);
+            this.setUpOnWindowResizeListener();
         }
 
         return isStarted;
@@ -280,13 +294,14 @@ export default class GuideChimp {
             return false;
         }
 
+        const stepNumber = (useIndex) ? parseInt(number, 10) : number;
         const fromStep = { ...this.step };
         let toStep = null;
 
         // skip if this step is already displayed
         const isSameStep = (useIndex)
-            ? (this.steps.indexOf(this.step) === number)
-            : (this.step && this.step.number === number);
+            ? (this.steps.indexOf(this.step) === stepNumber)
+            : (this.step && this.step.step === stepNumber);
 
         if (isSameStep) {
             return false;
@@ -295,59 +310,20 @@ export default class GuideChimp {
         this.steps = [];
         // if tour is empty or is string, looks for steps among the data attributes
         if (typeof this.tour === 'string') {
-            let tourStepsEl = Array.from(document.querySelectorAll(`[data-guidechimp-tour*='${this.tour}']`));
-
-            // filter steps by tour name
-            tourStepsEl = tourStepsEl.filter((v) => {
-                const tours = v.getAttribute('data-guidechimp-tour').split(',');
-                return tours.includes(this.tour);
-            });
-
-            this.steps = tourStepsEl.map((el, i) => {
-                const step = parseInt(
-                    el.getAttribute(`data-guidechimp-${this.tour}-step`)
-                    || el.getAttribute('data-guidechimp-step')
-                    || i,
-                    10,
-                );
-                const title = el.getAttribute(`data-guidechimp-${this.tour}-title`)
-                    || el.getAttribute('data-guidechimp-title');
-                const description = el.getAttribute(`data-guidechimp-${this.tour}-description`)
-                    || el.getAttribute('data-guidechimp-description');
-                const position = el.getAttribute(`data-guidechimp-${this.tour}-position`)
-                    || el.getAttribute('data-guidechimp-position');
-
-                let interaction = el.getAttribute(`data-guidechimp-${this.tour}-interaction`)
-                    || el.getAttribute('data-guidechimp-interaction');
-
-                if (typeof interaction === 'string') {
-                    interaction = (interaction === 'true');
-                }
-
-                return { element: el, step, title, description, position, interaction };
-            });
+            this.steps = this.getDataSteps(this.tour);
         } else if (Array.isArray(this.tour)) {
-            this.steps = this.tour.map((v, i) => ({ ...v, step: v.step || i }));
+            this.steps = this.getJsSteps(this.tour);
         }
 
         if (!this.steps.length) {
             return false;
         }
 
-        // sort steps by number
-        this.steps.sort((a, b) => {
-            if (a.step < b.step) {
-                return -1;
-            }
-            if (a.step > b.step) {
-                return 1;
-            }
-            return 0;
-        });
-
+        // sort steps by step
+        this.steps = this.sortSteps(this.steps);
         for (let i = 0; i < this.steps.length; i++) {
             const step = this.steps[i];
-            const isToStep = (useIndex) ? (i === number) : (step.number === number);
+            const isToStep = (useIndex) ? (i === stepNumber) : (step.step === stepNumber);
 
             if (isToStep) {
                 toStep = step;
@@ -391,7 +367,7 @@ export default class GuideChimp {
         }
 
         if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
-            el = this.showFakeElement();
+            el = this.showDefaultElement();
         }
 
         const highlightLayer = this.showHighlightLayer();
@@ -405,16 +381,26 @@ export default class GuideChimp {
         const tooltipLayer = this.showTooltipLayer();
         this.showTooltipTail();
         this.showProgressbar();
-        this.showTitle();
-        this.showDescription();
+        this.showTitle(this.step.title);
+        this.showDescription(this.step.description);
         this.showClose();
 
         this.showCustomButtonsLayer(buttons);
 
-        this.showNavigation();
+        const navigationLayer = this.showNavigation();
         this.showNavigationPrev();
         this.showPagination();
         this.showNavigationNext();
+
+        const isNeedHideNavigation = Array.from(navigationLayer.children)
+            .every((v) => v.classList.contains(this.constructor.getHiddenClass()));
+
+        if (isNeedHideNavigation) {
+            navigationLayer.classList.add(this.constructor.getHiddenClass());
+        } else {
+            navigationLayer.classList.remove(this.constructor.getHiddenClass());
+        }
+
         this.showCopyright();
 
         this.setTooltipLayerPosition(tooltipLayer, el, position);
@@ -455,7 +441,6 @@ export default class GuideChimp {
         return false;
     }
 
-
     async stop() {
         const stepIndex = this.steps.indexOf(this.step);
 
@@ -468,15 +453,9 @@ export default class GuideChimp {
         this.step = null;
         this.steps = [];
 
-        if (this.cache.has('onKeyDownListener')) {
-            window.removeEventListener('keydown', this.cache.get('onKeyDownListener'), true);
-            this.cache.delete('onKeyDownListener');
-        }
-
-        if (this.cache.has('onKeyDownListener')) {
-            window.removeEventListener('keydown', this.cache.get('onKeyDownListener'), true);
-            this.cache.delete('onKeyDownListener');
-        }
+        // shut up events listeners
+        this.shutUpOnKeydownListener();
+        this.shutUpOnWindowResizeListener();
 
         this.removePreloaderElement();
         this.removeOverlayLayer();
@@ -487,6 +466,71 @@ export default class GuideChimp {
         this.cache.clear();
 
         return this;
+    }
+
+    getDataSteps(tour) {
+        const dataPrefix = 'data-guidechimp';
+        let tourStepsEl = Array.from(document.querySelectorAll(`[${dataPrefix}-tour*='${tour}']`));
+
+        // filter steps by tour name
+        tourStepsEl = tourStepsEl.filter((v) => {
+            const tours = v.getAttribute(`${dataPrefix}-tour`).split(',');
+            return tours.includes(this.tour);
+        });
+
+        const dataTourRegExp = new RegExp(`^${dataPrefix}-${tour}-[^-]+$`);
+        const dataGlobalRegExp = new RegExp(`^${dataPrefix}-[^-]+$`);
+
+        return tourStepsEl.map((el, i) => {
+            const stepAttrs = {};
+
+            for (let j = 0; j < el.attributes.length; j++) {
+                const { name: attrName, value: attrValue } = el.attributes[j];
+
+                const isTourAttr = dataTourRegExp.test(attrName);
+                const isGlobalAttr = (isTourAttr) ? false : dataGlobalRegExp.test(attrName);
+
+                if (isTourAttr || isGlobalAttr) {
+                    const attrShortName = (isTourAttr)
+                        ? attrName.replace(`${dataPrefix}-${tour}-`, '')
+                        : attrName.replace(`${dataPrefix}-`, '');
+
+                    if (attrShortName !== 'tour') {
+                        if (isTourAttr || (isGlobalAttr && !stepAttrs[attrShortName])) {
+                            stepAttrs[attrShortName] = attrValue;
+                        }
+                    }
+                }
+            }
+
+            return {
+                step: i,
+                title: '',
+                description: '',
+                position: this.options.position,
+                interaction: this.options.interaction,
+                ...stepAttrs,
+                element: el,
+            };
+        });
+    }
+
+    getJsSteps(tour) {
+        return tour.map((v, i) => ({ ...v, step: v.step || i }));
+    }
+
+    sortSteps(steps) {
+        const copy = [...steps];
+
+        return copy.sort((a, b) => {
+            if (a.step < b.step) {
+                return -1;
+            }
+            if (a.step > b.step) {
+                return 1;
+            }
+            return 0;
+        });
     }
 
     scrollParentToChildElement(el) {
@@ -532,7 +576,6 @@ export default class GuideChimp {
 
         return this;
     }
-
 
     highlightElement(el) {
         let parentEl = el.parentElement;
@@ -637,7 +680,7 @@ export default class GuideChimp {
         let position = 'floating';
         let alignment = null;
 
-        const isFakeElement = el.classList.contains(this.constructor.getFakeElementClass());
+        const isDefaultElement = el.classList.contains(this.constructor.getDefaultElementClass());
 
         const {
             top: elTop,
@@ -663,7 +706,7 @@ export default class GuideChimp {
         style.marginLeft = null;
         style.marginTop = null;
 
-        if (!isFakeElement) {
+        if (!isDefaultElement) {
             const positionPriority = ['top', 'bottom', 'right', 'left'];
 
             if (elTop - tooltipHeight < 0) {
@@ -836,25 +879,23 @@ export default class GuideChimp {
         return this;
     }
 
-    showFakeElement() {
-        let fakeEl = this.cache.get('fakeEl');
+    showDefaultElement() {
+        let defaultEl = this.cache.get('defaultEl');
 
-        if (!fakeEl) {
-            fakeEl = document.createElement('div');
-            document.body.appendChild(fakeEl);
+        if (!defaultEl) {
+            defaultEl = document.createElement('div');
+            document.body.appendChild(defaultEl);
         }
 
-        fakeEl.className = this.constructor.getFakeElementClass();
+        defaultEl.className = this.constructor.getDefaultElementClass();
 
-        this.cache.set('fakeEl', fakeEl);
+        this.cache.set('defaultEl', defaultEl);
 
-        return fakeEl;
+        return defaultEl;
     }
 
     showPreloaderElement() {
-        let preloaderEl = (this.cache.has('preloaderEl'))
-            ? this.cache.get('preloaderEl')
-            : document.querySelector(`.${this.constructor.getPreloaderClass()}`);
+        let preloaderEl = this.cache.get('preloaderEl');
 
         if (!preloaderEl) {
             preloaderEl = document.createElement('div');
@@ -868,12 +909,10 @@ export default class GuideChimp {
     }
 
     removePreloaderElement() {
-        const overlayLayer = (this.cache.has('preloaderEl'))
-            ? this.cache.get('preloaderEl')
-            : document.querySelector(`.${this.constructor.getPreloaderClass()}`);
+        const preloaderEl = this.cache.get('preloaderEl');
 
-        if (overlayLayer) {
-            overlayLayer.parentElement.removeChild(overlayLayer);
+        if (preloaderEl) {
+            preloaderEl.parentElement.removeChild(preloaderEl);
         }
 
         this.cache.delete('preloaderEl');
@@ -882,9 +921,7 @@ export default class GuideChimp {
     }
 
     showOverlayLayer() {
-        let overlayLayer = (this.cache.has('overlayLayer'))
-            ? this.cache.get('overlayLayer')
-            : document.querySelector(`.${this.constructor.getOverlayLayerClass()}`);
+        let overlayLayer = this.cache.get('overlayLayer');
 
         if (!overlayLayer) {
             overlayLayer = document.createElement('div');
@@ -899,9 +936,7 @@ export default class GuideChimp {
     }
 
     removeOverlayLayer() {
-        const overlayLayer = (this.cache.has('overlayLayer'))
-            ? this.cache.get('overlayLayer')
-            : document.querySelector(`.${this.constructor.getOverlayLayerClass()}`);
+        const overlayLayer = this.cache.get('overlayLayer');
 
         if (overlayLayer) {
             overlayLayer.parentElement.removeChild(overlayLayer);
@@ -913,9 +948,7 @@ export default class GuideChimp {
     }
 
     showHighlightLayer() {
-        let highlightLayer = (this.cache.has('highlightLayer'))
-            ? this.cache.get('highlightLayer')
-            : document.querySelector(`.${this.constructor.getHighlightLayerClass()}`);
+        let highlightLayer = this.cache.get('highlightLayer');
 
         if (!highlightLayer) {
             highlightLayer = document.createElement('div');
@@ -929,9 +962,7 @@ export default class GuideChimp {
     }
 
     removeHighlightLayer() {
-        const highlightLayer = (this.cache.has('highlightLayer'))
-            ? this.cache.get('highlightLayer')
-            : document.querySelector(`.${this.constructor.getHighlightLayerClass()}`);
+        const highlightLayer = this.cache.get('highlightLayer');
 
         if (highlightLayer) {
             highlightLayer.parentElement.removeChild(highlightLayer);
@@ -943,9 +974,7 @@ export default class GuideChimp {
     }
 
     showControlLayer() {
-        let controlLayer = (this.cache.has('controlLayer'))
-            ? this.cache.get('controlLayer')
-            : document.querySelector(`.${this.constructor.getControlLayerClass()}`);
+        let controlLayer = this.cache.get('controlLayer');
 
         if (!controlLayer) {
             controlLayer = document.createElement('div');
@@ -959,9 +988,7 @@ export default class GuideChimp {
     }
 
     removeControlLayer() {
-        const controlLayer = (this.cache.has('controlLayer'))
-            ? this.cache.get('controlLayer')
-            : document.querySelector(`.${this.constructor.getControlLayerClass()}`);
+        const controlLayer = this.cache.get('controlLayer');
 
         if (controlLayer) {
             controlLayer.parentElement.removeChild(controlLayer);
@@ -974,9 +1001,7 @@ export default class GuideChimp {
 
     showInteractionLayer() {
         // get or create interaction layer
-        let interactionLayer = (this.cache.has('interactionLayer'))
-            ? this.cache.get('interactionLayer')
-            : document.querySelector(`.${this.constructor.getInteractionLayerClass()}`);
+        let interactionLayer = this.cache.get('interactionLayer');
 
         if (!interactionLayer) {
             interactionLayer = document.createElement('div');
@@ -1002,9 +1027,7 @@ export default class GuideChimp {
     }
 
     removeInteractionLayer() {
-        const interactionLayer = (this.cache.has('interactionLayer'))
-            ? this.cache.get('interactionLayer')
-            : document.querySelector(`.${this.constructor.getInteractionLayerClass()}`);
+        const interactionLayer = this.cache.get('interactionLayer');
 
         if (interactionLayer) {
             interactionLayer.parentElement.removeChild(interactionLayer);
@@ -1018,9 +1041,7 @@ export default class GuideChimp {
     showTooltipLayer() {
         const parent = this.showControlLayer();
 
-        let tooltipLayer = (this.cache.has('tooltipLayer'))
-            ? this.cache.get('tooltipLayer')
-            : parent.querySelector(`.${this.constructor.getTooltipLayerClass()}`);
+        let tooltipLayer = this.cache.get('tooltipLayer');
 
         if (!tooltipLayer) {
             tooltipLayer = document.createElement('div');
@@ -1038,10 +1059,7 @@ export default class GuideChimp {
     showTooltipTail() {
         const parent = this.showTooltipLayer();
 
-        let tooltipTailEl = (this.cache.has('tooltipTailEl'))
-            ? this.cache.get('tooltipTailEl')
-            : parent.querySelector(`.${this.constructor.getTooltipTailClass()}`);
-
+        let tooltipTailEl = this.cache.get('tooltipTailEl');
 
         if (!tooltipTailEl) {
             tooltipTailEl = document.createElement('div');
@@ -1058,9 +1076,7 @@ export default class GuideChimp {
     showClose() {
         const parent = this.showTooltipLayer();
 
-        let closeEl = (this.cache.has('closeEl'))
-            ? this.cache.get('closeEl')
-            : parent.querySelector(`.${this.constructor.getCloseClass()}`);
+        let closeEl = this.cache.get('closeEl');
 
         if (!closeEl) {
             closeEl = document.createElement('div');
@@ -1075,13 +1091,10 @@ export default class GuideChimp {
         return closeEl;
     }
 
-
     showProgressbar() {
         const parent = this.showTooltipLayer();
 
-        let progressbarEl = (this.cache.has('progressbarEl'))
-            ? this.cache.get('progressbarEl')
-            : parent.querySelector(`.${this.constructor.getProgressbarClass()}`);
+        let progressbarEl = this.cache.get('progressbarEl');
 
         if (!progressbarEl) {
             progressbarEl = document.createElement('div');
@@ -1110,21 +1123,15 @@ export default class GuideChimp {
         return progressbarEl;
     }
 
-    showTitle() {
-        const parent = this.showTooltipLayer();
-
-        let titleEl = (this.cache.has('titleEl'))
-            ? this.cache.get('titleEl')
-            : parent.querySelector(`.${this.constructor.getTitleClass()}`);
+    showTitle(title) {
+        let titleEl = this.cache.get('titleEl');
 
         if (!titleEl) {
             titleEl = document.createElement('div');
-            parent.appendChild(titleEl);
+            this.showTooltipLayer().appendChild(titleEl);
         }
 
         titleEl.className = this.constructor.getTitleClass();
-
-        const { title } = this.step || {};
 
         if (!title) {
             titleEl.classList.add(this.constructor.getHiddenClass());
@@ -1137,21 +1144,15 @@ export default class GuideChimp {
         return titleEl;
     }
 
-    showDescription() {
-        const parent = this.showTooltipLayer();
-
-        let descriptionEl = (this.cache.has('descriptionEl'))
-            ? this.cache.get('descriptionEl')
-            : parent.querySelector(`.${this.constructor.getDescriptionClass()}`);
+    showDescription(description) {
+        let descriptionEl = this.cache.get('descriptionEl');
 
         if (!descriptionEl) {
             descriptionEl = document.createElement('div');
-            parent.appendChild(descriptionEl);
+            this.showTooltipLayer().appendChild(descriptionEl);
         }
 
         descriptionEl.className = this.constructor.getDescriptionClass();
-
-        const { description } = this.step || {};
 
         if (!description) {
             descriptionEl.classList.add(this.constructor.getHiddenClass());
@@ -1165,15 +1166,11 @@ export default class GuideChimp {
     }
 
     showCustomButtonsLayer(buttons = []) {
-        const parent = this.showTooltipLayer();
-
-        let customButtonsLayer = (this.cache.has('customButtonsLayer'))
-            ? this.cache.get('customButtonsLayer')
-            : parent.querySelector(`.${this.constructor.getCustomButtonsLayerClass()}`);
+        let customButtonsLayer = this.cache.get('customButtonsLayer');
 
         if (!customButtonsLayer) {
             customButtonsLayer = document.createElement('div');
-            parent.appendChild(customButtonsLayer);
+            this.showTooltipLayer().appendChild(customButtonsLayer);
         }
 
         customButtonsLayer.className = this.constructor.getCustomButtonsLayerClass();
@@ -1206,22 +1203,17 @@ export default class GuideChimp {
             }
         });
 
-
         this.cache.set('customButtonsLayer', customButtonsLayer);
 
         return customButtonsLayer;
     }
 
     showNavigation() {
-        const parent = this.showTooltipLayer();
-
-        let navigationLayer = (this.cache.has('navigationLayer'))
-            ? this.cache.get('navigationLayer')
-            : parent.querySelector(`.${this.constructor.getNavigationClass()}`);
+        let navigationLayer = this.cache.get('navigationLayer');
 
         if (!navigationLayer) {
             navigationLayer = document.createElement('div');
-            parent.appendChild(navigationLayer);
+            this.showTooltipLayer().appendChild(navigationLayer);
         }
 
         navigationLayer.className = this.constructor.getNavigationClass();
@@ -1232,15 +1224,11 @@ export default class GuideChimp {
     }
 
     showPagination() {
-        const parent = this.showNavigation();
-
-        let paginationLayer = (this.cache.has('paginationLayer'))
-            ? this.cache.get('paginationLayer')
-            : parent.querySelector(`.${this.constructor.getPaginationLayerClass()}`);
+        let paginationLayer = this.cache.get('paginationLayer');
 
         if (!paginationLayer) {
             paginationLayer = document.createElement('div');
-            parent.appendChild(paginationLayer);
+            this.showNavigation().appendChild(paginationLayer);
         }
 
         paginationLayer.className = this.constructor.getPaginationLayerClass();
@@ -1274,15 +1262,11 @@ export default class GuideChimp {
     }
 
     showNavigationPrev() {
-        const parent = this.showNavigation();
-
-        let navigationPrevEl = (this.cache.has('navigationPrevEl'))
-            ? this.cache.get('navigationPrevEl')
-            : parent.querySelector(`.${this.constructor.getNavigationPrevClass()}`);
+        let navigationPrevEl = this.cache.get('navigationPrevEl');
 
         if (!navigationPrevEl) {
             navigationPrevEl = document.createElement('div');
-            parent.appendChild(navigationPrevEl);
+            this.showNavigation().appendChild(navigationPrevEl);
         }
         navigationPrevEl.onclick = null;
         navigationPrevEl.className = this.constructor.getNavigationPrevClass();
@@ -1303,15 +1287,11 @@ export default class GuideChimp {
     }
 
     showNavigationNext() {
-        const parent = this.showNavigation();
-
-        let navigationNextEl = (this.cache.has('navigationNextEl'))
-            ? this.cache.get('navigationNextEl')
-            : parent.querySelector(`.${this.constructor.getNavigationNextClass()}`);
+        let navigationNextEl = this.cache.get('navigationNextEl');
 
         if (!navigationNextEl) {
             navigationNextEl = document.createElement('div');
-            parent.appendChild(navigationNextEl);
+            this.showNavigation().appendChild(navigationNextEl);
         }
 
         navigationNextEl.onclick = null;
@@ -1335,15 +1315,11 @@ export default class GuideChimp {
     }
 
     showCopyright() {
-        const parent = this.showTooltipLayer();
-
-        let copyrightEl = (this.cache.has('copyrightEl'))
-            ? this.cache.get('copyrightEl')
-            : parent.querySelector(`.${this.constructor.getCopyrightClass()}`);
+        let copyrightEl = this.cache.get('copyrightEl');
 
         if (!copyrightEl) {
             copyrightEl = document.createElement('div');
-            parent.appendChild(copyrightEl);
+            this.showTooltipLayer().appendChild(copyrightEl);
         }
 
         copyrightEl.className = this.constructor.getCopyrightClass();
@@ -1393,42 +1369,77 @@ export default class GuideChimp {
     }
 
     /**
+     * Set up keydown event listener
+     * @return {this}
+     */
+    setUpOnKeydownListener() {
+        this.shutUpOnKeydownListener();
+
+        // turn on keyboard navigation
+        this.cache.set('onKeydownListener', this.getOnKeydownListener());
+        window.addEventListener('keydown', this.cache.get('onKeydownListener'), true);
+
+        return this;
+    }
+
+    /**
      * Return on key down event listener function
      * @returns {function}
      */
-    getOnKeyDownListener() {
-        const onKeyDown = this.cache.has('onKeyDownListener')
-            ? this.cache.get('onKeyDownListener')
-            : (event) => {
-                const { keyCode } = event;
+    getOnKeydownListener() {
+        return (event) => {
+            const { keyCode } = event;
 
-                const escCode = 27;
-                const arrowLeftCode = 37;
-                const arrowRightCode = 39;
-                const enterCode = 13;
-                const spaceCode = 32;
+            const escCode = 27;
+            const arrowLeftCode = 37;
+            const arrowRightCode = 39;
+            const enterCode = 13;
+            const spaceCode = 32;
 
-                // exit key pressed, stop tour
-                if (keyCode === escCode) {
-                    this.stop();
-                    return;
-                }
+            // exit key pressed, stop tour
+            if (keyCode === escCode) {
+                this.stop();
+                return;
+            }
 
-                // if the left arrow is pressed, go to the previous step
-                if (keyCode === arrowLeftCode) {
-                    this.previous();
-                    return;
-                }
+            // if the left arrow is pressed, go to the previous step
+            if (keyCode === arrowLeftCode) {
+                this.previous();
+                return;
+            }
 
-                // if the right arrow, enter or space is pressed, go to the next step
-                if (keyCode === arrowRightCode || keyCode === enterCode || keyCode === spaceCode) {
-                    this.next();
-                }
-            };
+            // if the right arrow, enter or space is pressed, go to the next step
+            if (keyCode === arrowRightCode || keyCode === enterCode || keyCode === spaceCode) {
+                this.next();
+            }
+        };
+    }
 
-        this.cache.set('onKeyDownListener', onKeyDown);
+    /**
+     * Shut up keydown event listener
+     * @return {this}
+     */
+    shutUpOnKeydownListener() {
+        if (this.cache.has('onKeydownListener')) {
+            window.removeEventListener('keydown', this.cache.get('onKeydownListener'), true);
+            this.cache.delete('onKeydownListener');
+        }
 
-        return onKeyDown;
+        return this;
+    }
+
+    /**
+     * Set up window resize event listener
+     * @return {this}
+     */
+    setUpOnWindowResizeListener() {
+        this.shutUpOnWindowResizeListener();
+
+        // turn on keyboard navigation
+        this.cache.set('onWindowResizeListener', this.getOnWindowResizeListener());
+        window.addEventListener('resize', this.cache.get('onWindowResizeListener'), true);
+
+        return this;
     }
 
     /**
@@ -1436,14 +1447,20 @@ export default class GuideChimp {
      * @returns {function}
      */
     getOnWindowResizeListener() {
-        const onWindowResize = this.cache.has('onWindowResizeListener')
-            ? this.cache.get('onWindowResizeListener')
-            : () => this.refresh();
+        return () => this.refresh();
+    }
 
-        // save listener to cache
-        this.cache.set('onWindowResizeListener', onWindowResize);
+    /**
+     * Shut up window resize event listener
+     * @return {this}
+     */
+    shutUpOnWindowResizeListener() {
+        if (this.cache.has('onWindowResizeListener')) {
+            window.removeEventListener('resize', this.cache.get('onWindowResizeListener'), true);
+            this.cache.delete('onWindowResizeListener');
+        }
 
-        return onWindowResize;
+        return this;
     }
 
     /**
@@ -1455,36 +1472,20 @@ export default class GuideChimp {
             return this;
         }
 
-        const highlightLayer = this.cache.has('highlightLayer')
-            ? this.cache.get('highlightLayer')
-            : document.body.querySelector(`.${this.constructor.getHighlightLayerClass()}`);
-
-        if (highlightLayer) {
-            this.setLayerPosition(highlightLayer, this.step.element);
+        if (this.cache.has('highlightLayer')) {
+            this.setLayerPosition(this.cache.get('highlightLayer'), this.step.element);
         }
 
-        const controlLayer = this.cache.has('controlLayer')
-            ? this.cache.get('controlLayer')
-            : document.body.querySelector(`.${this.constructor.getControlLayerClass()}`);
-
-        if (controlLayer) {
-            this.setLayerPosition(controlLayer, this.step.element);
+        if (this.cache.has('controlLayer')) {
+            this.setLayerPosition(this.cache.get('controlLayer'), this.step.element);
         }
 
-        const interactionLayer = this.cache.has('interactionLayer')
-            ? this.cache.get('interactionLayer')
-            : document.body.querySelector(`.${this.constructor.getInteractionLayerClass()}`);
-
-        if (interactionLayer) {
-            this.setLayerPosition(interactionLayer, this.step.element);
+        if (this.cache.has('interactionLayer')) {
+            this.setLayerPosition(this.cache.get('interactionLayer'), this.step.element);
         }
 
-        const tooltipLayer = this.cache.has('tooltipLayer')
-            ? this.cache.get('tooltipLayer')
-            : document.body.querySelector(`.${this.constructor.getTooltipLayerClass()}`);
-
-        if (tooltipLayer) {
-            this.setTooltipLayerPosition(tooltipLayer, this.step.element, this.step.position);
+        if (this.cache.has('tooltipLayer')) {
+            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), this.step.element, this.step.position);
         }
 
         return this;

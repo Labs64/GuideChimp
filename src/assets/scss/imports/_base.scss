@@ -8,7 +8,7 @@
 
 .gc-overlay {
   position: fixed;
-  z-index: 9000;
+  z-index: 6400;
   top: 0;
   right: 0;
   bottom: 0;
@@ -21,7 +21,7 @@
 
 .gc-highlight {
   position: absolute;
-  z-index: 9001;
+  z-index: 6401;
   box-sizing: content-box;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
@@ -40,7 +40,7 @@
 
 .gc-control {
   position: absolute;
-  z-index: 9004;
+  z-index: 6404;
   visibility: hidden;
   box-sizing: content-box;
   -moz-transition: all 0.3s ease-out;
@@ -55,7 +55,7 @@
 
   &.gc-disable {
     position: absolute;
-    z-index: 9003 !important;
+    z-index: 6403;
     opacity: 0;
     background-color: white;
     filter: alpha(opacity=0);
@@ -215,7 +215,7 @@
   }
 }
 
-.gc-fake {
+.gc-default {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -224,11 +224,11 @@
 }
 
 .gc-highlighted {
-  z-index: 9002 !important;
+  z-index: 6402;
 
   & > td, & > th {
     position: relative;
-    z-index: 9002 !important;
+    z-index: 6402;
   }
 }
 
@@ -269,6 +269,10 @@
   display: flex;
   justify-content: space-between;
   padding: 20px 10px 10px 10px;
+
+  &.gc-hidden {
+    display: none;
+  }
 }
 
 .gc-navigation-prev,
@@ -324,6 +328,7 @@
 }
 
 .gc-copyright {
+  font-family: Arial, serif;
   font-size: 10px;
   position: absolute;
   bottom: 0;
@@ -333,9 +338,13 @@
   color: #888888;
 }
 
+//.gc-icon {
+//  background-image: url("../image/guidechimp-logo.png");
+//}
+
 .gc-preloader {
   position: fixed;
-  z-index: 9005;
+  z-index: 6405;
   top: 50%;
   left: 50%;
   width: 80px;

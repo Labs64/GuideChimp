@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         'import/resolver': {
             webpack: {
-                config: 'build/webpack.base.conf.js'
+                config: 'build/webpack.conf.js'
             }
         }
     },
@@ -31,7 +31,7 @@ module.exports = {
         'linebreak-style': 0,
         'max-len': ['error', 120, { ignoreComments: true }],
         'vue/no-template-key': 'off',
-        'object-curly-newline': ["error", { "consistent": true }],
+        'object-curly-newline': ['error', { 'consistent': true }],
         'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
     },
 };

@@ -2,15 +2,13 @@
 //   http://karma-runner.github.io/0.13/config/configuration-file.html
 // we are also using it with karma-webpack
 //   https://github.com/webpack/karma-webpack
+const merge = require('webpack-merge');
 const isDocker = require('is-docker')();
 
-const webpackConfig = require('../build/webpack.test.conf');
+const webpackConfig = require('../build/webpack.conf.js')
+    .map((v) => merge(v, { mode: 'development', devtool: 'inline-source-map' }));
 
 const browsers = ['Chrome'];
-
-if (!isDocker) {
-    // browsers.push('Firefox');
-}
 
 module.exports = function karmaConfig(config) {
     config.set({

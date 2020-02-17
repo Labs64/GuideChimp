@@ -115,9 +115,11 @@ module.exports = _interopRequireDefault;
 
 var _interopRequireDefault = __webpack_require__(0);
 
-var _GuideChimp = _interopRequireDefault(__webpack_require__(2));
+var _construct2 = _interopRequireDefault(__webpack_require__(2));
 
-__webpack_require__(13);
+var _GuideChimp = _interopRequireDefault(__webpack_require__(4));
+
+__webpack_require__(15);
 
 /**
  * Copyright (C) 2020 Labs64 GmbH
@@ -133,10 +135,82 @@ __webpack_require__(13);
  *
  * Import the library styling.
  */
-module.exports = _GuideChimp.default;
+var guideChimp = function guideChimp() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return (0, _construct2.default)(_GuideChimp.default, args);
+};
+
+guideChimp.prototype = _GuideChimp.default.prototype;
+
+guideChimp.extend = function (plugin) {
+  for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+    args[_key2 - 1] = arguments[_key2];
+  }
+
+  plugin.apply(void 0, [_GuideChimp.default, guideChimp].concat(args));
+  return guideChimp;
+};
+
+module.exports = guideChimp;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var setPrototypeOf = __webpack_require__(3);
+
+function isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _construct(Parent, args, Class) {
+  if (isNativeReflectConstruct()) {
+    module.exports = _construct = Reflect.construct;
+  } else {
+    module.exports = _construct = function _construct(Parent, args, Class) {
+      var a = [null];
+      a.push.apply(a, args);
+      var Constructor = Function.bind.apply(Parent, a);
+      var instance = new Constructor();
+      if (Class) setPrototypeOf(instance, Class.prototype);
+      return instance;
+    };
+  }
+
+  return _construct.apply(null, arguments);
+}
+
+module.exports = _construct;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -149,29 +223,42 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _regenerator = _interopRequireDefault(__webpack_require__(3));
+var _regenerator = _interopRequireDefault(__webpack_require__(5));
 
-var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(5));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(7));
 
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(6));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(8));
 
-var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(7));
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(9));
 
-var _classCallCheck2 = _interopRequireDefault(__webpack_require__(11));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(13));
 
-var _createClass2 = _interopRequireDefault(__webpack_require__(12));
+var _createClass2 = _interopRequireDefault(__webpack_require__(14));
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
+<<<<<<< HEAD
 /**
  * Copyright (C) 2020 Labs64 GmbH
  *
  * This source code is licensed under the Apache License 2.0 license
  * located in the LICENSE file and
  * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
+=======
+/* eslint-disable class-methods-use-this */
+
+/**
+ * Copyright (C) 2020 Labs64
+ *
+ * This source code is licensed under the Apache License 2.0 license
+ * located in the LICENSE file in the project root folder.
+>>>>>>> add plugins support
  */
+// global cache
+var cache = new Map();
+
 var GuideChimp =
 /*#__PURE__*/
 function () {
@@ -187,18 +274,33 @@ function () {
     this.steps = [];
     this.tour = null;
     this.options = {};
+    this.cache = cache;
     this.listeners = [];
-    this.cache = new Map();
     this.setOptions(options);
     this.setTour(tour);
+    this.init();
   }
+<<<<<<< HEAD
   /**
    * Default options
    * @return {Object}
+=======
+  /**
+   * Called after construction, this hook allows you to add some extra setup
+   * logic without having to override the constructor.
+>>>>>>> add plugins support
    */
 
 
   (0, _createClass2.default)(GuideChimp, [{
+    key: "init",
+    value: function init() {}
+    /**
+     * Default options
+     * @return {Object}
+     */
+
+  }, {
     key: "setTour",
 
     /**
@@ -277,11 +379,11 @@ function () {
                 if (isStarted) {
                   // turn on keyboard navigation
                   if (this.options.useKeyboard) {
-                    window.addEventListener('keydown', this.getOnKeyDownListener(), true);
+                    this.setUpOnKeydownListener();
                   } // on window resize
 
 
-                  window.addEventListener('resize', this.getOnWindowResizeListener(), true);
+                  this.setUpOnWindowResizeListener();
                 }
 
                 return _context.abrupt("return", isStarted);
@@ -316,10 +418,10 @@ function () {
         var _this = this;
 
         var useIndex,
+            stepNumber,
             fromStep,
             toStep,
             isSameStep,
-            tourStepsEl,
             i,
             step,
             isToStep,
@@ -335,6 +437,8 @@ function () {
             controlLayer,
             interactionLayer,
             tooltipLayer,
+            navigationLayer,
+            isNeedHideNavigation,
             _args2 = arguments;
 
         return _regenerator.default.wrap(function _callee2$(_context2) {
@@ -351,150 +455,112 @@ function () {
                 return _context2.abrupt("return", false);
 
               case 3:
+                stepNumber = useIndex ? parseInt(number, 10) : number;
                 fromStep = _objectSpread({}, this.step);
                 toStep = null; // skip if this step is already displayed
 
-                isSameStep = useIndex ? this.steps.indexOf(this.step) === number : this.step && this.step.number === number;
+                isSameStep = useIndex ? this.steps.indexOf(this.step) === stepNumber : this.step && this.step.step === stepNumber;
 
                 if (!isSameStep) {
-                  _context2.next = 8;
+                  _context2.next = 9;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 8:
+              case 9:
                 this.steps = []; // if tour is empty or is string, looks for steps among the data attributes
 
                 if (typeof this.tour === 'string') {
-                  tourStepsEl = Array.from(document.querySelectorAll("[data-guidechimp-tour*='".concat(this.tour, "']"))); // filter steps by tour name
-
-                  tourStepsEl = tourStepsEl.filter(function (v) {
-                    var tours = v.getAttribute('data-guidechimp-tour').split(',');
-                    return tours.includes(_this.tour);
-                  });
-                  this.steps = tourStepsEl.map(function (el, i) {
-                    var step = parseInt(el.getAttribute("data-guidechimp-".concat(_this.tour, "-step")) || el.getAttribute('data-guidechimp-step') || i, 10);
-                    var title = el.getAttribute("data-guidechimp-".concat(_this.tour, "-title")) || el.getAttribute('data-guidechimp-title');
-                    var description = el.getAttribute("data-guidechimp-".concat(_this.tour, "-description")) || el.getAttribute('data-guidechimp-description');
-                    var position = el.getAttribute("data-guidechimp-".concat(_this.tour, "-position")) || el.getAttribute('data-guidechimp-position');
-                    var interaction = el.getAttribute("data-guidechimp-".concat(_this.tour, "-interaction")) || el.getAttribute('data-guidechimp-interaction');
-
-                    if (typeof interaction === 'string') {
-                      interaction = interaction === 'true';
-                    }
-
-                    return {
-                      element: el,
-                      step: step,
-                      title: title,
-                      description: description,
-                      position: position,
-                      interaction: interaction
-                    };
-                  });
+                  this.steps = this.getDataSteps(this.tour);
                 } else if (Array.isArray(this.tour)) {
-                  this.steps = this.tour.map(function (v, i) {
-                    return _objectSpread({}, v, {
-                      step: v.step || i
-                    });
-                  });
+                  this.steps = this.getJsSteps(this.tour);
                 }
 
                 if (this.steps.length) {
-                  _context2.next = 12;
+                  _context2.next = 13;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 12:
-                // sort steps by number
-                this.steps.sort(function (a, b) {
-                  if (a.step < b.step) {
-                    return -1;
-                  }
-
-                  if (a.step > b.step) {
-                    return 1;
-                  }
-
-                  return 0;
-                });
+              case 13:
+                // sort steps by step
+                this.steps = this.sortSteps(this.steps);
                 i = 0;
 
-              case 14:
+              case 15:
                 if (!(i < this.steps.length)) {
-                  _context2.next = 23;
+                  _context2.next = 24;
                   break;
                 }
 
                 step = this.steps[i];
-                isToStep = useIndex ? i === number : step.number === number;
+                isToStep = useIndex ? i === stepNumber : step.step === stepNumber;
 
                 if (!isToStep) {
-                  _context2.next = 20;
+                  _context2.next = 21;
                   break;
                 }
 
                 toStep = step;
-                return _context2.abrupt("break", 23);
+                return _context2.abrupt("break", 24);
 
-              case 20:
+              case 21:
                 i++;
-                _context2.next = 14;
+                _context2.next = 15;
                 break;
 
-              case 23:
+              case 24:
                 if (toStep) {
-                  _context2.next = 25;
+                  _context2.next = 26;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 25:
+              case 26:
                 this.resetElementsHighlighting();
                 this.showOverlayLayer();
                 this.startPreloader();
                 _toStep = toStep, onBeforeChange = _toStep.onBeforeChange, onAfterChange = _toStep.onAfterChange;
-                _context2.next = 31;
+                _context2.next = 32;
                 return this.emit('onBeforeChange', this, fromStep, toStep);
 
-              case 31:
+              case 32:
                 results = _context2.sent;
 
                 if (!results.some(function (r) {
                   return r === false;
                 })) {
-                  _context2.next = 34;
+                  _context2.next = 35;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 34:
+              case 35:
                 if (!onBeforeChange) {
-                  _context2.next = 40;
+                  _context2.next = 41;
                   break;
                 }
 
-                _context2.next = 37;
+                _context2.next = 38;
                 return Promise.resolve().then(function () {
                   return onBeforeChange(_this, fromStep, toStep);
                 });
 
-              case 37:
+              case 38:
                 _context2.t0 = _context2.sent;
 
                 if (!(_context2.t0 === false)) {
-                  _context2.next = 40;
+                  _context2.next = 41;
                   break;
                 }
 
                 return _context2.abrupt("return", false);
 
-              case 40:
+              case 41:
                 this.stopPreloader();
                 this.step = toStep;
                 el = this.step.element;
@@ -505,7 +571,7 @@ function () {
                 }
 
                 if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
-                  el = this.showFakeElement();
+                  el = this.showDefaultElement();
                 }
 
                 highlightLayer = this.showHighlightLayer();
@@ -517,14 +583,24 @@ function () {
                 tooltipLayer = this.showTooltipLayer();
                 this.showTooltipTail();
                 this.showProgressbar();
-                this.showTitle();
-                this.showDescription();
+                this.showTitle(this.step.title);
+                this.showDescription(this.step.description);
                 this.showClose();
                 this.showCustomButtonsLayer(buttons);
-                this.showNavigation();
+                navigationLayer = this.showNavigation();
                 this.showNavigationPrev();
                 this.showPagination();
                 this.showNavigationNext();
+                isNeedHideNavigation = Array.from(navigationLayer.children).every(function (v) {
+                  return v.classList.contains(_this.constructor.getHiddenClass());
+                });
+
+                if (isNeedHideNavigation) {
+                  navigationLayer.classList.add(this.constructor.getHiddenClass());
+                } else {
+                  navigationLayer.classList.remove(this.constructor.getHiddenClass());
+                }
+
                 this.showCopyright();
                 this.setTooltipLayerPosition(tooltipLayer, el, position);
                 this.highlightElement(el);
@@ -541,7 +617,7 @@ function () {
 
                 return _context2.abrupt("return", true);
 
-              case 72:
+              case 75:
               case "end":
                 return _context2.stop();
             }
@@ -654,18 +730,10 @@ function () {
 
               case 6:
                 this.step = null;
-                this.steps = [];
+                this.steps = []; // shut up events listeners
 
-                if (this.cache.has('onKeyDownListener')) {
-                  window.removeEventListener('keydown', this.cache.get('onKeyDownListener'), true);
-                  this.cache.delete('onKeyDownListener');
-                }
-
-                if (this.cache.has('onKeyDownListener')) {
-                  window.removeEventListener('keydown', this.cache.get('onKeyDownListener'), true);
-                  this.cache.delete('onKeyDownListener');
-                }
-
+                this.shutUpOnKeydownListener();
+                this.shutUpOnWindowResizeListener();
                 this.removePreloaderElement();
                 this.removeOverlayLayer();
                 this.removeControlLayer();
@@ -689,6 +757,77 @@ function () {
 
       return stop;
     }()
+  }, {
+    key: "getDataSteps",
+    value: function getDataSteps(tour) {
+      var _this2 = this;
+
+      var dataPrefix = 'data-guidechimp';
+      var tourStepsEl = Array.from(document.querySelectorAll("[".concat(dataPrefix, "-tour*='").concat(tour, "']"))); // filter steps by tour name
+
+      tourStepsEl = tourStepsEl.filter(function (v) {
+        var tours = v.getAttribute("".concat(dataPrefix, "-tour")).split(',');
+        return tours.includes(_this2.tour);
+      });
+      var dataTourRegExp = new RegExp("^".concat(dataPrefix, "-").concat(tour, "-[^-]+$"));
+      var dataGlobalRegExp = new RegExp("^".concat(dataPrefix, "-[^-]+$"));
+      return tourStepsEl.map(function (el, i) {
+        var stepAttrs = {};
+
+        for (var j = 0; j < el.attributes.length; j++) {
+          var _el$attributes$j = el.attributes[j],
+              attrName = _el$attributes$j.name,
+              attrValue = _el$attributes$j.value;
+          var isTourAttr = dataTourRegExp.test(attrName);
+          var isGlobalAttr = isTourAttr ? false : dataGlobalRegExp.test(attrName);
+
+          if (isTourAttr || isGlobalAttr) {
+            var attrShortName = isTourAttr ? attrName.replace("".concat(dataPrefix, "-").concat(tour, "-"), '') : attrName.replace("".concat(dataPrefix, "-"), '');
+
+            if (attrShortName !== 'tour') {
+              if (isTourAttr || isGlobalAttr && !stepAttrs[attrShortName]) {
+                stepAttrs[attrShortName] = attrValue;
+              }
+            }
+          }
+        }
+
+        return _objectSpread({
+          step: i,
+          title: '',
+          description: '',
+          position: _this2.options.position,
+          interaction: _this2.options.interaction
+        }, stepAttrs, {
+          element: el
+        });
+      });
+    }
+  }, {
+    key: "getJsSteps",
+    value: function getJsSteps(tour) {
+      return tour.map(function (v, i) {
+        return _objectSpread({}, v, {
+          step: v.step || i
+        });
+      });
+    }
+  }, {
+    key: "sortSteps",
+    value: function sortSteps(steps) {
+      var copy = (0, _toConsumableArray2.default)(steps);
+      return copy.sort(function (a, b) {
+        if (a.step < b.step) {
+          return -1;
+        }
+
+        if (a.step > b.step) {
+          return 1;
+        }
+
+        return 0;
+      });
+    }
   }, {
     key: "scrollParentToChildElement",
     value: function scrollParentToChildElement(el) {
@@ -788,14 +927,14 @@ function () {
   }, {
     key: "resetElementsHighlighting",
     value: function resetElementsHighlighting() {
-      var _this2 = this;
+      var _this3 = this;
 
       var highlightEls = this.cache.has('highlightEls') ? this.cache.get('highlightEls') : document.body.querySelectorAll(".".concat(this.constructor.getHighlightElementClass()));
       var highlightElsArray = Array.from(highlightEls);
 
       if (highlightElsArray.length) {
         highlightEls.forEach(function (el) {
-          _this2.resetElementHighlighting(el);
+          _this3.resetElementHighlighting(el);
         });
       }
 
@@ -840,7 +979,7 @@ function () {
       // set tooltip position
       var position = 'floating';
       var alignment = null;
-      var isFakeElement = el.classList.contains(this.constructor.getFakeElementClass());
+      var isDefaultElement = el.classList.contains(this.constructor.getDefaultElementClass());
 
       var _el$getBoundingClient2 = el.getBoundingClientRect(),
           elTop = _el$getBoundingClient2.top,
@@ -868,7 +1007,7 @@ function () {
       style.marginLeft = null;
       style.marginTop = null;
 
-      if (!isFakeElement) {
+      if (!isDefaultElement) {
         var positionPriority = ['top', 'bottom', 'right', 'left'];
 
         if (elTop - tooltipHeight < 0) {
@@ -1027,23 +1166,23 @@ function () {
       return this;
     }
   }, {
-    key: "showFakeElement",
-    value: function showFakeElement() {
-      var fakeEl = this.cache.get('fakeEl');
+    key: "showDefaultElement",
+    value: function showDefaultElement() {
+      var defaultEl = this.cache.get('defaultEl');
 
-      if (!fakeEl) {
-        fakeEl = document.createElement('div');
-        document.body.appendChild(fakeEl);
+      if (!defaultEl) {
+        defaultEl = document.createElement('div');
+        document.body.appendChild(defaultEl);
       }
 
-      fakeEl.className = this.constructor.getFakeElementClass();
-      this.cache.set('fakeEl', fakeEl);
-      return fakeEl;
+      defaultEl.className = this.constructor.getDefaultElementClass();
+      this.cache.set('defaultEl', defaultEl);
+      return defaultEl;
     }
   }, {
     key: "showPreloaderElement",
     value: function showPreloaderElement() {
-      var preloaderEl = this.cache.has('preloaderEl') ? this.cache.get('preloaderEl') : document.querySelector(".".concat(this.constructor.getPreloaderClass()));
+      var preloaderEl = this.cache.get('preloaderEl');
 
       if (!preloaderEl) {
         preloaderEl = document.createElement('div');
@@ -1057,10 +1196,10 @@ function () {
   }, {
     key: "removePreloaderElement",
     value: function removePreloaderElement() {
-      var overlayLayer = this.cache.has('preloaderEl') ? this.cache.get('preloaderEl') : document.querySelector(".".concat(this.constructor.getPreloaderClass()));
+      var preloaderEl = this.cache.get('preloaderEl');
 
-      if (overlayLayer) {
-        overlayLayer.parentElement.removeChild(overlayLayer);
+      if (preloaderEl) {
+        preloaderEl.parentElement.removeChild(preloaderEl);
       }
 
       this.cache.delete('preloaderEl');
@@ -1069,15 +1208,15 @@ function () {
   }, {
     key: "showOverlayLayer",
     value: function showOverlayLayer() {
-      var _this3 = this;
+      var _this4 = this;
 
-      var overlayLayer = this.cache.has('overlayLayer') ? this.cache.get('overlayLayer') : document.querySelector(".".concat(this.constructor.getOverlayLayerClass()));
+      var overlayLayer = this.cache.get('overlayLayer');
 
       if (!overlayLayer) {
         overlayLayer = document.createElement('div');
         overlayLayer.className = this.constructor.getOverlayLayerClass();
         overlayLayer.onclick = this.options.exitOverlay ? function () {
-          return _this3.stop();
+          return _this4.stop();
         } : null;
         document.body.appendChild(overlayLayer);
       }
@@ -1088,7 +1227,7 @@ function () {
   }, {
     key: "removeOverlayLayer",
     value: function removeOverlayLayer() {
-      var overlayLayer = this.cache.has('overlayLayer') ? this.cache.get('overlayLayer') : document.querySelector(".".concat(this.constructor.getOverlayLayerClass()));
+      var overlayLayer = this.cache.get('overlayLayer');
 
       if (overlayLayer) {
         overlayLayer.parentElement.removeChild(overlayLayer);
@@ -1100,7 +1239,7 @@ function () {
   }, {
     key: "showHighlightLayer",
     value: function showHighlightLayer() {
-      var highlightLayer = this.cache.has('highlightLayer') ? this.cache.get('highlightLayer') : document.querySelector(".".concat(this.constructor.getHighlightLayerClass()));
+      var highlightLayer = this.cache.get('highlightLayer');
 
       if (!highlightLayer) {
         highlightLayer = document.createElement('div');
@@ -1114,7 +1253,7 @@ function () {
   }, {
     key: "removeHighlightLayer",
     value: function removeHighlightLayer() {
-      var highlightLayer = this.cache.has('highlightLayer') ? this.cache.get('highlightLayer') : document.querySelector(".".concat(this.constructor.getHighlightLayerClass()));
+      var highlightLayer = this.cache.get('highlightLayer');
 
       if (highlightLayer) {
         highlightLayer.parentElement.removeChild(highlightLayer);
@@ -1126,7 +1265,7 @@ function () {
   }, {
     key: "showControlLayer",
     value: function showControlLayer() {
-      var controlLayer = this.cache.has('controlLayer') ? this.cache.get('controlLayer') : document.querySelector(".".concat(this.constructor.getControlLayerClass()));
+      var controlLayer = this.cache.get('controlLayer');
 
       if (!controlLayer) {
         controlLayer = document.createElement('div');
@@ -1140,7 +1279,7 @@ function () {
   }, {
     key: "removeControlLayer",
     value: function removeControlLayer() {
-      var controlLayer = this.cache.has('controlLayer') ? this.cache.get('controlLayer') : document.querySelector(".".concat(this.constructor.getControlLayerClass()));
+      var controlLayer = this.cache.get('controlLayer');
 
       if (controlLayer) {
         controlLayer.parentElement.removeChild(controlLayer);
@@ -1153,7 +1292,7 @@ function () {
     key: "showInteractionLayer",
     value: function showInteractionLayer() {
       // get or create interaction layer
-      var interactionLayer = this.cache.has('interactionLayer') ? this.cache.get('interactionLayer') : document.querySelector(".".concat(this.constructor.getInteractionLayerClass()));
+      var interactionLayer = this.cache.get('interactionLayer');
 
       if (!interactionLayer) {
         interactionLayer = document.createElement('div');
@@ -1178,7 +1317,7 @@ function () {
   }, {
     key: "removeInteractionLayer",
     value: function removeInteractionLayer() {
-      var interactionLayer = this.cache.has('interactionLayer') ? this.cache.get('interactionLayer') : document.querySelector(".".concat(this.constructor.getInteractionLayerClass()));
+      var interactionLayer = this.cache.get('interactionLayer');
 
       if (interactionLayer) {
         interactionLayer.parentElement.removeChild(interactionLayer);
@@ -1191,7 +1330,7 @@ function () {
     key: "showTooltipLayer",
     value: function showTooltipLayer() {
       var parent = this.showControlLayer();
-      var tooltipLayer = this.cache.has('tooltipLayer') ? this.cache.get('tooltipLayer') : parent.querySelector(".".concat(this.constructor.getTooltipLayerClass()));
+      var tooltipLayer = this.cache.get('tooltipLayer');
 
       if (!tooltipLayer) {
         tooltipLayer = document.createElement('div');
@@ -1207,7 +1346,7 @@ function () {
     key: "showTooltipTail",
     value: function showTooltipTail() {
       var parent = this.showTooltipLayer();
-      var tooltipTailEl = this.cache.has('tooltipTailEl') ? this.cache.get('tooltipTailEl') : parent.querySelector(".".concat(this.constructor.getTooltipTailClass()));
+      var tooltipTailEl = this.cache.get('tooltipTailEl');
 
       if (!tooltipTailEl) {
         tooltipTailEl = document.createElement('div');
@@ -1221,16 +1360,16 @@ function () {
   }, {
     key: "showClose",
     value: function showClose() {
-      var _this4 = this;
+      var _this5 = this;
 
       var parent = this.showTooltipLayer();
-      var closeEl = this.cache.has('closeEl') ? this.cache.get('closeEl') : parent.querySelector(".".concat(this.constructor.getCloseClass()));
+      var closeEl = this.cache.get('closeEl');
 
       if (!closeEl) {
         closeEl = document.createElement('div');
 
         closeEl.onclick = function () {
-          return _this4.stop();
+          return _this5.stop();
         };
 
         parent.appendChild(closeEl);
@@ -1244,7 +1383,7 @@ function () {
     key: "showProgressbar",
     value: function showProgressbar() {
       var parent = this.showTooltipLayer();
-      var progressbarEl = this.cache.has('progressbarEl') ? this.cache.get('progressbarEl') : parent.querySelector(".".concat(this.constructor.getProgressbarClass()));
+      var progressbarEl = this.cache.get('progressbarEl');
 
       if (!progressbarEl) {
         progressbarEl = document.createElement('div');
@@ -1273,19 +1412,15 @@ function () {
     }
   }, {
     key: "showTitle",
-    value: function showTitle() {
-      var parent = this.showTooltipLayer();
-      var titleEl = this.cache.has('titleEl') ? this.cache.get('titleEl') : parent.querySelector(".".concat(this.constructor.getTitleClass()));
+    value: function showTitle(title) {
+      var titleEl = this.cache.get('titleEl');
 
       if (!titleEl) {
         titleEl = document.createElement('div');
-        parent.appendChild(titleEl);
+        this.showTooltipLayer().appendChild(titleEl);
       }
 
       titleEl.className = this.constructor.getTitleClass();
-
-      var _ref = this.step || {},
-          title = _ref.title;
 
       if (!title) {
         titleEl.classList.add(this.constructor.getHiddenClass());
@@ -1297,19 +1432,15 @@ function () {
     }
   }, {
     key: "showDescription",
-    value: function showDescription() {
-      var parent = this.showTooltipLayer();
-      var descriptionEl = this.cache.has('descriptionEl') ? this.cache.get('descriptionEl') : parent.querySelector(".".concat(this.constructor.getDescriptionClass()));
+    value: function showDescription(description) {
+      var descriptionEl = this.cache.get('descriptionEl');
 
       if (!descriptionEl) {
         descriptionEl = document.createElement('div');
-        parent.appendChild(descriptionEl);
+        this.showTooltipLayer().appendChild(descriptionEl);
       }
 
       descriptionEl.className = this.constructor.getDescriptionClass();
-
-      var _ref2 = this.step || {},
-          description = _ref2.description;
 
       if (!description) {
         descriptionEl.classList.add(this.constructor.getHiddenClass());
@@ -1323,12 +1454,11 @@ function () {
     key: "showCustomButtonsLayer",
     value: function showCustomButtonsLayer() {
       var buttons = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var parent = this.showTooltipLayer();
-      var customButtonsLayer = this.cache.has('customButtonsLayer') ? this.cache.get('customButtonsLayer') : parent.querySelector(".".concat(this.constructor.getCustomButtonsLayerClass()));
+      var customButtonsLayer = this.cache.get('customButtonsLayer');
 
       if (!customButtonsLayer) {
         customButtonsLayer = document.createElement('div');
-        parent.appendChild(customButtonsLayer);
+        this.showTooltipLayer().appendChild(customButtonsLayer);
       }
 
       customButtonsLayer.className = this.constructor.getCustomButtonsLayerClass();
@@ -1371,12 +1501,11 @@ function () {
   }, {
     key: "showNavigation",
     value: function showNavigation() {
-      var parent = this.showTooltipLayer();
-      var navigationLayer = this.cache.has('navigationLayer') ? this.cache.get('navigationLayer') : parent.querySelector(".".concat(this.constructor.getNavigationClass()));
+      var navigationLayer = this.cache.get('navigationLayer');
 
       if (!navigationLayer) {
         navigationLayer = document.createElement('div');
-        parent.appendChild(navigationLayer);
+        this.showTooltipLayer().appendChild(navigationLayer);
       }
 
       navigationLayer.className = this.constructor.getNavigationClass();
@@ -1386,14 +1515,13 @@ function () {
   }, {
     key: "showPagination",
     value: function showPagination() {
-      var _this5 = this;
+      var _this6 = this;
 
-      var parent = this.showNavigation();
-      var paginationLayer = this.cache.has('paginationLayer') ? this.cache.get('paginationLayer') : parent.querySelector(".".concat(this.constructor.getPaginationLayerClass()));
+      var paginationLayer = this.cache.get('paginationLayer');
 
       if (!paginationLayer) {
         paginationLayer = document.createElement('div');
-        parent.appendChild(paginationLayer);
+        this.showNavigation().appendChild(paginationLayer);
       }
 
       paginationLayer.className = this.constructor.getPaginationLayerClass();
@@ -1408,14 +1536,14 @@ function () {
 
       this.steps.forEach(function (v, i) {
         var paginationItem = document.createElement('div');
-        paginationItem.className = _this5.constructor.getPaginationItemClass();
+        paginationItem.className = _this6.constructor.getPaginationItemClass();
 
-        if (_this5.step === v) {
-          paginationItem.classList.add(_this5.constructor.getPaginationCurrentItemClass());
+        if (_this6.step === v) {
+          paginationItem.classList.add(_this6.constructor.getPaginationCurrentItemClass());
         }
 
         paginationItem.onclick = function () {
-          _this5.go(i, true);
+          _this6.go(i, true);
         };
 
         paginationLayer.appendChild(paginationItem);
@@ -1426,14 +1554,13 @@ function () {
   }, {
     key: "showNavigationPrev",
     value: function showNavigationPrev() {
-      var _this6 = this;
+      var _this7 = this;
 
-      var parent = this.showNavigation();
-      var navigationPrevEl = this.cache.has('navigationPrevEl') ? this.cache.get('navigationPrevEl') : parent.querySelector(".".concat(this.constructor.getNavigationPrevClass()));
+      var navigationPrevEl = this.cache.get('navigationPrevEl');
 
       if (!navigationPrevEl) {
         navigationPrevEl = document.createElement('div');
-        parent.appendChild(navigationPrevEl);
+        this.showNavigation().appendChild(navigationPrevEl);
       }
 
       navigationPrevEl.onclick = null;
@@ -1445,7 +1572,7 @@ function () {
           navigationPrevEl.classList.add(this.constructor.getHiddenClass());
         } else {
           navigationPrevEl.onclick = function () {
-            return _this6.go(stepIndex - 1, true);
+            return _this7.go(stepIndex - 1, true);
           };
         }
       }
@@ -1456,14 +1583,13 @@ function () {
   }, {
     key: "showNavigationNext",
     value: function showNavigationNext() {
-      var _this7 = this;
+      var _this8 = this;
 
-      var parent = this.showNavigation();
-      var navigationNextEl = this.cache.has('navigationNextEl') ? this.cache.get('navigationNextEl') : parent.querySelector(".".concat(this.constructor.getNavigationNextClass()));
+      var navigationNextEl = this.cache.get('navigationNextEl');
 
       if (!navigationNextEl) {
         navigationNextEl = document.createElement('div');
-        parent.appendChild(navigationNextEl);
+        this.showNavigation().appendChild(navigationNextEl);
       }
 
       navigationNextEl.onclick = null;
@@ -1475,7 +1601,7 @@ function () {
           navigationNextEl.classList.add(this.constructor.getHiddenClass());
         } else {
           navigationNextEl.onclick = function () {
-            _this7.go(stepIndex + 1, true);
+            _this8.go(stepIndex + 1, true);
           };
         }
       }
@@ -1486,12 +1612,11 @@ function () {
   }, {
     key: "showCopyright",
     value: function showCopyright() {
-      var parent = this.showTooltipLayer();
-      var copyrightEl = this.cache.has('copyrightEl') ? this.cache.get('copyrightEl') : parent.querySelector(".".concat(this.constructor.getCopyrightClass()));
+      var copyrightEl = this.cache.get('copyrightEl');
 
       if (!copyrightEl) {
         copyrightEl = document.createElement('div');
-        parent.appendChild(copyrightEl);
+        this.showTooltipLayer().appendChild(copyrightEl);
       }
 
       copyrightEl.className = this.constructor.getCopyrightClass();
@@ -1511,15 +1636,15 @@ function () {
   }, {
     key: "on",
     value: function on(event, listener) {
-      var _this8 = this;
+      var _this9 = this;
 
       var events = event.split(',').map(function (e) {
         return e.trim();
       });
       events.forEach(function (e) {
-        _this8.listeners[e] = _this8.listeners[e] || [];
+        _this9.listeners[e] = _this9.listeners[e] || [];
 
-        _this8.listeners[e].push(listener);
+        _this9.listeners[e].push(listener);
       });
     }
     /**
@@ -1552,17 +1677,37 @@ function () {
         });
       }));
     }
+<<<<<<< HEAD
     /**
      * Return on key down event listener function
      * @returns {function}
+=======
+    /**
+     * Set up keydown event listener
+     * @return {this}
      */
 
   }, {
-    key: "getOnKeyDownListener",
-    value: function getOnKeyDownListener() {
-      var _this9 = this;
+    key: "setUpOnKeydownListener",
+    value: function setUpOnKeydownListener() {
+      this.shutUpOnKeydownListener(); // turn on keyboard navigation
 
-      var onKeyDown = this.cache.has('onKeyDownListener') ? this.cache.get('onKeyDownListener') : function (event) {
+      this.cache.set('onKeydownListener', this.getOnKeydownListener());
+      window.addEventListener('keydown', this.cache.get('onKeydownListener'), true);
+      return this;
+    }
+    /**
+     * Return on key down event listener function
+     * @returns {function}
+>>>>>>> add plugins support
+     */
+
+  }, {
+    key: "getOnKeydownListener",
+    value: function getOnKeydownListener() {
+      var _this10 = this;
+
+      return function (event) {
         var keyCode = event.keyCode;
         var escCode = 27;
         var arrowLeftCode = 37;
@@ -1571,25 +1716,52 @@ function () {
         var spaceCode = 32; // exit key pressed, stop tour
 
         if (keyCode === escCode) {
-          _this9.stop();
+          _this10.stop();
 
           return;
         } // if the left arrow is pressed, go to the previous step
 
 
         if (keyCode === arrowLeftCode) {
-          _this9.previous();
+          _this10.previous();
 
           return;
         } // if the right arrow, enter or space is pressed, go to the next step
 
 
         if (keyCode === arrowRightCode || keyCode === enterCode || keyCode === spaceCode) {
-          _this9.next();
+          _this10.next();
         }
       };
-      this.cache.set('onKeyDownListener', onKeyDown);
-      return onKeyDown;
+    }
+    /**
+     * Shut up keydown event listener
+     * @return {this}
+     */
+
+  }, {
+    key: "shutUpOnKeydownListener",
+    value: function shutUpOnKeydownListener() {
+      if (this.cache.has('onKeydownListener')) {
+        window.removeEventListener('keydown', this.cache.get('onKeydownListener'), true);
+        this.cache.delete('onKeydownListener');
+      }
+
+      return this;
+    }
+    /**
+     * Set up window resize event listener
+     * @return {this}
+     */
+
+  }, {
+    key: "setUpOnWindowResizeListener",
+    value: function setUpOnWindowResizeListener() {
+      this.shutUpOnWindowResizeListener(); // turn on keyboard navigation
+
+      this.cache.set('onWindowResizeListener', this.getOnWindowResizeListener());
+      window.addEventListener('resize', this.cache.get('onWindowResizeListener'), true);
+      return this;
     }
     /**
      * Return on window resize event listener function
@@ -1599,14 +1771,26 @@ function () {
   }, {
     key: "getOnWindowResizeListener",
     value: function getOnWindowResizeListener() {
-      var _this10 = this;
+      var _this11 = this;
 
-      var onWindowResize = this.cache.has('onWindowResizeListener') ? this.cache.get('onWindowResizeListener') : function () {
-        return _this10.refresh();
-      }; // save listener to cache
+      return function () {
+        return _this11.refresh();
+      };
+    }
+    /**
+     * Shut up window resize event listener
+     * @return {this}
+     */
 
-      this.cache.set('onWindowResizeListener', onWindowResize);
-      return onWindowResize;
+  }, {
+    key: "shutUpOnWindowResizeListener",
+    value: function shutUpOnWindowResizeListener() {
+      if (this.cache.has('onWindowResizeListener')) {
+        window.removeEventListener('resize', this.cache.get('onWindowResizeListener'), true);
+        this.cache.delete('onWindowResizeListener');
+      }
+
+      return this;
     }
     /**
      * Refresh layers position
@@ -1620,28 +1804,20 @@ function () {
         return this;
       }
 
-      var highlightLayer = this.cache.has('highlightLayer') ? this.cache.get('highlightLayer') : document.body.querySelector(".".concat(this.constructor.getHighlightLayerClass()));
-
-      if (highlightLayer) {
-        this.setLayerPosition(highlightLayer, this.step.element);
+      if (this.cache.has('highlightLayer')) {
+        this.setLayerPosition(this.cache.get('highlightLayer'), this.step.element);
       }
 
-      var controlLayer = this.cache.has('controlLayer') ? this.cache.get('controlLayer') : document.body.querySelector(".".concat(this.constructor.getControlLayerClass()));
-
-      if (controlLayer) {
-        this.setLayerPosition(controlLayer, this.step.element);
+      if (this.cache.has('controlLayer')) {
+        this.setLayerPosition(this.cache.get('controlLayer'), this.step.element);
       }
 
-      var interactionLayer = this.cache.has('interactionLayer') ? this.cache.get('interactionLayer') : document.body.querySelector(".".concat(this.constructor.getInteractionLayerClass()));
-
-      if (interactionLayer) {
-        this.setLayerPosition(interactionLayer, this.step.element);
+      if (this.cache.has('interactionLayer')) {
+        this.setLayerPosition(this.cache.get('interactionLayer'), this.step.element);
       }
 
-      var tooltipLayer = this.cache.has('tooltipLayer') ? this.cache.get('tooltipLayer') : document.body.querySelector(".".concat(this.constructor.getTooltipLayerClass()));
-
-      if (tooltipLayer) {
-        this.setTooltipLayerPosition(tooltipLayer, this.step.element, this.step.position);
+      if (this.cache.has('tooltipLayer')) {
+        this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), this.step.element, this.step.position);
       }
 
       return this;
@@ -1661,9 +1837,9 @@ function () {
       };
     }
   }, {
-    key: "getFakeElementClass",
-    value: function getFakeElementClass() {
-      return 'gc-fake';
+    key: "getDefaultElementClass",
+    value: function getDefaultElementClass() {
+      return 'gc-default';
     }
   }, {
     key: "getHighlightElementClass",
@@ -1877,14 +2053,14 @@ function () {
 exports.default = GuideChimp;
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(4);
+module.exports = __webpack_require__(6);
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2616,7 +2792,7 @@ try {
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -2658,7 +2834,7 @@ function _asyncToGenerator(fn) {
 module.exports = _asyncToGenerator;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
 function _defineProperty(obj, key, value) {
@@ -2679,14 +2855,14 @@ function _defineProperty(obj, key, value) {
 module.exports = _defineProperty;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayWithoutHoles = __webpack_require__(8);
+var arrayWithoutHoles = __webpack_require__(10);
 
-var iterableToArray = __webpack_require__(9);
+var iterableToArray = __webpack_require__(11);
 
-var nonIterableSpread = __webpack_require__(10);
+var nonIterableSpread = __webpack_require__(12);
 
 function _toConsumableArray(arr) {
   return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
@@ -2695,7 +2871,7 @@ function _toConsumableArray(arr) {
 module.exports = _toConsumableArray;
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 function _arrayWithoutHoles(arr) {
@@ -2711,7 +2887,7 @@ function _arrayWithoutHoles(arr) {
 module.exports = _arrayWithoutHoles;
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports) {
 
 function _iterableToArray(iter) {
@@ -2721,7 +2897,7 @@ function _iterableToArray(iter) {
 module.exports = _iterableToArray;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 function _nonIterableSpread() {
@@ -2731,7 +2907,7 @@ function _nonIterableSpread() {
 module.exports = _nonIterableSpread;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 function _classCallCheck(instance, Constructor) {
@@ -2743,7 +2919,7 @@ function _classCallCheck(instance, Constructor) {
 module.exports = _classCallCheck;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports) {
 
 function _defineProperties(target, props) {
@@ -2765,7 +2941,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 module.exports = _createClass;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
