@@ -107,6 +107,14 @@ var _regenerator = _interopRequireDefault(__webpack_require__(2));
 
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(4));
 
+/**
+ * Copyright (C) 2020 Labs64 GmbH
+ *
+ * This source code is licensed under the Apache License 2.0 license
+ * located in the LICENSE file and
+ * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
+ */
+
 /* eslint-disable no-param-reassign,func-names */
 module.exports = function (c) {
   var storageKey = 'GUIDECHIMP_MULTIPAGE_STEP';

@@ -232,6 +232,11 @@
   }
 }
 
+.gc-fix-stacking-context {
+  z-index: 6402;
+  position: relative;
+}
+
 .gc-title {
   font-size: 18px;
   font-weight: bold;
@@ -337,6 +342,10 @@
   letter-spacing: 0.1em;
   color: #888888;
 }
+
+//.gc-icon {
+//  background-image: url("../image/guidechimp-logo.png");
+//}
 
 .gc-preloader {
   position: fixed;

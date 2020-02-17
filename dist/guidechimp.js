@@ -867,19 +867,26 @@ function () {
     value: function highlightElement(el) {
       var parentEl = el.parentElement;
 
-      if (el instanceof SVGElement) {
-        while (parentEl) {
-          if (parentEl === document.body) {
-            break;
-          }
-
-          if (parentEl.tagName.toLowerCase() === 'svg') {
-            this.constructor.addElementClass(parentEl, "".concat(this.constructor.getHighlightElementClass()));
-            this.constructor.addElementClass(parentEl, this.constructor.getRelativePositionClass());
-          }
-
-          parentEl = parentEl.parentElement;
+      while (parentEl) {
+        if (parentEl === document.body) {
+          break;
         }
+
+        if (el instanceof SVGElement && parentEl.tagName.toLowerCase() === 'svg') {
+          this.constructor.addElementClass(parentEl, "".concat(this.constructor.getHighlightElementClass()));
+          this.constructor.addElementClass(parentEl, this.constructor.getRelativePositionClass());
+        }
+
+        var parentElStyle = getComputedStyle(parentEl);
+        var zIndex = parentElStyle.getPropertyValue('z-index');
+        var opacity = parentElStyle.getPropertyValue('opacity');
+        var transform = parentElStyle.getPropertyValue('transform');
+
+        if (/[0-9]+/.test(zIndex) || opacity < 1 || transform && transform !== 'none') {
+          this.constructor.addElementClass(parentEl, this.constructor.getFixStackingContext());
+        }
+
+        parentEl = parentEl.parentElement;
       }
 
       this.constructor.addElementClass(el, this.constructor.getHighlightElementClass());
@@ -906,6 +913,16 @@ function () {
 
         el.classList.remove(this.constructor.getHighlightElementClass());
         el.classList.remove(this.constructor.getRelativePositionClass());
+        var parentEl = el.parentElement;
+
+        while (parentEl) {
+          if (parentEl === document.body) {
+            break;
+          }
+
+          parentEl.classList.remove(this.constructor.getFixStackingContext());
+          parentEl = parentEl.parentElement;
+        }
       }
 
       return this;
@@ -915,13 +932,16 @@ function () {
     value: function resetElementsHighlighting() {
       var _this3 = this;
 
-      var highlightEls = this.cache.has('highlightEls') ? this.cache.get('highlightEls') : document.body.querySelectorAll(".".concat(this.constructor.getHighlightElementClass()));
-      var highlightElsArray = Array.from(highlightEls);
+      var highlightEls = this.cache.get('highlightEls');
 
-      if (highlightElsArray.length) {
-        highlightEls.forEach(function (el) {
-          _this3.resetElementHighlighting(el);
-        });
+      if (highlightEls) {
+        var highlightElsArray = Array.from(highlightEls);
+
+        if (highlightElsArray.length) {
+          highlightEls.forEach(function (el) {
+            _this3.resetElementHighlighting(el);
+          });
+        }
       }
 
       return this;
@@ -1820,6 +1840,11 @@ function () {
     key: "getDefaultElementClass",
     value: function getDefaultElementClass() {
       return 'gc-default';
+    }
+  }, {
+    key: "getFixStackingContext",
+    value: function getFixStackingContext() {
+      return 'gc-fix-stacking-context';
     }
   }, {
     key: "getHighlightElementClass",

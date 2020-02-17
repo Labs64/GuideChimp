@@ -62,6 +62,10 @@ export default class GuideChimp {
         return 'gc-default';
     }
 
+    static getFixStackingContext() {
+        return 'gc-fix-stacking-context';
+    }
+
     static getHighlightElementClass() {
         return 'gc-highlighted';
     }
@@ -580,19 +584,27 @@ export default class GuideChimp {
     highlightElement(el) {
         let parentEl = el.parentElement;
 
-        if (el instanceof SVGElement) {
-            while (parentEl) {
-                if (parentEl === document.body) {
-                    break;
-                }
-
-                if (parentEl.tagName.toLowerCase() === 'svg') {
-                    this.constructor.addElementClass(parentEl, `${this.constructor.getHighlightElementClass()}`);
-                    this.constructor.addElementClass(parentEl, this.constructor.getRelativePositionClass());
-                }
-
-                parentEl = parentEl.parentElement;
+        while (parentEl) {
+            if (parentEl === document.body) {
+                break;
             }
+
+            if (el instanceof SVGElement && parentEl.tagName.toLowerCase() === 'svg') {
+                this.constructor.addElementClass(parentEl, `${this.constructor.getHighlightElementClass()}`);
+                this.constructor.addElementClass(parentEl, this.constructor.getRelativePositionClass());
+            }
+
+            const parentElStyle = getComputedStyle(parentEl);
+
+            const zIndex = parentElStyle.getPropertyValue('z-index');
+            const opacity = parentElStyle.getPropertyValue('opacity');
+            const transform = parentElStyle.getPropertyValue('transform');
+
+            if (/[0-9]+/.test(zIndex) || opacity < 1 || (transform && transform !== 'none')) {
+                this.constructor.addElementClass(parentEl, this.constructor.getFixStackingContext());
+            }
+
+            parentEl = parentEl.parentElement;
         }
 
         this.constructor.addElementClass(el, this.constructor.getHighlightElementClass());
@@ -622,22 +634,33 @@ export default class GuideChimp {
 
             el.classList.remove(this.constructor.getHighlightElementClass());
             el.classList.remove(this.constructor.getRelativePositionClass());
+
+            let parentEl = el.parentElement;
+
+            while (parentEl) {
+                if (parentEl === document.body) {
+                    break;
+                }
+
+                parentEl.classList.remove(this.constructor.getFixStackingContext());
+                parentEl = parentEl.parentElement;
+            }
         }
 
         return this;
     }
 
     resetElementsHighlighting() {
-        const highlightEls = (this.cache.has('highlightEls'))
-            ? this.cache.get('highlightEls')
-            : document.body.querySelectorAll(`.${this.constructor.getHighlightElementClass()}`);
+        const highlightEls = this.cache.get('highlightEls');
 
-        const highlightElsArray = Array.from(highlightEls);
+        if (highlightEls) {
+            const highlightElsArray = Array.from(highlightEls);
 
-        if (highlightElsArray.length) {
-            highlightEls.forEach((el) => {
-                this.resetElementHighlighting(el);
-            });
+            if (highlightElsArray.length) {
+                highlightEls.forEach((el) => {
+                    this.resetElementHighlighting(el);
+                });
+            }
         }
 
         return this;
