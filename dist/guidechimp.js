@@ -239,22 +239,14 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-<<<<<<< HEAD
+/* eslint-disable class-methods-use-this */
+
 /**
  * Copyright (C) 2020 Labs64 GmbH
  *
  * This source code is licensed under the Apache License 2.0 license
  * located in the LICENSE file and
  * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
-=======
-/* eslint-disable class-methods-use-this */
-
-/**
- * Copyright (C) 2020 Labs64
- *
- * This source code is licensed under the Apache License 2.0 license
- * located in the LICENSE file in the project root folder.
->>>>>>> add plugins support
  */
 // global cache
 var cache = new Map();
@@ -280,15 +272,9 @@ function () {
     this.setTour(tour);
     this.init();
   }
-<<<<<<< HEAD
-  /**
-   * Default options
-   * @return {Object}
-=======
   /**
    * Called after construction, this hook allows you to add some extra setup
    * logic without having to override the constructor.
->>>>>>> add plugins support
    */
 
 
@@ -1677,11 +1663,6 @@ function () {
         });
       }));
     }
-<<<<<<< HEAD
-    /**
-     * Return on key down event listener function
-     * @returns {function}
-=======
     /**
      * Set up keydown event listener
      * @return {this}
@@ -1699,7 +1680,6 @@ function () {
     /**
      * Return on key down event listener function
      * @returns {function}
->>>>>>> add plugins support
      */
 
   }, {
