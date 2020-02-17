@@ -26,10 +26,11 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Seamless integration with any web app.
 - GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
 - Let GuideChimp look like an integral part of your software product by configuring its look & feel.
-- GuideChimp works well with tools you already use (e.g. WordPress, Confluence, Medium, etc.).
+- GuideChimp works well with tools you already use (e.g. WordPress, Confluence, etc.).
 - Tooltips: Help, Info, Hotspot, Beacon, Labels and more styles
 - Tours: Flows, Walkthroughs, Guides, Tutorials
 - Support of *Single Page Applications* build with Angular, Vue.js, React, etc.
+- Extendable using out-of-the-box and third-party [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins).
 - Tooltip auto-positioning on an element
 - Easy styling through SCSS and clean CSS
 - Tour steps can be defined in two ways: HTML elements data attributes and JavaScript object properties
