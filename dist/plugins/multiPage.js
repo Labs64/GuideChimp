@@ -91,91 +91,63 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/plugins/multiPage/index.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/******/ ({
 
-"use strict";
+/***/ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
 
-var _interopRequireDefault = __webpack_require__(1);
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
 
-var _regenerator = _interopRequireDefault(__webpack_require__(2));
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
 
-var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(4));
-
-/**
- * Copyright (C) 2020 Labs64 GmbH
- *
- * This source code is licensed under the Apache License 2.0 license
- * located in the LICENSE file and
- * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
- */
-
-/* eslint-disable no-param-reassign,func-names */
-module.exports = function (c) {
-  var storageKey = 'GUIDECHIMP_MULTIPAGE_STEP';
-  var parentInit = c.prototype.init;
-
-  c.prototype.init = function () {
-    var _this = this;
-
-    parentInit();
-    this.on('onBeforeChange', function (self, fromStep, toStep) {
-      if (_this.tour && _this.tour !== 'string') {
-        if (toStep.page) {
-          var url = document.createElement('a');
-          url.href = toStep.page;
-
-          if (url.href !== window.location.href) {
-            sessionStorage.setItem(storageKey, _this.steps.indexOf(toStep));
-            window.location.href = toStep.page;
-            return false;
-          }
-        }
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
       }
 
-      return true;
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
     });
   };
+}
 
-  c.prototype.continue =
-  /*#__PURE__*/
-  (0, _asyncToGenerator2.default)(
-  /*#__PURE__*/
-  _regenerator.default.mark(function _callee() {
-    var stepIndex;
-    return _regenerator.default.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            stepIndex = sessionStorage.getItem(storageKey);
-
-            if (!(stepIndex !== null)) {
-              _context.next = 4;
-              break;
-            }
-
-            sessionStorage.removeItem(storageKey);
-            return _context.abrupt("return", this.start(stepIndex, true));
-
-          case 4:
-            return _context.abrupt("return", false);
-
-          case 5:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-};
+module.exports = _asyncToGenerator;
 
 /***/ }),
-/* 1 */
+
+/***/ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
+  \**********************************************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 function _interopRequireDefault(obj) {
@@ -187,14 +159,24 @@ function _interopRequireDefault(obj) {
 module.exports = _interopRequireDefault;
 
 /***/ }),
-/* 2 */
+
+/***/ "./node_modules/@babel/runtime/regenerator/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(3);
+module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime.js");
 
 
 /***/ }),
-/* 3 */
+
+/***/ "./node_modules/regenerator-runtime/runtime.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/regenerator-runtime/runtime.js ***!
+  \*****************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -926,48 +908,92 @@ try {
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
+/***/ "./src/plugins/multiPage/index.js":
+/*!****************************************!*\
+  !*** ./src/plugins/multiPage/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
+"use strict";
 
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
 
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js"));
+
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
+
+/**
+ * Copyright (C) 2020 Labs64 GmbH
+ *
+ * This source code is licensed under the Apache License 2.0 license
+ * located in the LICENSE file and
+ * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
+ */
+
+/* eslint-disable no-param-reassign,func-names */
+module.exports = function (c) {
+  var storageKey = 'GUIDECHIMP_MULTIPAGE_STEP';
+  var parentInit = c.prototype.init;
+
+  c.prototype.init = function () {
+    var _this = this;
+
+    parentInit();
+    this.on('onBeforeChange', function (self, fromStep, toStep) {
+      if (_this.tour && _this.tour !== 'string') {
+        if (toStep.page) {
+          var url = document.createElement('a');
+          url.href = toStep.page;
+
+          if (url.href !== window.location.href) {
+            sessionStorage.setItem(storageKey, _this.steps.indexOf(toStep));
+            window.location.href = toStep.page;
+            return false;
+          }
+        }
       }
 
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
+      return true;
     });
   };
-}
 
-module.exports = _asyncToGenerator;
+  c.prototype.continue =
+  /*#__PURE__*/
+  (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee() {
+    var stepIndex;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            stepIndex = sessionStorage.getItem(storageKey);
+
+            if (!(stepIndex !== null)) {
+              _context.next = 4;
+              break;
+            }
+
+            sessionStorage.removeItem(storageKey);
+            return _context.abrupt("return", this.start(stepIndex, true));
+
+          case 4:
+            return _context.abrupt("return", false);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+};
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
 //# sourceMappingURL=multiPage.js.map

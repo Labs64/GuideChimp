@@ -375,15 +375,16 @@ export default class GuideChimp {
         }
 
         const highlightLayer = this.showHighlightLayer();
-        const controlLayer = this.showControlLayer();
         const interactionLayer = this.showInteractionLayer();
+        const controlLayer = this.showControlLayer();
 
         this.setLayerPosition(highlightLayer, el);
-        this.setLayerPosition(controlLayer, el);
         this.setLayerPosition(interactionLayer, el);
+        this.setControlLayerPosition(controlLayer, el);
 
         const tooltipLayer = this.showTooltipLayer();
         this.showTooltipTail();
+
         this.showProgressbar();
         this.showTitle(this.step.title);
         this.showDescription(this.step.description);
@@ -537,7 +538,7 @@ export default class GuideChimp {
         });
     }
 
-    scrollParentToChildElement(el) {
+    getScrollableParentElement(el) {
         const regex = /(auto|scroll)/;
 
         const getScrollableParent = (parent) => {
@@ -558,9 +559,13 @@ export default class GuideChimp {
 
         const elStyle = getComputedStyle(el);
 
-        const scrollableParent = (elStyle.getPropertyValue('position') === 'fixed')
+        return (elStyle.getPropertyValue('position') === 'fixed')
             ? document.body
             : getScrollableParent(el.parentElement);
+    }
+
+    scrollParentToChildElement(el) {
+        const scrollableParent = this.getScrollableParentElement(el);
 
         // scroll a parent scrollable element to a child element
         if (scrollableParent !== document.body) {
@@ -698,6 +703,23 @@ export default class GuideChimp {
         return this;
     }
 
+    setControlLayerPosition(controlLayer, el) {
+        this.setLayerPosition(controlLayer, el);
+
+        const scrollableParent = this.getScrollableParentElement(el);
+
+        const { left: elLeft, width: elWidth } = el.getBoundingClientRect();
+        const { width: scrollableParentWidth } = scrollableParent.getBoundingClientRect();
+
+        const { style } = controlLayer;
+
+        style.width = (elLeft + elWidth < scrollableParentWidth)
+            ? `${scrollableParentWidth - elLeft}px`
+            : `${elWidth}px`;
+
+        return this;
+    }
+
     setTooltipLayerPosition(tooltipLayer, el, preferredPosition = '') {
         // set tooltip position
         let position = 'floating';
@@ -764,20 +786,19 @@ export default class GuideChimp {
 
         if (position === 'top' || position === 'bottom') {
             const availableAlignments = ['left', 'right', 'middle'];
-            const minWindowSize = Math.min(window.innerWidth, window.screen.width);
 
             // valid left space must be at least tooltip width
-            if (minWindowSize - elLeft < tooltipWidth) {
+            if (window.innerWidth - elLeft < tooltipWidth) {
                 availableAlignments.splice(availableAlignments.indexOf('left'), 1);
             }
 
             // valid middle space must be at least half width from both sides
-            if (elLeft < (tooltipWidth / 2) || minWindowSize - elLeft < (tooltipWidth / 2)) {
+            if (elLeft < (tooltipWidth / 2) || window.innerWidth - elLeft < (tooltipWidth / 2)) {
                 availableAlignments.splice(availableAlignments.indexOf('middle'), 1);
             }
 
             // valid right space must be at least tooltip width
-            if (elLeft < tooltipWidth) {
+            if (elRight < tooltipWidth) {
                 availableAlignments.splice(availableAlignments.indexOf('right'), 1);
             }
 
@@ -817,10 +838,21 @@ export default class GuideChimp {
             }
         }
 
+
         if (alignment === 'right') {
-            style.left = `${elWidth - tooltipWidth}px`;
+            if ((elLeft + (elWidth / 2)) + (tooltipWidth / 2) > window.innerWidth) {
+                style.left = `${window.innerWidth - tooltipWidth - elLeft}px`;
+            } else {
+                style.left = `${elWidth - tooltipWidth}px`;
+            }
         } else if (alignment === 'middle') {
-            style.left = `${(elWidth / 2) - (tooltipWidth / 2)}px`;
+            if (elLeft + (elWidth / 2) - (tooltipWidth / 2) < 0) {
+                style.left = `${-elLeft}px`;
+            } else if ((elLeft + (elWidth / 2)) + (tooltipWidth / 2) > window.innerWidth) {
+                style.left = `${window.innerWidth - tooltipWidth - elLeft}px`;
+            } else {
+                style.left = `${(elWidth / 2) - (tooltipWidth / 2)}px`;
+            }
         }
 
         return this;
@@ -1071,7 +1103,7 @@ export default class GuideChimp {
             tooltipLayer.setAttribute('role', 'dialog');
             parent.appendChild(tooltipLayer);
         }
-
+console.log(getComputedStyle(tooltipLayer).getPropertyValue('min-width'));
         tooltipLayer.className = this.constructor.getTooltipLayerClass();
 
         this.cache.set('tooltipLayer', tooltipLayer);
