@@ -1,9 +1,25 @@
-.gc-relative {
-  position: relative;
-}
+.gc {
+  & .gc-fix-stacking-context {
+    z-index: 6402;
+    position: relative;
+  }
 
-.gc-fixed {
-  position: fixed;
+  .gc-relative {
+    position: relative;
+  }
+
+  .gc-fixed {
+    position: fixed;
+  }
+
+  .gc-highlighted {
+    z-index: 6402;
+
+    & > td, & > th {
+      position: relative;
+      z-index: 6402;
+    }
+  }
 }
 
 .gc-overlay {
@@ -221,20 +237,6 @@
   left: 50%;
   width: 0;
   height: 0;
-}
-
-.gc-highlighted {
-  z-index: 6402;
-
-  & > td, & > th {
-    position: relative;
-    z-index: 6402;
-  }
-}
-
-.gc-fix-stacking-context {
-  z-index: 6402;
-  position: relative;
 }
 
 .gc-title {

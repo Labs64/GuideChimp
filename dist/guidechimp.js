@@ -363,7 +363,9 @@ function () {
                 isStarted = _context.sent;
 
                 if (isStarted) {
-                  // turn on keyboard navigation
+                  // add a class that increase the specificity of guidechimp classes
+                  document.body.classList.add(this.constructor.getBodyClass()); // turn on keyboard navigation
+
                   if (this.options.useKeyboard) {
                     this.setUpOnKeydownListener();
                   } // on window resize
@@ -716,7 +718,9 @@ function () {
 
               case 6:
                 this.step = null;
-                this.steps = []; // shut up events listeners
+                this.steps = []; // remove the class that increase the specificity of the guidechimp classes
+
+                document.body.classList.remove(this.constructor.getBodyClass()); // shut up events listeners
 
                 this.shutUpOnKeydownListener();
                 this.shutUpOnWindowResizeListener();
@@ -729,7 +733,7 @@ function () {
                 this.cache.clear();
                 return _context5.abrupt("return", this);
 
-              case 18:
+              case 19:
               case "end":
                 return _context5.stop();
             }
@@ -1835,6 +1839,11 @@ function () {
         interaction: true,
         padding: 10
       };
+    }
+  }, {
+    key: "getBodyClass",
+    value: function getBodyClass() {
+      return 'gc';
     }
   }, {
     key: "getDefaultElementClass",

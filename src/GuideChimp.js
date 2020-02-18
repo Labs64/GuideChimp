@@ -58,6 +58,10 @@ export default class GuideChimp {
         };
     }
 
+    static getBodyClass() {
+        return 'gc';
+    }
+
     static getDefaultElementClass() {
         return 'gc-default';
     }
@@ -275,6 +279,9 @@ export default class GuideChimp {
         const isStarted = await this.go(number, useIndex);
 
         if (isStarted) {
+            // add a class that increase the specificity of guidechimp classes
+            document.body.classList.add(this.constructor.getBodyClass());
+
             // turn on keyboard navigation
             if (this.options.useKeyboard) {
                 this.setUpOnKeydownListener();
@@ -456,6 +463,9 @@ export default class GuideChimp {
 
         this.step = null;
         this.steps = [];
+
+        // remove the class that increase the specificity of the guidechimp classes
+        document.body.classList.remove(this.constructor.getBodyClass());
 
         // shut up events listeners
         this.shutUpOnKeydownListener();
