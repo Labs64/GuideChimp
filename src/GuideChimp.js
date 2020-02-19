@@ -381,6 +381,8 @@ export default class GuideChimp {
             el = this.showDefaultElement();
         }
 
+        this.scrollParentToChildElement(el);
+
         const highlightLayer = this.showHighlightLayer();
         const controlLayer = this.showControlLayer();
         const interactionLayer = this.showInteractionLayer();
@@ -418,7 +420,6 @@ export default class GuideChimp {
 
         this.highlightElement(el);
 
-        this.scrollParentToChildElement(el);
         this.scrollTo(el);
 
         setTimeout(() => {

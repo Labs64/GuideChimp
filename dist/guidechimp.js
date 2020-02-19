@@ -562,6 +562,7 @@ function () {
                   el = this.showDefaultElement();
                 }
 
+                this.scrollParentToChildElement(el);
                 highlightLayer = this.showHighlightLayer();
                 controlLayer = this.showControlLayer();
                 interactionLayer = this.showInteractionLayer();
@@ -592,7 +593,6 @@ function () {
                 this.showCopyright();
                 this.setTooltipLayerPosition(tooltipLayer, el, position);
                 this.highlightElement(el);
-                this.scrollParentToChildElement(el);
                 this.scrollTo(el);
                 setTimeout(function () {
                   _this.scrollTo(tooltipLayer, 'smooth');
