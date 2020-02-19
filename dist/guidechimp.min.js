@@ -1468,11 +1468,12 @@ function () {
                   el = this.showDefaultElement();
                 }
 
+                this.scrollParentToChildElement(el);
                 highlightLayer = this.showHighlightLayer();
                 interactionLayer = this.showInteractionLayer();
                 controlLayer = this.showControlLayer();
-                this.setLayerPosition(highlightLayer, el);
-                this.setLayerPosition(interactionLayer, el);
+                this.setHighlightLayerPosition(highlightLayer, el);
+                this.setInteractionLayerPosition(interactionLayer, el);
                 this.setControlLayerPosition(controlLayer, el);
                 tooltipLayer = this.showTooltipLayer();
                 this.showTooltipTail();
@@ -1498,7 +1499,6 @@ function () {
                 this.showCopyright();
                 this.setTooltipLayerPosition(tooltipLayer, el, position);
                 this.highlightElement(el);
-                this.scrollParentToChildElement(el);
                 this.scrollTo(el);
                 setTimeout(function () {
                   _this.scrollTo(tooltipLayer, 'smooth');
@@ -1892,6 +1892,16 @@ function () {
       return this;
     }
   }, {
+    key: "setHighlightLayerPosition",
+    value: function setHighlightLayerPosition() {
+      return this.setLayerPosition.apply(this, arguments);
+    }
+  }, {
+    key: "setInteractionLayerPosition",
+    value: function setInteractionLayerPosition() {
+      return this.setLayerPosition.apply(this, arguments);
+    }
+  }, {
     key: "setControlLayerPosition",
     value: function setControlLayerPosition(controlLayer, el) {
       this.setLayerPosition(controlLayer, el);
@@ -1932,8 +1942,18 @@ function () {
 
       var _tooltipLayer$getBoun = tooltipLayer.getBoundingClientRect(),
           tooltipWidth = _tooltipLayer$getBoun.width,
-          tooltipHeight = _tooltipLayer$getBoun.height;
+          tooltipHeight = _tooltipLayer$getBoun.height; // find out min tooltip width
 
+
+      var cloneTooltip = tooltipLayer.cloneNode();
+      cloneTooltip.style.visibility = 'hidden';
+      cloneTooltip.innerHTML = '';
+      tooltipLayer.parentElement.appendChild(cloneTooltip);
+
+      var _cloneTooltip$getBoun = cloneTooltip.getBoundingClientRect(),
+          minTooltipWidth = _cloneTooltip$getBoun.width;
+
+      tooltipLayer.parentElement.removeChild(cloneTooltip);
       var style = tooltipLayer.style; // reset tooltip styles
 
       style.top = null;
@@ -1954,11 +1974,11 @@ function () {
           positionPriority.splice(positionPriority.indexOf('bottom'), 1);
         }
 
-        if (elRight + tooltipWidth > window.innerWidth) {
+        if (elRight + minTooltipWidth > window.innerWidth) {
           positionPriority.splice(positionPriority.indexOf('right'), 1);
         }
 
-        if (elLeft - tooltipWidth < 0) {
+        if (elLeft - minTooltipWidth < 0) {
           positionPriority.splice(positionPriority.indexOf('left'), 1);
         } // eslint-disable-next-line prefer-destructuring
 
@@ -1979,17 +1999,17 @@ function () {
       if (position === 'top' || position === 'bottom') {
         var availableAlignments = ['left', 'right', 'middle']; // valid left space must be at least tooltip width
 
-        if (window.innerWidth - elLeft < tooltipWidth) {
+        if (window.innerWidth - elLeft < minTooltipWidth) {
           availableAlignments.splice(availableAlignments.indexOf('left'), 1);
         } // valid middle space must be at least half width from both sides
 
 
-        if (elLeft < tooltipWidth / 2 || window.innerWidth - elLeft < tooltipWidth / 2) {
+        if (elLeft < minTooltipWidth / 2 || window.innerWidth - elLeft < minTooltipWidth / 2) {
           availableAlignments.splice(availableAlignments.indexOf('middle'), 1);
         } // valid right space must be at least tooltip width
 
 
-        if (elRight < tooltipWidth) {
+        if (elRight < minTooltipWidth) {
           availableAlignments.splice(availableAlignments.indexOf('right'), 1);
         }
 
@@ -2027,24 +2047,24 @@ function () {
           {
             style.left = '50%';
             style.top = '50%';
-            style.marginLeft = "-".concat(tooltipWidth / 2, "px");
+            style.marginLeft = "-".concat(minTooltipWidth / 2, "px");
             style.marginTop = "-".concat(tooltipHeight / 2, "px");
           }
       }
 
       if (alignment === 'right') {
-        if (elLeft + elWidth / 2 + tooltipWidth / 2 > window.innerWidth) {
-          style.left = "".concat(window.innerWidth - tooltipWidth - elLeft, "px");
+        if (elLeft + elWidth / 2 + minTooltipWidth / 2 > window.innerWidth) {
+          style.left = "".concat(window.innerWidth - minTooltipWidth - elLeft, "px");
         } else {
-          style.left = "".concat(elWidth - tooltipWidth, "px");
+          style.left = "".concat(elWidth - minTooltipWidth, "px");
         }
       } else if (alignment === 'middle') {
-        if (elLeft + elWidth / 2 - tooltipWidth / 2 < 0) {
+        if (elLeft + elWidth / 2 - minTooltipWidth / 2 < 0) {
           style.left = "".concat(-elLeft, "px");
-        } else if (elLeft + elWidth / 2 + tooltipWidth / 2 > window.innerWidth) {
-          style.left = "".concat(window.innerWidth - tooltipWidth - elLeft, "px");
+        } else if (elLeft + elWidth / 2 + minTooltipWidth / 2 > window.innerWidth) {
+          style.left = "".concat(window.innerWidth - minTooltipWidth - elLeft, "px");
         } else {
-          style.left = "".concat(elWidth / 2 - tooltipWidth / 2, "px");
+          style.left = "".concat(elWidth / 2 - minTooltipWidth / 2, "px");
         }
       }
 
@@ -2283,7 +2303,6 @@ function () {
         parent.appendChild(tooltipLayer);
       }
 
-      console.log(getComputedStyle(tooltipLayer).getPropertyValue('min-width'));
       tooltipLayer.className = this.constructor.getTooltipLayerClass();
       this.cache.set('tooltipLayer', tooltipLayer);
       return tooltipLayer;
@@ -2744,20 +2763,27 @@ function () {
         return this;
       }
 
+      var el = this.step.element;
+      var position = this.step.position;
+
+      if (typeof el === 'string') {
+        el = document.querySelector(el);
+      }
+
       if (this.cache.has('highlightLayer')) {
-        this.setLayerPosition(this.cache.get('highlightLayer'), this.step.element);
+        this.setHighlightLayerPosition(this.cache.get('highlightLayer'), el);
       }
 
       if (this.cache.has('controlLayer')) {
-        this.setLayerPosition(this.cache.get('controlLayer'), this.step.element);
+        this.setControlLayerPosition(this.cache.get('controlLayer'), el);
       }
 
       if (this.cache.has('interactionLayer')) {
-        this.setLayerPosition(this.cache.get('interactionLayer'), this.step.element);
+        this.setInteractionLayerPosition(this.cache.get('interactionLayer'), el);
       }
 
       if (this.cache.has('tooltipLayer')) {
-        this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), this.step.element, this.step.position);
+        this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, position);
       }
 
       return this;

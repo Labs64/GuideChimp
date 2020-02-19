@@ -374,12 +374,14 @@ export default class GuideChimp {
             el = this.showDefaultElement();
         }
 
+        this.scrollParentToChildElement(el);
+
         const highlightLayer = this.showHighlightLayer();
         const interactionLayer = this.showInteractionLayer();
         const controlLayer = this.showControlLayer();
 
-        this.setLayerPosition(highlightLayer, el);
-        this.setLayerPosition(interactionLayer, el);
+        this.setHighlightLayerPosition(highlightLayer, el);
+        this.setInteractionLayerPosition(interactionLayer, el);
         this.setControlLayerPosition(controlLayer, el);
 
         const tooltipLayer = this.showTooltipLayer();
@@ -412,7 +414,6 @@ export default class GuideChimp {
 
         this.highlightElement(el);
 
-        this.scrollParentToChildElement(el);
         this.scrollTo(el);
 
         setTimeout(() => {
@@ -703,6 +704,14 @@ export default class GuideChimp {
         return this;
     }
 
+    setHighlightLayerPosition(...args) {
+        return this.setLayerPosition(...args);
+    }
+
+    setInteractionLayerPosition(...args) {
+        return this.setLayerPosition(...args);
+    }
+
     setControlLayerPosition(controlLayer, el) {
         this.setLayerPosition(controlLayer, el);
 
@@ -741,6 +750,17 @@ export default class GuideChimp {
 
         const { width: tooltipWidth, height: tooltipHeight } = tooltipLayer.getBoundingClientRect();
 
+        // find out min tooltip width
+        const cloneTooltip = tooltipLayer.cloneNode();
+        cloneTooltip.style.visibility = 'hidden';
+        cloneTooltip.innerHTML = '';
+
+        tooltipLayer.parentElement.appendChild(cloneTooltip);
+
+        const { width: minTooltipWidth } = cloneTooltip.getBoundingClientRect();
+
+        tooltipLayer.parentElement.removeChild(cloneTooltip);
+
         const { style } = tooltipLayer;
 
         // reset tooltip styles
@@ -762,11 +782,11 @@ export default class GuideChimp {
                 positionPriority.splice(positionPriority.indexOf('bottom'), 1);
             }
 
-            if (elRight + tooltipWidth > window.innerWidth) {
+            if (elRight + minTooltipWidth > window.innerWidth) {
                 positionPriority.splice(positionPriority.indexOf('right'), 1);
             }
 
-            if (elLeft - tooltipWidth < 0) {
+            if (elLeft - minTooltipWidth < 0) {
                 positionPriority.splice(positionPriority.indexOf('left'), 1);
             }
 
@@ -788,17 +808,17 @@ export default class GuideChimp {
             const availableAlignments = ['left', 'right', 'middle'];
 
             // valid left space must be at least tooltip width
-            if (window.innerWidth - elLeft < tooltipWidth) {
+            if (window.innerWidth - elLeft < minTooltipWidth) {
                 availableAlignments.splice(availableAlignments.indexOf('left'), 1);
             }
 
             // valid middle space must be at least half width from both sides
-            if (elLeft < (tooltipWidth / 2) || window.innerWidth - elLeft < (tooltipWidth / 2)) {
+            if (elLeft < (minTooltipWidth / 2) || window.innerWidth - elLeft < (minTooltipWidth / 2)) {
                 availableAlignments.splice(availableAlignments.indexOf('middle'), 1);
             }
 
             // valid right space must be at least tooltip width
-            if (elRight < tooltipWidth) {
+            if (elRight < minTooltipWidth) {
                 availableAlignments.splice(availableAlignments.indexOf('right'), 1);
             }
 
@@ -833,25 +853,24 @@ export default class GuideChimp {
             default: {
                 style.left = '50%';
                 style.top = '50%';
-                style.marginLeft = `-${tooltipWidth / 2}px`;
+                style.marginLeft = `-${minTooltipWidth / 2}px`;
                 style.marginTop = `-${tooltipHeight / 2}px`;
             }
         }
 
-
         if (alignment === 'right') {
-            if ((elLeft + (elWidth / 2)) + (tooltipWidth / 2) > window.innerWidth) {
-                style.left = `${window.innerWidth - tooltipWidth - elLeft}px`;
+            if ((elLeft + (elWidth / 2)) + (minTooltipWidth / 2) > window.innerWidth) {
+                style.left = `${window.innerWidth - minTooltipWidth - elLeft}px`;
             } else {
-                style.left = `${elWidth - tooltipWidth}px`;
+                style.left = `${elWidth - minTooltipWidth}px`;
             }
         } else if (alignment === 'middle') {
-            if (elLeft + (elWidth / 2) - (tooltipWidth / 2) < 0) {
+            if (elLeft + (elWidth / 2) - (minTooltipWidth / 2) < 0) {
                 style.left = `${-elLeft}px`;
-            } else if ((elLeft + (elWidth / 2)) + (tooltipWidth / 2) > window.innerWidth) {
-                style.left = `${window.innerWidth - tooltipWidth - elLeft}px`;
+            } else if ((elLeft + (elWidth / 2)) + (minTooltipWidth / 2) > window.innerWidth) {
+                style.left = `${window.innerWidth - minTooltipWidth - elLeft}px`;
             } else {
-                style.left = `${(elWidth / 2) - (tooltipWidth / 2)}px`;
+                style.left = `${(elWidth / 2) - (minTooltipWidth / 2)}px`;
             }
         }
 
@@ -1103,7 +1122,7 @@ export default class GuideChimp {
             tooltipLayer.setAttribute('role', 'dialog');
             parent.appendChild(tooltipLayer);
         }
-console.log(getComputedStyle(tooltipLayer).getPropertyValue('min-width'));
+
         tooltipLayer.className = this.constructor.getTooltipLayerClass();
 
         this.cache.set('tooltipLayer', tooltipLayer);
@@ -1527,20 +1546,27 @@ console.log(getComputedStyle(tooltipLayer).getPropertyValue('min-width'));
             return this;
         }
 
+        let { element: el } = this.step;
+        const { position } = this.step;
+
+        if (typeof el === 'string') {
+            el = document.querySelector(el);
+        }
+
         if (this.cache.has('highlightLayer')) {
-            this.setLayerPosition(this.cache.get('highlightLayer'), this.step.element);
+            this.setHighlightLayerPosition(this.cache.get('highlightLayer'), el);
         }
 
         if (this.cache.has('controlLayer')) {
-            this.setLayerPosition(this.cache.get('controlLayer'), this.step.element);
+            this.setControlLayerPosition(this.cache.get('controlLayer'), el);
         }
 
         if (this.cache.has('interactionLayer')) {
-            this.setLayerPosition(this.cache.get('interactionLayer'), this.step.element);
+            this.setInteractionLayerPosition(this.cache.get('interactionLayer'), el);
         }
 
         if (this.cache.has('tooltipLayer')) {
-            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), this.step.element, this.step.position);
+            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, position);
         }
 
         return this;
