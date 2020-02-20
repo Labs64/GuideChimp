@@ -59,6 +59,10 @@ export default class GuideChimp {
         };
     }
 
+    static getBodyClass() {
+        return 'gc';
+    }
+
     static getDefaultElementClass() {
         return 'gc-default';
     }
@@ -271,11 +275,14 @@ export default class GuideChimp {
      */
     async start(number = 0, useIndex = true) {
         // emit start event
-        await this.emit('onStart', this);
+        await this.emit('onStart');
 
         const isStarted = await this.go(number, useIndex);
 
         if (isStarted) {
+            // add a class that increase the specificity of guidechimp classes
+            document.body.classList.add(this.constructor.getBodyClass());
+
             // turn on keyboard navigation
             if (this.options.useKeyboard) {
                 this.setUpOnKeydownListener();
@@ -348,14 +355,14 @@ export default class GuideChimp {
 
         const { onBeforeChange, onAfterChange } = toStep;
 
-        const results = await this.emit('onBeforeChange', this, fromStep, toStep);
+        const results = await this.emit('onBeforeChange', toStep, fromStep);
 
         if (results.some((r) => r === false)) {
             return false;
         }
 
         if (onBeforeChange) {
-            if (await Promise.resolve().then(() => onBeforeChange(this, fromStep, toStep)) === false) {
+            if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
                 return false;
             }
         }
@@ -364,16 +371,10 @@ export default class GuideChimp {
 
         this.step = toStep;
 
-        let { element: el } = this.step;
-        const { position, buttons } = this.step;
+        const { element, position, buttons } = this.step;
+        const el = this.getStepElement(element);
 
-        if (typeof el === 'string') {
-            el = document.querySelector(el);
-        }
-
-        if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
-            el = this.showDefaultElement();
-        }
+        this.scrollParentToChildElement(el);
 
         this.scrollParentToChildElement(el);
         this.scrollTo(el);
@@ -420,10 +421,10 @@ export default class GuideChimp {
             this.scrollTo(tooltipLayer, 'smooth');
         }, 300);
 
-        this.emit('onAfterChange', this, fromStep, toStep);
+        this.emit('onAfterChange', toStep, fromStep);
 
         if (onAfterChange) {
-            onAfterChange(this, fromStep, toStep);
+            onAfterChange.call(this, toStep, fromStep);
         }
 
         return true;
@@ -451,13 +452,16 @@ export default class GuideChimp {
         const stepIndex = this.steps.indexOf(this.step);
 
         if (stepIndex === this.steps.length - 1) {
-            await this.emit('onComplete', this);
+            await this.emit('onComplete');
         }
 
-        await this.emit('onStop', this);
+        await this.emit('onStop');
 
         this.step = null;
         this.steps = [];
+
+        // remove the class that increase the specificity of the guidechimp classes
+        document.body.classList.remove(this.constructor.getBodyClass());
 
         // shut up events listeners
         this.shutUpOnKeydownListener();
@@ -537,6 +541,18 @@ export default class GuideChimp {
             }
             return 0;
         });
+    }
+
+    getStepElement(selector) {
+        let el = (selector instanceof HTMLElement)
+            ? selector
+            : document.querySelector(selector);
+
+        if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
+            el = this.showDefaultElement();
+        }
+
+        return el;
     }
 
     getScrollableParentElement(el) {
@@ -822,8 +838,6 @@ export default class GuideChimp {
             if (elTop - tooltipHeight + scrollableParentEl.scrollTop < 0) {
                 positionPriority.splice(positionPriority.indexOf('top'), 1);
             }
-
-            console.log(scrollableParentEl, scrollableParentEl.scrollHeight, scrollableParentEl.scrollTop);
 
             if (elBottom + tooltipHeight > windowHeight) {
                 positionPriority.splice(positionPriority.indexOf('bottom'), 1);
@@ -1505,7 +1519,7 @@ export default class GuideChimp {
         }
 
         // run through each listener
-        return Promise.all(listeners.map((f) => Promise.resolve().then(() => f(...args))));
+        return Promise.all(listeners.map((f) => Promise.resolve().then(() => f.apply(this, args))));
     }
 
     /**
@@ -1612,12 +1626,8 @@ export default class GuideChimp {
             return this;
         }
 
-        let { element: el } = this.step;
-        const { position } = this.step;
-
-        if (typeof el === 'string') {
-            el = document.querySelector(el);
-        }
+        const { element, position } = this.step;
+        const el = this.getStepElement(element);
 
         if (this.cache.has('highlightLayer')) {
             this.setHighlightLayerPosition(this.cache.get('highlightLayer'), el);
