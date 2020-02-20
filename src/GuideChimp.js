@@ -47,7 +47,7 @@ export default class GuideChimp {
      */
     static getDefaultOptions() {
         return {
-            position: 'top',
+            position: 'bottom',
             useKeyboard: true,
             exitEscape: true,
             exitOverlay: true,
@@ -290,6 +290,8 @@ export default class GuideChimp {
 
             // on window resize
             this.setUpOnWindowResizeListener();
+            // on window scroll
+            // this.setUpOnWindowScrollListener();
         }
 
         return isStarted;
@@ -413,7 +415,7 @@ export default class GuideChimp {
 
         this.showCopyright();
 
-        this.setTooltipLayerPosition(tooltipLayer, el, position);
+        this.setTooltipLayerPosition(tooltipLayer, el, { position, boundary: document.documentElement });
 
         this.highlightElement(el);
 
@@ -466,6 +468,7 @@ export default class GuideChimp {
         // shut up events listeners
         this.shutUpOnKeydownListener();
         this.shutUpOnWindowResizeListener();
+        this.shutUpOnWindowScrollListener();
 
         this.removePreloaderElement();
         this.removeOverlayLayer();
@@ -555,7 +558,7 @@ export default class GuideChimp {
         return el;
     }
 
-    getScrollableParentElement(el) {
+    getScrollableParentElement(el, axis = ['x', 'y']) {
         const regex = /(auto|scroll)/;
 
         const elStyle = getComputedStyle(el);
@@ -572,11 +575,15 @@ export default class GuideChimp {
                 return getScrollableParent(parent.parentElement);
             }
 
-            const isScrollable = regex.test(
-                `${parentStyle.getPropertyValue('overflow')}
-                ${parentStyle.getPropertyValue('overflow-y')}
-                ${parentStyle.getPropertyValue('overflow-x')}`,
-            );
+            let overflow = '';
+
+            const overflowAxis = (Array.isArray(axis)) ? axis : [axis];
+
+            overflowAxis.forEach((v) => {
+                overflow += parentStyle.getPropertyValue(`overflow-${v}`);
+            });
+
+            const isScrollable = regex.test(overflow);
 
             return (isScrollable) ? parent : getScrollableParent(parent.parentElement);
         };
@@ -587,11 +594,18 @@ export default class GuideChimp {
     }
 
     scrollParentToChildElement(el) {
-        const scrollableParentEl = this.getScrollableParentElement(el);
+        const scrollableParentElX = this.getScrollableParentElement(el, 'x');
+        const scrollableParentElY = this.getScrollableParentElement(el, 'y');
+
+        const { scrollPadding } = this.options;
 
         // scroll a parent scrollable element to a child element
-        if (scrollableParentEl !== document.body) {
-            scrollableParentEl.scrollTop = el.offsetTop - scrollableParentEl.offsetTop - this.options.scrollPadding;
+        if (scrollableParentElX !== document.body) {
+            scrollableParentElX.scrollTop = el.offsetTop - scrollableParentElX.offsetTop - scrollPadding;
+        }
+
+        if (scrollableParentElY !== document.body) {
+            scrollableParentElY.scrollLeft = el.offsetLeft - scrollableParentElY.offsetLeft - scrollPadding;
         }
 
         return this;
@@ -601,8 +615,10 @@ export default class GuideChimp {
         const { top, bottom, left, right } = el.getBoundingClientRect();
         const { innerWidth, innerHeight } = window;
 
+        const { scrollPadding } = this.options;
+
         if (!(top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth)) {
-            window.scrollBy({ top: top - this.options.scrollPadding, behavior });
+            window.scrollBy({ behavior, top: top - scrollPadding, left: left - scrollPadding });
         }
 
         return this;
@@ -746,13 +762,36 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { pageXOffset, innerWidth } = window;
-        const { height, top, left, right } = this.constructor.getElementOffset(el);
+        const { pageXOffset } = window;
+        const { width: docElWidth } = document.documentElement.getBoundingClientRect();
+        const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getElementOffset(el);
 
-        const layerHeight = height + padding;
-        const layerTop = top - (padding / 2);
-        const layerLeft = (pageXOffset < (left - (padding / 2))) ? pageXOffset : left - (padding / 2);
-        const layerWidth = (layerLeft + innerWidth > (right + (padding / 2))) ? innerWidth : right + (padding / 2);
+        const height = elHeight + padding;
+        const top = elTop - (padding / 2);
+        const left = (pageXOffset < pageXOffset + (elLeft - (padding / 2))) ? pageXOffset : (elLeft - (padding / 2));
+        const width = (pageXOffset + docElWidth > pageXOffset + (elRight + (padding / 2)))
+            ? docElWidth
+            : (elRight + (padding / 2));
+
+        // left = (left < (elLeft - (padding / 2))) ? left : elLeft - (padding / 2);
+        // width = (left + width > (elRight + (padding / 2))) ? width : elRight + (padding / 2);
+        //
+        // const { left: docElLeft, width: docElWidth } = document.documentElement.getBoundingClientRect();
+        // const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getElementOffset(el);
+        //
+        // const height = elHeight + padding;
+        // const top = top - (padding / 2);
+        // // const left = (Math.abs(docElLeft) < (elLeft - (padding / 2))) ? Math.abs(docElLeft) : elLeft - (padding / 2);
+        // const left = (Math.abs(docElLeft) < elRight) ? Math.abs(docElLeft) : elRight;
+        // const width = (docElWidth > elLeft) ? Math.abs(docElLeft) : elRight;
+        //
+        // const { pageXOffset, innerWidth } = window;
+        // const { height, top, left, right } = this.constructor.getElementOffset(el);
+        //
+        // const layerHeight = height + padding;
+        // const layerTop = top - (padding / 2);
+        // const layerLeft = (pageXOffset < (left - (padding / 2))) ? pageXOffset : left - (padding / 2);
+        // const layerWidth = (layerLeft + innerWidth > (right + (padding / 2))) ? innerWidth : right + (padding / 2);
 
         if (this.constructor.isElementFixed(el)) {
             this.constructor.addElementClass(layer, this.constructor.getFixedClass());
@@ -763,15 +802,189 @@ export default class GuideChimp {
         const { style: layerStyle } = layer;
 
         // set new position
-        layerStyle.cssText = `width: ${layerWidth}px;
-        height: ${layerHeight}px;
-        top: ${layerTop}px;
-        left: ${layerLeft}px;`;
+        layerStyle.cssText = `width: ${width}px;
+        height: ${height}px;
+        top: ${top}px;
+        left: ${left}px;`;
 
         return this;
     }
 
-    setTooltipLayerPosition(tooltipLayer, el, preferredPosition = '') {
+    setTooltipLayerPosition(tooltipLayer, el, options = {}) {
+        let { position, boundary } = options;
+
+        position = position || this.options.position;
+
+        let alignment = null;
+
+        if (!boundary) {
+            boundary = window;
+        }
+
+        let { padding } = this.options;
+
+        const elStyle = getComputedStyle(el);
+
+        if (elStyle.getPropertyValue('position') === 'floating') {
+            padding = 0;
+        }
+
+        const { style } = tooltipLayer;
+
+        // reset tooltip styles
+        style.top = null;
+        style.right = null;
+        style.bottom = null;
+        style.left = null;
+        style.marginLeft = null;
+        style.marginTop = null;
+
+        const {
+            top: elTop,
+            bottom: elBottom,
+            left: elLeft,
+            right: elRight,
+            width: elWidth,
+            height: elHeight,
+        } = el.getBoundingClientRect();
+
+        const { height: tooltipHeight, width: tooltipWith } = tooltipLayer.getBoundingClientRect();
+
+        // find out min tooltip width
+        const cloneTooltip = tooltipLayer.cloneNode();
+        cloneTooltip.style.visibility = 'hidden';
+        cloneTooltip.innerHTML = '';
+
+        tooltipLayer.parentElement.appendChild(cloneTooltip);
+
+        const { width: minTooltipWidth } = cloneTooltip.getBoundingClientRect();
+
+        let boundaryRect = {};
+
+        if (boundary === window) {
+            boundaryRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
+        } else {
+            const { x, y } = boundary.getBoundingClientRect();
+            boundaryRect = new DOMRect(x, y, boundary.scrollWidth, boundary.scrollHeight);
+        }
+
+        const {
+            top: boundaryTop,
+            bottom: boundaryBottom,
+            left: boundaryLeft,
+            right: boundaryRight,
+            width: boundaryWidth,
+        } = boundaryRect;
+
+
+        // if the element is default element, skip position and alignment calculation
+        if (!el.classList.contains(this.constructor.getDefaultElementClass())) {
+            // calculate position
+            const positions = ['bottom', 'right', 'left', 'top'];
+
+            // check if the tooltip can be placed on top
+            if (tooltipHeight > (elTop - boundaryTop)) {
+                positions.splice(positions.indexOf('top'), 1);
+            }
+
+            // check if the tooltip can be placed on bottom
+            if (tooltipHeight > boundaryBottom - elBottom) {
+                positions.splice(positions.indexOf('bottom'), 1);
+            }
+
+            // check if the tooltip can be placed on left
+            if (minTooltipWidth > elLeft - boundaryLeft) {
+                positions.splice(positions.indexOf('left'), 1);
+            }
+
+            // check if the tooltip can be placed on right
+            if (minTooltipWidth > boundaryRight - elRight) {
+                positions.splice(positions.indexOf('right'), 1);
+            }
+
+            if (positions.length) {
+                position = positions.includes(position) ? position : positions[0];
+            } else {
+                position = 'floating';
+            }
+
+            if (position === 'top' || position === 'bottom') {
+                const alignments = ['left', 'right', 'middle'];
+
+                // valid left space must be at least tooltip width
+                if (boundaryRight - elLeft < minTooltipWidth) {
+                    alignments.splice(alignments.indexOf('left'), 1);
+                }
+
+                // valid right space must be at least tooltip width
+                if (elRight - boundaryLeft < minTooltipWidth) {
+                    alignments.splice(alignments.indexOf('right'), 1);
+                }
+
+                // valid middle space must be at least half width from both sides
+                if (((elLeft + (elWidth / 2)) - boundaryLeft) < (minTooltipWidth / 2)
+                    || (boundaryRight - (elRight - (elWidth / 2))) < (minTooltipWidth / 2)) {
+                }
+
+                alignment = (alignments.length) ? alignments[0] : 'middle';
+            }
+        }
+
+        const root = document.documentElement;
+
+        tooltipLayer.removeAttribute('data-guidechimp-position');
+        tooltipLayer.setAttribute('data-guidechimp-position', position);
+
+        switch (position) {
+            case 'top':
+                style.bottom = `${elHeight + padding}px`;
+                break;
+            case 'right':
+                style.left = `${(elRight + (padding / 2)) - root.clientLeft}px`;
+                break;
+            case 'left':
+                style.right = `${root.clientWidth - (elLeft - (padding / 2))}px`;
+                break;
+            case 'bottom':
+                style.top = `${elHeight + padding}px`;
+                break;
+            default: {
+                style.left = '50%';
+                style.top = '50%';
+                style.transform = 'translate(-50%,-50%)';
+            }
+        }
+
+        tooltipLayer.removeAttribute('data-guidechimp-alignment');
+
+        if (alignment) {
+            tooltipLayer.setAttribute('data-guidechimp-alignment', alignment);
+
+            switch (alignment) {
+                case 'left': {
+                    style.left = `${elLeft - (padding / 2)}px`;
+                    break;
+                }
+                case 'right': {
+                    style.right = `${root.clientWidth - elRight - (padding / 2)}px`;
+                    break;
+                }
+                default: {
+                    if ((elLeft + (elWidth / 2)) < (tooltipWith / 2)
+                        || (elLeft + (elWidth / 2) + (tooltipWith / 2)) > root.clientWidth) {
+                        style.left = `${((root.clientWidth) / 2) - (tooltipWith / 2)}px`;
+                    } else {
+                        style.left = `${elLeft + (elWidth / 2) - (tooltipWith / 2)}px`;
+                    }
+                }
+            }
+        }
+
+
+        return this;
+    }
+
+    setTooltipLayerPosition2(tooltipLayer, el, preferredPosition = '') {
         // set tooltip position
         let position = 'floating';
         let alignment = null;
@@ -791,7 +1004,7 @@ export default class GuideChimp {
         const windowHeight = window.innerHeight;
         const windowWidth = window.innerWidth;
 
-        const scrollableParentEl = this.getScrollableParentElement(el);
+        const { scrollTop, scrollHeight } = this.getScrollableParentElement(el, 'x');
 
         let {
             top: elTop,
@@ -835,11 +1048,11 @@ export default class GuideChimp {
         if (!isDefaultElement) {
             const positionPriority = ['top', 'bottom', 'right', 'left'];
 
-            if (elTop - tooltipHeight + scrollableParentEl.scrollTop < 0) {
+            if (elTop - tooltipHeight + scrollTop < 0) {
                 positionPriority.splice(positionPriority.indexOf('top'), 1);
             }
 
-            if (elBottom + tooltipHeight > windowHeight) {
+            if (scrollHeight - (scrollTop + elBottom) < tooltipHeight) {
                 positionPriority.splice(positionPriority.indexOf('bottom'), 1);
             }
 
@@ -1618,6 +1831,41 @@ export default class GuideChimp {
     }
 
     /**
+     * Set up window scroll event listener
+     * @return {this}
+     */
+    setUpOnWindowScrollListener() {
+        this.shutUpOnWindowScrollListener();
+
+        // turn on keyboard navigation
+        this.cache.set('onWindowScrollListener', this.getOnWindowScrollListener());
+        window.addEventListener('scroll', this.cache.get('onWindowScrollListener'), true);
+
+        return this;
+    }
+
+    /**
+     * Return on window scroll event listener function
+     * @returns {function}
+     */
+    getOnWindowScrollListener() {
+        return () => this.refresh();
+    }
+
+    /**
+     * Shut up window scroll event listener
+     * @return {this}
+     */
+    shutUpOnWindowScrollListener() {
+        if (this.cache.has('onWindowScrollListener')) {
+            window.removeEventListener('scroll', this.cache.get('onWindowScrollListener'), true);
+            this.cache.delete('onWindowScrollListener');
+        }
+
+        return this;
+    }
+
+    /**
      * Refresh layers position
      * @returns {this}
      */
@@ -1642,7 +1890,7 @@ export default class GuideChimp {
         }
 
         if (this.cache.has('tooltipLayer')) {
-            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, position);
+            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, { position, boundary: window });
         }
 
         return this;
