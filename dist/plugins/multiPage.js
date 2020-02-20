@@ -124,7 +124,7 @@ module.exports = function (c) {
     var _this = this;
 
     parentInit();
-    this.on('onBeforeChange', function (self, fromStep, toStep) {
+    this.on('onBeforeChange', function (toStep) {
       if (_this.tour && _this.tour !== 'string') {
         if (toStep.page) {
           var url = document.createElement('a');

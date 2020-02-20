@@ -14,7 +14,7 @@ module.exports = (c) => {
     c.prototype.init = function () {
         parentInit();
 
-        this.on('onBeforeChange', (self, fromStep, toStep) => {
+        this.on('onBeforeChange', (toStep) => {
             if (this.tour && this.tour !== 'string') {
                 if (toStep.page) {
                     const url = document.createElement('a');
