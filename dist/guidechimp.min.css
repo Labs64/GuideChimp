@@ -76,7 +76,6 @@
   .gc-tooltip[data-guidechimp-position='top'] {
     margin-bottom: 10px; }
   .gc-tooltip[data-guidechimp-position='left'] {
-    margin-top: 5px;
     margin-right: 10px; }
   .gc-tooltip[data-guidechimp-position='right'] {
     margin-left: 10px; }

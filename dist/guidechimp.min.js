@@ -1469,6 +1469,7 @@ function () {
                 }
 
                 this.scrollParentToChildElement(el);
+                this.scrollTo(el);
                 highlightLayer = this.showHighlightLayer();
                 interactionLayer = this.showInteractionLayer();
                 controlLayer = this.showControlLayer();
@@ -1499,7 +1500,6 @@ function () {
                 this.showCopyright();
                 this.setTooltipLayerPosition(tooltipLayer, el, position);
                 this.highlightElement(el);
-                this.scrollTo(el);
                 setTimeout(function () {
                   _this.scrollTo(tooltipLayer, 'smooth');
                 }, 300);
@@ -1726,6 +1726,7 @@ function () {
     key: "getScrollableParentElement",
     value: function getScrollableParentElement(el) {
       var regex = /(auto|scroll)/;
+      var elStyle = getComputedStyle(el);
 
       var getScrollableParent = function getScrollableParent(parent) {
         if (!parent || parent === document.body) {
@@ -1733,20 +1734,24 @@ function () {
         }
 
         var parentStyle = getComputedStyle(parent);
+
+        if (elStyle.getPropertyValue('position') === 'fixed' && parentStyle.getPropertyValue('position') === 'static') {
+          return getScrollableParent(parent.parentElement);
+        }
+
         var isScrollable = regex.test("".concat(parentStyle.getPropertyValue('overflow'), "\n                ").concat(parentStyle.getPropertyValue('overflow-y'), "\n                ").concat(parentStyle.getPropertyValue('overflow-x')));
         return isScrollable ? parent : getScrollableParent(parent.parentElement);
       };
 
-      var elStyle = getComputedStyle(el);
       return elStyle.getPropertyValue('position') === 'fixed' ? document.body : getScrollableParent(el.parentElement);
     }
   }, {
     key: "scrollParentToChildElement",
     value: function scrollParentToChildElement(el) {
-      var scrollableParent = this.getScrollableParentElement(el); // scroll a parent scrollable element to a child element
+      var scrollableParentEl = this.getScrollableParentElement(el); // scroll a parent scrollable element to a child element
 
-      if (scrollableParent !== document.body) {
-        scrollableParent.scrollTop = el.offsetTop - scrollableParent.offsetTop;
+      if (scrollableParentEl !== document.body) {
+        scrollableParentEl.scrollTop = el.offsetTop - scrollableParentEl.offsetTop - this.options.scrollPadding;
       }
 
       return this;
@@ -1768,7 +1773,7 @@ function () {
 
       if (!(top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth)) {
         window.scrollBy({
-          top: top,
+          top: top - this.options.scrollPadding,
           behavior: behavior
         });
       }
@@ -1867,6 +1872,11 @@ function () {
       }
 
       var padding = this.options.padding;
+      var elStyle = getComputedStyle(el);
+
+      if (elStyle.getPropertyValue('position') === 'floating') {
+        padding = 0;
+      }
 
       var _this$constructor$get = this.constructor.getElementOffset(el),
           width = _this$constructor$get.width,
@@ -1878,12 +1888,6 @@ function () {
         this.constructor.addElementClass(layer, this.constructor.getFixedClass());
       } else {
         this.constructor.removeElementClass(layer, this.constructor.getFixedClass());
-      }
-
-      var elStyle = getComputedStyle(el);
-
-      if (elStyle.getPropertyValue('position') === 'floating') {
-        padding = 0;
       }
 
       var layerStyle = layer.style; // set new position
@@ -1903,19 +1907,42 @@ function () {
     }
   }, {
     key: "setControlLayerPosition",
-    value: function setControlLayerPosition(controlLayer, el) {
-      this.setLayerPosition(controlLayer, el);
-      var scrollableParent = this.getScrollableParentElement(el);
+    value: function setControlLayerPosition(layer, el) {
+      if (!layer || !el) {
+        return this;
+      }
 
-      var _el$getBoundingClient2 = el.getBoundingClientRect(),
-          elLeft = _el$getBoundingClient2.left,
-          elWidth = _el$getBoundingClient2.width;
+      var padding = this.options.padding;
+      var elStyle = getComputedStyle(el);
 
-      var _scrollableParent$get = scrollableParent.getBoundingClientRect(),
-          scrollableParentWidth = _scrollableParent$get.width;
+      if (elStyle.getPropertyValue('position') === 'floating') {
+        padding = 0;
+      }
 
-      var style = controlLayer.style;
-      style.width = elLeft + elWidth < scrollableParentWidth ? "".concat(scrollableParentWidth - elLeft, "px") : "".concat(elWidth, "px");
+      var _window2 = window,
+          pageXOffset = _window2.pageXOffset,
+          innerWidth = _window2.innerWidth;
+
+      var _this$constructor$get2 = this.constructor.getElementOffset(el),
+          height = _this$constructor$get2.height,
+          top = _this$constructor$get2.top,
+          left = _this$constructor$get2.left,
+          right = _this$constructor$get2.right;
+
+      var layerHeight = height + padding;
+      var layerTop = top - padding / 2;
+      var layerLeft = pageXOffset < left - padding / 2 ? pageXOffset : left - padding / 2;
+      var layerWidth = layerLeft + innerWidth > right + padding / 2 ? innerWidth : right + padding / 2;
+
+      if (this.constructor.isElementFixed(el)) {
+        this.constructor.addElementClass(layer, this.constructor.getFixedClass());
+      } else {
+        this.constructor.removeElementClass(layer, this.constructor.getFixedClass());
+      }
+
+      var layerStyle = layer.style; // set new position
+
+      layerStyle.cssText = "width: ".concat(layerWidth, "px;\n        height: ").concat(layerHeight, "px;\n        top: ").concat(layerTop, "px;\n        left: ").concat(layerLeft, "px;");
       return this;
     }
   }, {
@@ -1926,22 +1953,35 @@ function () {
       var position = 'floating';
       var alignment = null;
       var isDefaultElement = el.classList.contains(this.constructor.getDefaultElementClass());
+      var padding = this.options.padding;
+      var elStyle = getComputedStyle(el);
 
-      var _el$getBoundingClient3 = el.getBoundingClientRect(),
-          elTop = _el$getBoundingClient3.top,
-          elBottom = _el$getBoundingClient3.bottom,
-          elLeft = _el$getBoundingClient3.left,
-          elRight = _el$getBoundingClient3.right;
+      if (elStyle.getPropertyValue('position') === 'floating') {
+        padding = 0;
+      }
 
-      var _el$getBoundingClient4 = el.getBoundingClientRect(),
-          elWidth = _el$getBoundingClient4.width,
-          elHeight = _el$getBoundingClient4.height;
+      var windowRight = window.innerWidth + window.pageXOffset;
+      var windowLeft = window.pageXOffset;
+      var windowHeight = window.innerHeight;
+      var windowWidth = window.innerWidth;
+      var scrollableParentEl = this.getScrollableParentElement(el);
 
-      elWidth += this.options.padding;
-      elHeight += this.options.padding;
+      var _el$getBoundingClient2 = el.getBoundingClientRect(),
+          elTop = _el$getBoundingClient2.top,
+          elBottom = _el$getBoundingClient2.bottom,
+          elLeft = _el$getBoundingClient2.left,
+          elRight = _el$getBoundingClient2.right,
+          elWidth = _el$getBoundingClient2.width,
+          elHeight = _el$getBoundingClient2.height;
+
+      elTop -= padding / 2;
+      elBottom += padding / 2;
+      elLeft -= padding / 2;
+      elRight += padding / 2;
+      elWidth += padding;
+      elHeight += padding;
 
       var _tooltipLayer$getBoun = tooltipLayer.getBoundingClientRect(),
-          tooltipWidth = _tooltipLayer$getBoun.width,
           tooltipHeight = _tooltipLayer$getBoun.height; // find out min tooltip width
 
 
@@ -1966,15 +2006,17 @@ function () {
       if (!isDefaultElement) {
         var positionPriority = ['top', 'bottom', 'right', 'left'];
 
-        if (elTop - tooltipHeight < 0) {
+        if (elTop - tooltipHeight + scrollableParentEl.scrollTop < 0) {
           positionPriority.splice(positionPriority.indexOf('top'), 1);
         }
 
-        if (elBottom + tooltipHeight > window.innerHeight) {
+        console.log(scrollableParentEl, scrollableParentEl.scrollHeight, scrollableParentEl.scrollTop);
+
+        if (elBottom + tooltipHeight > windowHeight) {
           positionPriority.splice(positionPriority.indexOf('bottom'), 1);
         }
 
-        if (elRight + minTooltipWidth > window.innerWidth) {
+        if (elRight + minTooltipWidth > windowWidth) {
           positionPriority.splice(positionPriority.indexOf('right'), 1);
         }
 
@@ -1999,12 +2041,12 @@ function () {
       if (position === 'top' || position === 'bottom') {
         var availableAlignments = ['left', 'right', 'middle']; // valid left space must be at least tooltip width
 
-        if (window.innerWidth - elLeft < minTooltipWidth) {
+        if (windowWidth - elLeft < minTooltipWidth) {
           availableAlignments.splice(availableAlignments.indexOf('left'), 1);
         } // valid middle space must be at least half width from both sides
 
 
-        if (elLeft < minTooltipWidth / 2 || window.innerWidth - elLeft < minTooltipWidth / 2) {
+        if (elLeft < minTooltipWidth / 2 || windowWidth - elLeft < minTooltipWidth / 2) {
           availableAlignments.splice(availableAlignments.indexOf('middle'), 1);
         } // valid right space must be at least tooltip width
 
@@ -2022,21 +2064,17 @@ function () {
       tooltipLayer.removeAttribute(dataAlignmentAttr);
       tooltipLayer.setAttribute(dataPositionAttr, position);
 
-      if (alignment) {
-        tooltipLayer.setAttribute(dataAlignmentAttr, alignment);
-      }
-
       switch (position) {
         case 'top':
           style.bottom = "".concat(elHeight, "px");
           break;
 
         case 'right':
-          style.left = "".concat(elWidth, "px");
+          style.left = "".concat(elRight - windowLeft, "px");
           break;
 
         case 'left':
-          style.right = "".concat(elWidth, "px");
+          style.right = "".concat(windowRight - elLeft, "px");
           break;
 
         case 'bottom':
@@ -2052,21 +2090,47 @@ function () {
           }
       }
 
-      if (alignment === 'right') {
-        if (elLeft + elWidth / 2 + minTooltipWidth / 2 > window.innerWidth) {
-          style.left = "".concat(window.innerWidth - minTooltipWidth - elLeft, "px");
-        } else {
-          style.left = "".concat(elWidth - minTooltipWidth, "px");
+      if (alignment) {
+        tooltipLayer.setAttribute(dataAlignmentAttr, alignment);
+
+        switch (alignment) {
+          case 'left':
+            {
+              style.left = "".concat(elLeft - windowLeft, "px");
+              break;
+            }
+
+          case 'right':
+            {
+              style.right = "".concat(windowRight > elRight ? windowRight - elRight : 0, "px");
+              break;
+            }
+
+          default:
+            {
+              if (elLeft + elWidth / 2 - windowLeft < minTooltipWidth / 2 || elLeft + elWidth / 2 + minTooltipWidth / 2 > windowRight) {
+                style.left = "".concat((windowRight - windowLeft) / 2 + windowLeft - minTooltipWidth / 2, "px");
+              } else {
+                style.left = "".concat(elLeft + elWidth / 2 - windowLeft - minTooltipWidth / 2, "px");
+              }
+            }
         }
-      } else if (alignment === 'middle') {
-        if (elLeft + elWidth / 2 - minTooltipWidth / 2 < 0) {
-          style.left = "".concat(-elLeft, "px");
-        } else if (elLeft + elWidth / 2 + minTooltipWidth / 2 > window.innerWidth) {
-          style.left = "".concat(window.innerWidth - minTooltipWidth - elLeft, "px");
-        } else {
-          style.left = "".concat(elWidth / 2 - minTooltipWidth / 2, "px");
-        }
-      }
+      } // if (alignment === 'right') {
+      //     if ((elLeft + (elWidth / 2)) + (minTooltipWidth / 2) > window.innerWidth) {
+      //         style.left = `${window.innerWidth - minTooltipWidth - elLeft}px`;
+      //     } else {
+      //         style.left = `${elWidth - minTooltipWidth}px`;
+      //     }
+      // } else if (alignment === 'middle') {
+      //     if (elLeft + (elWidth / 2) - (minTooltipWidth / 2) < 0) {
+      //         style.left = `${-elLeft}px`;
+      //     } else if ((elLeft + (elWidth / 2)) + (minTooltipWidth / 2) > window.innerWidth) {
+      //         style.left = `${window.innerWidth - minTooltipWidth - elLeft}px`;
+      //     } else {
+      //         style.left = `${(elWidth / 2) - (minTooltipWidth / 2)}px`;
+      //     }
+      // }
+
 
       return this;
     }
@@ -2799,7 +2863,8 @@ function () {
         showPagination: true,
         showProgressbar: true,
         interaction: true,
-        padding: 10
+        padding: 10,
+        scrollPadding: 10
       };
     }
   }, {
@@ -2947,15 +3012,23 @@ function () {
       var scrollTop = window.pageYOffset || documentElement.scrollTop || body.scrollTop;
       var scrollLeft = window.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
 
-      var _el$getBoundingClient5 = el.getBoundingClientRect(),
-          width = _el$getBoundingClient5.width,
-          height = _el$getBoundingClient5.height,
-          top = _el$getBoundingClient5.top,
-          left = _el$getBoundingClient5.left;
+      var _el$getBoundingClient3 = el.getBoundingClientRect(),
+          top = _el$getBoundingClient3.top,
+          right = _el$getBoundingClient3.right,
+          bottom = _el$getBoundingClient3.bottom,
+          left = _el$getBoundingClient3.left,
+          width = _el$getBoundingClient3.width,
+          height = _el$getBoundingClient3.height,
+          x = _el$getBoundingClient3.x,
+          y = _el$getBoundingClient3.y;
 
       return {
+        right: right,
+        bottom: bottom,
         width: width,
         height: height,
+        x: x,
+        y: y,
         top: top + scrollTop,
         left: left + scrollLeft
       };
