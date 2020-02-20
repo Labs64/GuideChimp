@@ -417,10 +417,11 @@ function () {
             onBeforeChange,
             onAfterChange,
             results,
-            el,
             _this$step,
+            element,
             position,
             buttons,
+            el,
             highlightLayer,
             controlLayer,
             interactionLayer,
@@ -551,17 +552,8 @@ function () {
               case 41:
                 this.stopPreloader();
                 this.step = toStep;
-                el = this.step.element;
-                _this$step = this.step, position = _this$step.position, buttons = _this$step.buttons;
-
-                if (typeof el === 'string') {
-                  el = document.querySelector(el);
-                }
-
-                if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
-                  el = this.showDefaultElement();
-                }
-
+                _this$step = this.step, element = _this$step.element, position = _this$step.position, buttons = _this$step.buttons;
+                el = this.getStepElement(element);
                 this.scrollParentToChildElement(el);
                 highlightLayer = this.showHighlightLayer();
                 controlLayer = this.showControlLayer();
@@ -605,7 +597,7 @@ function () {
 
                 return _context2.abrupt("return", true);
 
-              case 75:
+              case 73:
               case "end":
                 return _context2.stop();
             }
@@ -817,6 +809,17 @@ function () {
 
         return 0;
       });
+    }
+  }, {
+    key: "getStepElement",
+    value: function getStepElement(selector) {
+      var el = selector instanceof HTMLElement ? selector : document.querySelector(selector);
+
+      if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
+        el = this.showDefaultElement();
+      }
+
+      return el;
     }
   }, {
     key: "scrollParentToChildElement",
@@ -1810,20 +1813,25 @@ function () {
         return this;
       }
 
+      var _this$step2 = this.step,
+          element = _this$step2.element,
+          position = _this$step2.position;
+      var el = this.getStepElement(element);
+
       if (this.cache.has('highlightLayer')) {
-        this.setLayerPosition(this.cache.get('highlightLayer'), this.step.element);
+        this.setLayerPosition(this.cache.get('highlightLayer'), el);
       }
 
       if (this.cache.has('controlLayer')) {
-        this.setLayerPosition(this.cache.get('controlLayer'), this.step.element);
+        this.setLayerPosition(this.cache.get('controlLayer'), el);
       }
 
       if (this.cache.has('interactionLayer')) {
-        this.setLayerPosition(this.cache.get('interactionLayer'), this.step.element);
+        this.setLayerPosition(this.cache.get('interactionLayer'), el);
       }
 
       if (this.cache.has('tooltipLayer')) {
-        this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), this.step.element, this.step.position);
+        this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, position);
       }
 
       return this;

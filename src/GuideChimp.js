@@ -370,16 +370,8 @@ export default class GuideChimp {
 
         this.step = toStep;
 
-        let { element: el } = this.step;
-        const { position, buttons } = this.step;
-
-        if (typeof el === 'string') {
-            el = document.querySelector(el);
-        }
-
-        if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
-            el = this.showDefaultElement();
-        }
+        const { element, position, buttons } = this.step;
+        const el = this.getStepElement(element);
 
         this.scrollParentToChildElement(el);
 
@@ -546,6 +538,18 @@ export default class GuideChimp {
             }
             return 0;
         });
+    }
+
+    getStepElement(selector) {
+        let el = (selector instanceof HTMLElement)
+            ? selector
+            : document.querySelector(selector);
+
+        if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
+            el = this.showDefaultElement();
+        }
+
+        return el;
     }
 
     scrollParentToChildElement(el) {
@@ -1506,20 +1510,23 @@ export default class GuideChimp {
             return this;
         }
 
+        const { element, position } = this.step;
+        const el = this.getStepElement(element);
+
         if (this.cache.has('highlightLayer')) {
-            this.setLayerPosition(this.cache.get('highlightLayer'), this.step.element);
+            this.setLayerPosition(this.cache.get('highlightLayer'), el);
         }
 
         if (this.cache.has('controlLayer')) {
-            this.setLayerPosition(this.cache.get('controlLayer'), this.step.element);
+            this.setLayerPosition(this.cache.get('controlLayer'), el);
         }
 
         if (this.cache.has('interactionLayer')) {
-            this.setLayerPosition(this.cache.get('interactionLayer'), this.step.element);
+            this.setLayerPosition(this.cache.get('interactionLayer'), el);
         }
 
         if (this.cache.has('tooltipLayer')) {
-            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), this.step.element, this.step.position);
+            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, position);
         }
 
         return this;
