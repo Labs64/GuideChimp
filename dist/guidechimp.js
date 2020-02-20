@@ -353,7 +353,7 @@ function () {
                 number = _args.length > 0 && _args[0] !== undefined ? _args[0] : 0;
                 useIndex = _args.length > 1 && _args[1] !== undefined ? _args[1] : true;
                 _context.next = 4;
-                return this.emit('onStart', this);
+                return this.emit('onStart');
 
               case 4:
                 _context.next = 6;
@@ -513,7 +513,7 @@ function () {
                 this.startPreloader();
                 _toStep = toStep, onBeforeChange = _toStep.onBeforeChange, onAfterChange = _toStep.onAfterChange;
                 _context2.next = 32;
-                return this.emit('onBeforeChange', this, fromStep, toStep);
+                return this.emit('onBeforeChange', toStep, fromStep);
 
               case 32:
                 results = _context2.sent;
@@ -535,7 +535,7 @@ function () {
 
                 _context2.next = 38;
                 return Promise.resolve().then(function () {
-                  return onBeforeChange(_this, fromStep, toStep);
+                  return onBeforeChange.call(_this, toStep, fromStep);
                 });
 
               case 38:
@@ -597,10 +597,10 @@ function () {
                 setTimeout(function () {
                   _this.scrollTo(tooltipLayer, 'smooth');
                 }, 300);
-                this.emit('onAfterChange', this, fromStep, toStep);
+                this.emit('onAfterChange', toStep, fromStep);
 
                 if (onAfterChange) {
-                  onAfterChange(this, fromStep, toStep);
+                  onAfterChange.call(this, toStep, fromStep);
                 }
 
                 return _context2.abrupt("return", true);
@@ -710,11 +710,11 @@ function () {
                 }
 
                 _context5.next = 4;
-                return this.emit('onComplete', this);
+                return this.emit('onComplete');
 
               case 4:
                 _context5.next = 6;
-                return this.emit('onStop', this);
+                return this.emit('onStop');
 
               case 6:
                 this.step = null;
@@ -1670,6 +1670,8 @@ function () {
   }, {
     key: "emit",
     value: function emit(event) {
+      var _this10 = this;
+
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
@@ -1683,7 +1685,7 @@ function () {
 
       return Promise.all(listeners.map(function (f) {
         return Promise.resolve().then(function () {
-          return f.apply(void 0, args);
+          return f.apply(_this10, args);
         });
       }));
     }
@@ -1709,7 +1711,7 @@ function () {
   }, {
     key: "getOnKeydownListener",
     value: function getOnKeydownListener() {
-      var _this10 = this;
+      var _this11 = this;
 
       return function (event) {
         var keyCode = event.keyCode;
@@ -1720,21 +1722,21 @@ function () {
         var spaceCode = 32; // exit key pressed, stop tour
 
         if (keyCode === escCode) {
-          _this10.stop();
+          _this11.stop();
 
           return;
         } // if the left arrow is pressed, go to the previous step
 
 
         if (keyCode === arrowLeftCode) {
-          _this10.previous();
+          _this11.previous();
 
           return;
         } // if the right arrow, enter or space is pressed, go to the next step
 
 
         if (keyCode === arrowRightCode || keyCode === enterCode || keyCode === spaceCode) {
-          _this10.next();
+          _this11.next();
         }
       };
     }
@@ -1775,10 +1777,10 @@ function () {
   }, {
     key: "getOnWindowResizeListener",
     value: function getOnWindowResizeListener() {
-      var _this11 = this;
+      var _this12 = this;
 
       return function () {
-        return _this11.refresh();
+        return _this12.refresh();
       };
     }
     /**
