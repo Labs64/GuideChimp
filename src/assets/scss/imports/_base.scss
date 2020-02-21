@@ -98,16 +98,23 @@
   }
 
   &[data-guidechimp-position='left'] {
-    margin-top: 5px;
-    margin-right: 10px;
+    margin: 0 10px 0 10px;
   }
 
   &[data-guidechimp-position='right'] {
-    margin-left: 10px;
+    margin: 0 10px 0 10px;
   }
 
   &[data-guidechimp-position='bottom'] {
     margin-top: 10px;
+  }
+
+  &[data-guidechimp-alignment='right'] {
+    margin-left: 5px;
+  }
+
+  &[data-guidechimp-alignment='left'] {
+    margin-right: 5px;
   }
 }
 

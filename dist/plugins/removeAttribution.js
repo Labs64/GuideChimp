@@ -92,11 +92,16 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/plugins/removeAttribution/index.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./src/plugins/removeAttribution/index.js":
+/*!************************************************!*\
+  !*** ./src/plugins/removeAttribution/index.js ***!
+  \************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -117,6 +122,7 @@ module.exports = function (cls) {
 };
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
 //# sourceMappingURL=removeAttribution.js.map
