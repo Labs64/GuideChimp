@@ -1279,8 +1279,7 @@ function () {
                   } // on window resize
 
 
-                  this.setUpOnWindowResizeListener(); // on window scroll
-                  // this.setUpOnWindowScrollListener();
+                  this.setUpOnWindowResizeListener();
                 }
 
                 return _context.abrupt("return", isStarted);
@@ -1464,7 +1463,6 @@ function () {
                 _this$step = this.step, element = _this$step.element, position = _this$step.position, buttons = _this$step.buttons;
                 el = this.getStepElement(element);
                 this.scrollParentToChildElement(el);
-                this.scrollParentToChildElement(el);
                 this.scrollTo(el);
                 highlightLayer = this.showHighlightLayer();
                 interactionLayer = this.showInteractionLayer();
@@ -1510,7 +1508,7 @@ function () {
 
                 return _context2.abrupt("return", true);
 
-              case 74:
+              case 73:
               case "end":
                 return _context2.stop();
             }
@@ -1629,7 +1627,6 @@ function () {
 
                 this.shutUpOnKeydownListener();
                 this.shutUpOnWindowResizeListener();
-                this.shutUpOnWindowScrollListener();
                 this.removePreloaderElement();
                 this.removeOverlayLayer();
                 this.removeControlLayer();
@@ -1639,7 +1636,7 @@ function () {
                 this.cache.clear();
                 return _context5.abrupt("return", this);
 
-              case 20:
+              case 19:
               case "end":
                 return _context5.stop();
             }
@@ -1771,12 +1768,12 @@ function () {
       var scrollableParentElY = this.getScrollableParentElement(el, 'y');
       var scrollPadding = this.options.scrollPadding; // scroll a parent scrollable element to a child element
 
-      if (scrollableParentElX !== document.body) {
-        scrollableParentElX.scrollTop = el.offsetTop - scrollableParentElX.offsetTop - scrollPadding;
+      if (scrollableParentElY !== document.body) {
+        scrollableParentElY.scrollTop = el.offsetTop - scrollableParentElY.offsetTop - scrollPadding;
       }
 
-      if (scrollableParentElY !== document.body) {
-        scrollableParentElY.scrollLeft = el.offsetLeft - scrollableParentElY.offsetLeft - scrollPadding;
+      if (scrollableParentElX !== document.body) {
+        scrollableParentElX.scrollLeft = el.offsetLeft - scrollableParentElX.offsetLeft - scrollPadding;
       }
 
       return this;
@@ -1961,25 +1958,7 @@ function () {
       var height = elHeight + padding;
       var top = elTop - padding / 2;
       var left = pageXOffset < pageXOffset + (elLeft - padding / 2) ? pageXOffset : elLeft - padding / 2;
-      var width = pageXOffset + docElWidth > pageXOffset + (elRight + padding / 2) ? docElWidth : elRight + padding / 2; // left = (left < (elLeft - (padding / 2))) ? left : elLeft - (padding / 2);
-      // width = (left + width > (elRight + (padding / 2))) ? width : elRight + (padding / 2);
-      //
-      // const { left: docElLeft, width: docElWidth } = document.documentElement.getBoundingClientRect();
-      // const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getElementOffset(el);
-      //
-      // const height = elHeight + padding;
-      // const top = top - (padding / 2);
-      // // const left = (Math.abs(docElLeft) < (elLeft - (padding / 2))) ? Math.abs(docElLeft) : elLeft - (padding / 2);
-      // const left = (Math.abs(docElLeft) < elRight) ? Math.abs(docElLeft) : elRight;
-      // const width = (docElWidth > elLeft) ? Math.abs(docElLeft) : elRight;
-      //
-      // const { pageXOffset, innerWidth } = window;
-      // const { height, top, left, right } = this.constructor.getElementOffset(el);
-      //
-      // const layerHeight = height + padding;
-      // const layerTop = top - (padding / 2);
-      // const layerLeft = (pageXOffset < (left - (padding / 2))) ? pageXOffset : left - (padding / 2);
-      // const layerWidth = (layerLeft + innerWidth > (right + (padding / 2))) ? innerWidth : right + (padding / 2);
+      var width = pageXOffset + docElWidth > pageXOffset + (elRight + padding / 2) ? docElWidth : elRight + padding / 2;
 
       if (this.constructor.isElementFixed(el)) {
         this.constructor.addElementClass(layer, this.constructor.getFixedClass());
@@ -2020,6 +1999,7 @@ function () {
       style.left = null;
       style.marginLeft = null;
       style.marginTop = null;
+      style.transform = null;
 
       var _el$getBoundingClient2 = el.getBoundingClientRect(),
           elTop = _el$getBoundingClient2.top,
@@ -2042,6 +2022,7 @@ function () {
       var _cloneTooltip$getBoun = cloneTooltip.getBoundingClientRect(),
           minTooltipWidth = _cloneTooltip$getBoun.width;
 
+      cloneTooltip.parentElement.removeChild(cloneTooltip);
       var boundaryRect = {};
 
       if (boundary === window) {
@@ -2058,8 +2039,7 @@ function () {
           boundaryTop = _boundaryRect.top,
           boundaryBottom = _boundaryRect.bottom,
           boundaryLeft = _boundaryRect.left,
-          boundaryRight = _boundaryRect.right,
-          boundaryWidth = _boundaryRect.width; // if the element is default element, skip position and alignment calculation
+          boundaryRight = _boundaryRect.right; // if the element is default element, skip position and alignment calculation
 
       if (!el.classList.contains(this.constructor.getDefaultElementClass())) {
         // calculate position
@@ -2103,7 +2083,9 @@ function () {
           } // valid middle space must be at least half width from both sides
 
 
-          if (elLeft + elWidth / 2 - boundaryLeft < minTooltipWidth / 2 || boundaryRight - (elRight - elWidth / 2) < minTooltipWidth / 2) {}
+          if (elLeft + elWidth / 2 - boundaryLeft < minTooltipWidth / 2 || boundaryRight - (elRight - elWidth / 2) < minTooltipWidth / 2) {
+            alignments.splice(alignments.indexOf('middle'), 1);
+          }
 
           alignment = alignments.length ? alignments[0] : 'middle';
         }
@@ -2166,196 +2148,6 @@ function () {
             }
         }
       }
-
-      return this;
-    }
-  }, {
-    key: "setTooltipLayerPosition2",
-    value: function setTooltipLayerPosition2(tooltipLayer, el) {
-      var preferredPosition = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-      // set tooltip position
-      var position = 'floating';
-      var alignment = null;
-      var isDefaultElement = el.classList.contains(this.constructor.getDefaultElementClass());
-      var padding = this.options.padding;
-      var elStyle = getComputedStyle(el);
-
-      if (elStyle.getPropertyValue('position') === 'floating') {
-        padding = 0;
-      }
-
-      var windowRight = window.innerWidth + window.pageXOffset;
-      var windowLeft = window.pageXOffset;
-      var windowHeight = window.innerHeight;
-      var windowWidth = window.innerWidth;
-
-      var _this$getScrollablePa = this.getScrollableParentElement(el, 'x'),
-          scrollTop = _this$getScrollablePa.scrollTop,
-          scrollHeight = _this$getScrollablePa.scrollHeight;
-
-      var _el$getBoundingClient3 = el.getBoundingClientRect(),
-          elTop = _el$getBoundingClient3.top,
-          elBottom = _el$getBoundingClient3.bottom,
-          elLeft = _el$getBoundingClient3.left,
-          elRight = _el$getBoundingClient3.right,
-          elWidth = _el$getBoundingClient3.width,
-          elHeight = _el$getBoundingClient3.height;
-
-      elTop -= padding / 2;
-      elBottom += padding / 2;
-      elLeft -= padding / 2;
-      elRight += padding / 2;
-      elWidth += padding;
-      elHeight += padding;
-
-      var _tooltipLayer$getBoun2 = tooltipLayer.getBoundingClientRect(),
-          tooltipHeight = _tooltipLayer$getBoun2.height; // find out min tooltip width
-
-
-      var cloneTooltip = tooltipLayer.cloneNode();
-      cloneTooltip.style.visibility = 'hidden';
-      cloneTooltip.innerHTML = '';
-      tooltipLayer.parentElement.appendChild(cloneTooltip);
-
-      var _cloneTooltip$getBoun2 = cloneTooltip.getBoundingClientRect(),
-          minTooltipWidth = _cloneTooltip$getBoun2.width;
-
-      tooltipLayer.parentElement.removeChild(cloneTooltip);
-      var style = tooltipLayer.style; // reset tooltip styles
-
-      style.top = null;
-      style.right = null;
-      style.bottom = null;
-      style.left = null;
-      style.marginLeft = null;
-      style.marginTop = null;
-
-      if (!isDefaultElement) {
-        var positionPriority = ['top', 'bottom', 'right', 'left'];
-
-        if (elTop - tooltipHeight + scrollTop < 0) {
-          positionPriority.splice(positionPriority.indexOf('top'), 1);
-        }
-
-        if (scrollHeight - (scrollTop + elBottom) < tooltipHeight) {
-          positionPriority.splice(positionPriority.indexOf('bottom'), 1);
-        }
-
-        if (elRight + minTooltipWidth > windowWidth) {
-          positionPriority.splice(positionPriority.indexOf('right'), 1);
-        }
-
-        if (elLeft - minTooltipWidth < 0) {
-          positionPriority.splice(positionPriority.indexOf('left'), 1);
-        } // eslint-disable-next-line prefer-destructuring
-
-
-        position = positionPriority[0];
-
-        if (positionPriority.length) {
-          if (positionPriority.includes(this.options.position)) {
-            position = this.options.position;
-          }
-
-          if (positionPriority.includes(preferredPosition)) {
-            position = preferredPosition;
-          }
-        }
-      }
-
-      if (position === 'top' || position === 'bottom') {
-        var availableAlignments = ['left', 'right', 'middle']; // valid left space must be at least tooltip width
-
-        if (windowWidth - elLeft < minTooltipWidth) {
-          availableAlignments.splice(availableAlignments.indexOf('left'), 1);
-        } // valid middle space must be at least half width from both sides
-
-
-        if (elLeft < minTooltipWidth / 2 || windowWidth - elLeft < minTooltipWidth / 2) {
-          availableAlignments.splice(availableAlignments.indexOf('middle'), 1);
-        } // valid right space must be at least tooltip width
-
-
-        if (elRight < minTooltipWidth) {
-          availableAlignments.splice(availableAlignments.indexOf('right'), 1);
-        }
-
-        alignment = availableAlignments.length ? availableAlignments[0] : 'middle';
-      }
-
-      var dataPositionAttr = 'data-guidechimp-position';
-      var dataAlignmentAttr = 'data-guidechimp-alignment';
-      tooltipLayer.removeAttribute(dataPositionAttr);
-      tooltipLayer.removeAttribute(dataAlignmentAttr);
-      tooltipLayer.setAttribute(dataPositionAttr, position);
-
-      switch (position) {
-        case 'top':
-          style.bottom = "".concat(elHeight, "px");
-          break;
-
-        case 'right':
-          style.left = "".concat(elRight - windowLeft, "px");
-          break;
-
-        case 'left':
-          style.right = "".concat(windowRight - elLeft, "px");
-          break;
-
-        case 'bottom':
-          style.top = "".concat(elHeight, "px");
-          break;
-
-        default:
-          {
-            style.left = '50%';
-            style.top = '50%';
-            style.marginLeft = "-".concat(minTooltipWidth / 2, "px");
-            style.marginTop = "-".concat(tooltipHeight / 2, "px");
-          }
-      }
-
-      if (alignment) {
-        tooltipLayer.setAttribute(dataAlignmentAttr, alignment);
-
-        switch (alignment) {
-          case 'left':
-            {
-              style.left = "".concat(elLeft - windowLeft, "px");
-              break;
-            }
-
-          case 'right':
-            {
-              style.right = "".concat(windowRight > elRight ? windowRight - elRight : 0, "px");
-              break;
-            }
-
-          default:
-            {
-              if (elLeft + elWidth / 2 - windowLeft < minTooltipWidth / 2 || elLeft + elWidth / 2 + minTooltipWidth / 2 > windowRight) {
-                style.left = "".concat((windowRight - windowLeft) / 2 + windowLeft - minTooltipWidth / 2, "px");
-              } else {
-                style.left = "".concat(elLeft + elWidth / 2 - windowLeft - minTooltipWidth / 2, "px");
-              }
-            }
-        }
-      } // if (alignment === 'right') {
-      //     if ((elLeft + (elWidth / 2)) + (minTooltipWidth / 2) > window.innerWidth) {
-      //         style.left = `${window.innerWidth - minTooltipWidth - elLeft}px`;
-      //     } else {
-      //         style.left = `${elWidth - minTooltipWidth}px`;
-      //     }
-      // } else if (alignment === 'middle') {
-      //     if (elLeft + (elWidth / 2) - (minTooltipWidth / 2) < 0) {
-      //         style.left = `${-elLeft}px`;
-      //     } else if ((elLeft + (elWidth / 2)) + (minTooltipWidth / 2) > window.innerWidth) {
-      //         style.left = `${window.innerWidth - minTooltipWidth - elLeft}px`;
-      //     } else {
-      //         style.left = `${(elWidth / 2) - (minTooltipWidth / 2)}px`;
-      //     }
-      // }
-
 
       return this;
     }
@@ -3043,49 +2835,6 @@ function () {
       return this;
     }
     /**
-     * Set up window scroll event listener
-     * @return {this}
-     */
-
-  }, {
-    key: "setUpOnWindowScrollListener",
-    value: function setUpOnWindowScrollListener() {
-      this.shutUpOnWindowScrollListener(); // turn on keyboard navigation
-
-      this.cache.set('onWindowScrollListener', this.getOnWindowScrollListener());
-      window.addEventListener('scroll', this.cache.get('onWindowScrollListener'), true);
-      return this;
-    }
-    /**
-     * Return on window scroll event listener function
-     * @returns {function}
-     */
-
-  }, {
-    key: "getOnWindowScrollListener",
-    value: function getOnWindowScrollListener() {
-      var _this13 = this;
-
-      return function () {
-        return _this13.refresh();
-      };
-    }
-    /**
-     * Shut up window scroll event listener
-     * @return {this}
-     */
-
-  }, {
-    key: "shutUpOnWindowScrollListener",
-    value: function shutUpOnWindowScrollListener() {
-      if (this.cache.has('onWindowScrollListener')) {
-        window.removeEventListener('scroll', this.cache.get('onWindowScrollListener'), true);
-        this.cache.delete('onWindowScrollListener');
-      }
-
-      return this;
-    }
-    /**
      * Refresh layers position
      * @returns {this}
      */
@@ -3288,15 +3037,15 @@ function () {
       var scrollTop = window.pageYOffset || documentElement.scrollTop || body.scrollTop;
       var scrollLeft = window.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
 
-      var _el$getBoundingClient4 = el.getBoundingClientRect(),
-          top = _el$getBoundingClient4.top,
-          right = _el$getBoundingClient4.right,
-          bottom = _el$getBoundingClient4.bottom,
-          left = _el$getBoundingClient4.left,
-          width = _el$getBoundingClient4.width,
-          height = _el$getBoundingClient4.height,
-          x = _el$getBoundingClient4.x,
-          y = _el$getBoundingClient4.y;
+      var _el$getBoundingClient3 = el.getBoundingClientRect(),
+          top = _el$getBoundingClient3.top,
+          right = _el$getBoundingClient3.right,
+          bottom = _el$getBoundingClient3.bottom,
+          left = _el$getBoundingClient3.left,
+          width = _el$getBoundingClient3.width,
+          height = _el$getBoundingClient3.height,
+          x = _el$getBoundingClient3.x,
+          y = _el$getBoundingClient3.y;
 
       return {
         right: right,

@@ -86,11 +86,15 @@
   .gc-tooltip[data-guidechimp-position='top'] {
     margin-bottom: 10px; }
   .gc-tooltip[data-guidechimp-position='left'] {
-    margin-right: 10px; }
+    margin: 0 10px 0 10px; }
   .gc-tooltip[data-guidechimp-position='right'] {
-    margin-left: 10px; }
+    margin: 0 10px 0 10px; }
   .gc-tooltip[data-guidechimp-position='bottom'] {
     margin-top: 10px; }
+  .gc-tooltip[data-guidechimp-alignment='right'] {
+    margin-left: 5px; }
+  .gc-tooltip[data-guidechimp-alignment='left'] {
+    margin-right: 5px; }
 
 .gc-tooltip-tail {
   position: absolute;
@@ -292,10 +296,10 @@
   100% {
     transform: rotate(360deg); } }
 
-@media (max-width: 350px) {
+@media (max-width: 360px) {
   .gc-tooltip {
-    min-width: 200px;
-    max-width: 263px; } }
+    min-width: 260px;
+    max-width: 290px; } }
 
 
 /*# sourceMappingURL=guidechimp.min.css.map*/
