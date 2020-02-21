@@ -6,8 +6,9 @@ const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const { BannerPlugin } = require('webpack');
 
-const { name } = pkg;
+const { name, version } = pkg;
 const libraryName = 'GuideChimp';
 
 function resolve(dir) {
@@ -50,6 +51,11 @@ const baseConfig = {
             },
         ],
     },
+    plugins: [
+        new BannerPlugin({
+            banner: `${libraryName} v${version} | Copyright (C) ${(new Date()).getFullYear()} Labs64 GmbH`,
+        }),
+    ],
     performance: { hints: false },
     optimization: {
         minimizer: [

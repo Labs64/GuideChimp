@@ -1,3 +1,4 @@
+/*! GuideChimp v1.1.5 | Copyright (C) 2020 Labs64 GmbH */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
