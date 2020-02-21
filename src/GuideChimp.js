@@ -958,7 +958,6 @@ export default class GuideChimp {
             }
         }
 
-
         return this;
     }
 
