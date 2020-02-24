@@ -853,9 +853,10 @@ export default class GuideChimp {
             right: boundaryRight,
         } = boundaryRect;
 
-
         // if the element is default element, skip position and alignment calculation
-        if (!el.classList.contains(this.constructor.getDefaultElementClass())) {
+        if (el.classList.contains(this.constructor.getDefaultElementClass())) {
+            position = 'floating';
+        } else {
             // calculate position
             const positions = ['bottom', 'right', 'left', 'top'];
 
