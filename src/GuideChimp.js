@@ -693,7 +693,6 @@ export default class GuideChimp {
 
         if (highlightEls) {
             const highlightElsArray = Array.from(highlightEls);
-
             if (highlightElsArray.length) {
                 highlightEls.forEach((el) => {
                     this.resetElementHighlighting(el);

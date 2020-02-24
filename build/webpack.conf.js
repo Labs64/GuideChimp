@@ -38,12 +38,12 @@ const baseConfig = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
-                include: [resolve('src'), resolve('test')],
+                include: [resolve('src'), resolve('plugins'), resolve('test')],
             },
             {
                 test: /(\.jsx|\.js)$/,
                 loader: 'eslint-loader',
-                include: [resolve('src'), resolve('test')],
+                include: [resolve('src'), resolve('plugins'), resolve('test')],
                 options: {
                     formatter: eslintFriendlyFormatter,
                     emitWarning: true,
@@ -118,13 +118,13 @@ const libraryConfig = merge(
 
 const pluginsConfigs = [];
 
-fs.readdirSync(path.resolve(__dirname, '../src/plugins')).forEach(fileName => {
+fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(fileName => {
     pluginsConfigs.push(merge(
         baseConfig,
         {
             entry: {
-                [fileName]: `./src/plugins/${fileName}`,
-                [`${fileName}.min`]: `./src/plugins/${fileName}`,
+                [fileName]: `./plugins/${fileName}`,
+                [`${fileName}.min`]: `./plugins/${fileName}`,
             },
             output: {
                 path: path.resolve(__dirname, '../dist/plugins'),
