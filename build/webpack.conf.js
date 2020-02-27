@@ -118,22 +118,26 @@ const libraryConfig = merge(
 
 const pluginsConfigs = [];
 
+const notAllowedPlugins = ['boilerplate'];
+
 fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(fileName => {
-    pluginsConfigs.push(merge(
-        baseConfig,
-        {
-            entry: {
-                [fileName]: `./plugins/${fileName}`,
-                [`${fileName}.min`]: `./plugins/${fileName}`,
+    if (!notAllowedPlugins.includes(fileName)) {
+        pluginsConfigs.push(merge(
+            baseConfig,
+            {
+                entry: {
+                    [fileName]: `./plugins/${fileName}`,
+                    [`${fileName}.min`]: `./plugins/${fileName}`,
+                },
+                output: {
+                    path: path.resolve(__dirname, '../dist/plugins'),
+                    filename: '[name].js',
+                    library: `${camelize(`${libraryName} plugin ${fileName}`)}`,
+                    libraryTarget: 'umd',
+                },
             },
-            output: {
-                path: path.resolve(__dirname, '../dist/plugins'),
-                filename: '[name].js',
-                library: `${camelize(`${libraryName} plugin ${fileName}`)}`,
-                libraryTarget: 'umd',
-            },
-        },
-    ));
+        ));
+    }
 });
 
 module.exports = [libraryConfig, ...pluginsConfigs];
