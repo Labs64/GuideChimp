@@ -1,10 +1,12 @@
 
 ## MultiPage
-The multiPage plugin expands the features of the GuideChimp allowing you to use guided tour across the pages.
 
-MultiPage plugin adds a new `.continue()` method, which automatically starts a tour in case it needs to be continued.
+This plugin allows guided tour usage across multiple pages.
 
-_first-page.html_
+MultiPage plugin adds a new `.continue()` method, which automatically starts the tour in case it needs to be continued.
+
+**first-page.html**
+
 ```html
 <div id="step1">First step</div>
 <div id="step3">Third step</div>
@@ -41,7 +43,7 @@ GuideChimp.extend(guideChimpPluginMultiPage);
 
     var guide = GuideChimp(tour);
 
-    // detect that the tour should be continued, and automatically continue the tour with the necessary step
+    // detects whether the tour should be continued and automatically continues the tour on the right step
     guide.continue();
 
     document.getElementById('startTour').onclick = () => {
@@ -50,7 +52,8 @@ GuideChimp.extend(guideChimpPluginMultiPage);
 </script>
 ```
 
-_second-page.html_
+**second-page.html**
+
 ```html
 <div id="step2">Second step</div>
 
@@ -86,7 +89,7 @@ _second-page.html_
 
     var guide = GuideChimp(tour);
 
-    // detect that the tour should be continued, and automatically continue the tour with the necessary step
+    // detects whether the tour should be continued and automatically continues the tour on the right step
     guide.continue();
 </script>
 ```
