@@ -1,5 +1,6 @@
 ## Remove Attribution
-Remove "Made with GuideChimp" attribution.
+
+Remove _"Made with GuideChimp"_ attribution.
 
 ```javascript
 import GuideChimp from 'guidechimp';
