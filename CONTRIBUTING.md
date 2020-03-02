@@ -7,3 +7,5 @@ Contributions are welcome, and are accepted via pull requests. Please review the
 * Make sure that 100% of your code is covered by tests.
 
 ## Contributing New Plugins
+
+* See GuideChimp [plugins boilerplate](plugins/_boilerplate)
