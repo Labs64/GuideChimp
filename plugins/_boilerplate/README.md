@@ -3,15 +3,19 @@ You can contribute to the GuideChimp ecosystem and create your own plugins and e
 ## How To Start
 
 - Fork GuideChimp repository
-- Copy the plugins/_boilerplate/ folder and rename this (Notation: pluginName)
+- Copy the `plugins/_boilerplate` folder and rename this (Notation: `pluginName`)
 - Extend GuideChimp functionality
-- Do not forget to test your plugin
+- Do not forget to test your plugin ☝️
 - Provide installation and usage instructions in the plugin's README.md file
 - Create [Pull Request](https://github.com/Labs64/GuideChimp/pull/new/master)
 
 We'll verify your submission and accept Pull Request if this will satisfy our quality requirements.
 
 ## Plugin Template
+
+We advise you to use `plugins/_boilerplate/index.js` as a starting point for the plugin development
+This template provides a reference for the most interesting events and methods, which can be extended/overridden.
+You can delete not needed code snippets as per your plugin requirements.
 
 ```javascript
 /**
