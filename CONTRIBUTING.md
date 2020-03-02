@@ -4,29 +4,6 @@ Contributions are welcome, and are accepted via pull requests. Please review the
 
 ## Guidelines
 
-* Please follow the [PSR-2 Coding Standard](http://www.php-fig.org/psr/psr-2/) and [PHP-FIG Naming Conventions](http://www.php-fig.org/bylaws/psr-naming-conventions/).
-* Ensure that the current tests pass, and if you've added something new, add the tests where relevant.
-* Remember that we follow [SemVer](http://semver.org). If you are changing the behaviour, or the public api, you may need to update the docs.
-* Send a coherent commit history, making sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash](http://git-scm.com/book/en/Git-Tools-Rewriting-History) them before submitting.
-* You may also need to [rebase](http://git-scm.com/book/en/Git-Branching-Rebasing) to avoid merge conflicts.
-
-
-## Running Tests
-
-You will need an install of [Composer](https://getcomposer.org) before continuing.
-
-First, install the dependencies:
-
-```bash
-$ composer install
-```
-
-Then run phpunit:
-
-```bash
-$ vendor/bin/phpunit
-```
-
-If the test suite passes on your local machine you should be good to go.
-
-When you make a pull request, the tests will automatically be run again by [Travis CI](https://travis-ci.org/) on multiple php versions and hhvm.
+* As much as possible, try to follow the existing format of markdown and code.
+* Don't forget to run `npm run ci` and `npm test` before submitting pull requests.
+* Make sure that 100% of your code is covered by tests.
