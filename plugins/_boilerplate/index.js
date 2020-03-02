@@ -10,7 +10,7 @@
  *
  * @param {Class} cls GuideChimp class
  * @param {Object} factory GuideChimp factory
- * @param {Array} args any arguments for the needs of your plugin, for example: options object
+ * @param {Array} args optional arguments needed for the plugin; for instance, the options object
  */
 export default (cls, factory, ...args) => {
 
