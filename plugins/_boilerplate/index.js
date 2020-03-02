@@ -13,34 +13,35 @@
  * @param {Array} args any arguments for the needs of your plugin, for example: options object
  */
 export default (cls, factory, ...args) => {
+
     /**
      * INITIALIZATION & OPTIONS
      * ________________________
      */
 
     /**
-     * Add some extra setup logic without having to override the constructor.
+     * Add setup logic without having to override the constructor.
      */
     const parentInit = cls.prototype.init;
     cls.prototype.init = () => {
         parentInit();
 
         /**
-         * My event listener
+         * Custom event listener
          * @param {Object} to step to go to
          * @param {Object} from step to go from
          */
         this.on('onBeforeChange', (to, from) => {
-            // my code
+            // custom code
             // ...
         });
 
         /**
-         * Fire my custom event
+         * Trigger custom event
          */
-        this.emit('MyEvent', ...args);
+        this.emit('CustomEvent', ...args);
 
-        // my code
+        // custom code
         // ...
     };
 
@@ -51,7 +52,7 @@ export default (cls, factory, ...args) => {
     const parentDefaultOptions = cls.prototype.getDefaultOptions;
     cls.getDefaultOptions = () => ({
         ...parentDefaultOptions(),
-        // my default options
+        // custom default options
         // ...
     });
 
@@ -64,97 +65,97 @@ export default (cls, factory, ...args) => {
      * The getBodyClass method returns classes that will be added to the body, when GuideChimp starts
      */
     const parentGetBodyClass = cls.getBodyClass;
-    cls.getBodyClass = () => `${parentGetBodyClass()} my-class`;
+    cls.getBodyClass = () => `${parentGetBodyClass()} custom-class`;
 
     /**
      * The getHighlightElementClass method returns classes to be added to the element to be highlighted.
      */
     const parentGetHighlightElementClass = cls.getHighlightElementClass;
-    cls.getHighlightElementClass = () => `${parentGetHighlightElementClass()} my-class`;
+    cls.getHighlightElementClass = () => `${parentGetHighlightElementClass()} custom-class`;
 
     /**
      * The getPreloaderClass method returns classes to be added to the preloader element.
      */
     const parentGetPreloaderClass = cls.getPreloaderClass;
-    cls.getPreloaderClass = () => `${parentGetPreloaderClass()} my-class`;
+    cls.getPreloaderClass = () => `${parentGetPreloaderClass()} custom-class`;
 
     /**
      * The getOverlayLayerClass method returns classes to be added to the overlay layer.
      */
     const parentGetOverlayLayerClass = cls.getOverlayLayerClass;
-    cls.getOverlayLayerClass = () => `${parentGetOverlayLayerClass()} my-class`;
+    cls.getOverlayLayerClass = () => `${parentGetOverlayLayerClass()} custom-class`;
 
     /**
      * The getHighlightLayerClass method returns classes to be added to the highlight layer.
      */
     const parentGetHighlightLayerClass = cls.getHighlightLayerClass;
-    cls.getHighlightLayerClass = () => `${parentGetHighlightLayerClass()} my-class`;
+    cls.getHighlightLayerClass = () => `${parentGetHighlightLayerClass()} custom-class`;
 
     /**
      * The getControlLayerClass method returns classes to be added to the control layer.
      */
     const parentGetControlLayerClass = cls.getControlLayerClass;
-    cls.getControlLayerClass = () => `${parentGetControlLayerClass()} my-class`;
+    cls.getControlLayerClass = () => `${parentGetControlLayerClass()} custom-class`;
 
     /**
      * The getInteractionLayerClass method returns classes to be added to the interaction layer.
      */
     const parentGetInteractionLayerClass = cls.getInteractionLayerClass;
-    cls.getInteractionLayerClass = () => `${parentGetInteractionLayerClass()} my-class`;
+    cls.getInteractionLayerClass = () => `${parentGetInteractionLayerClass()} custom-class`;
 
     /**
      * The getTooltipLayerClass method returns classes to be added to the tooltip layer.
      */
     const parentGetTooltipLayerClass = cls.getTooltipLayerClass;
-    cls.getTooltipLayerClass = () => `${parentGetTooltipLayerClass()} my-class`;
+    cls.getTooltipLayerClass = () => `${parentGetTooltipLayerClass()} custom-class`;
 
     /**
      * The getTitleClass method returns classes to be added to the title element.
      */
     const parentGetTitleClass = cls.getTitleClass;
-    cls.getTitleClass = () => `${parentGetTitleClass()} my-class`;
+    cls.getTitleClass = () => `${parentGetTitleClass()} custom-class`;
 
     /**
      * The getDescriptionClass method returns classes to be added to the description element.
      */
     const parentGetDescriptionClass = cls.getDescriptionClass;
-    cls.getDescriptionClass = () => `${parentGetDescriptionClass()} my-class`;
+    cls.getDescriptionClass = () => `${parentGetDescriptionClass()} custom-class`;
 
     /**
      * The getCustomButtonsLayerClass method returns classes to be added to the custom buttons layer.
      */
     const parentGetCustomButtonsLayerClass = cls.getCustomButtonsLayerClass;
-    cls.getCustomButtonsLayerClass = () => `${parentGetCustomButtonsLayerClass()} my-class`;
+    cls.getCustomButtonsLayerClass = () => `${parentGetCustomButtonsLayerClass()} custom-class`;
 
     /**
      * The getNavigationClass method returns classes to be added to the navigation layer.
      */
     const parentGetNavigationClass = cls.getNavigationClass;
-    cls.getNavigationClass = () => `${parentGetNavigationClass()} my-class`;
+    cls.getNavigationClass = () => `${parentGetNavigationClass()} custom-class`;
 
     /**
      * The getNavigationClass method returns classes to be added to the navigation prev element.
      */
     const parentGetNavigationPrevClass = cls.getNavigationPrevClass;
-    cls.getNavigationPrevClass = () => `${parentGetNavigationPrevClass()} my-class`;
+    cls.getNavigationPrevClass = () => `${parentGetNavigationPrevClass()} custom-class`;
 
     /**
      * The getNavigationNextClass method returns classes to be added to the navigation next element.
      */
     const parentGetNavigationNextClass = cls.getNavigationNextClass;
-    cls.getNavigationNextClass = () => `${parentGetNavigationNextClass()} my-class`;
+    cls.getNavigationNextClass = () => `${parentGetNavigationNextClass()} custom-class`;
 
     /**
      * The getPaginationLayerClass method returns classes to be added to the pagination layer.
      */
     const parentGetPaginationLayerClass = cls.getPaginationLayerClass;
-    cls.getPaginationLayerClass = () => `${parentGetPaginationLayerClass()} my-class`;
+    cls.getPaginationLayerClass = () => `${parentGetPaginationLayerClass()} custom-class`;
 
     /**
      * The getProgressbarClass method returns classes to be added to the progressbar element.
      */
     const parentGetProgressbarClass = cls.getProgressbarClass;
-    cls.getProgressbarClass = () => `${parentGetProgressbarClass()} my-class`;
+    cls.getProgressbarClass = () => `${parentGetProgressbarClass()} custom-class`;
 
 
     /**
@@ -163,57 +164,57 @@ export default (cls, factory, ...args) => {
      */
 
     /**
-     * The start method starts the tour and initiates the necessary window event listeners
+     * This method starts the tour and initiates the necessary event listeners
      */
     const parentStart = cls.prototype.start;
     cls.prototype.start = async (...startArgs) => {
         await parentStart(...startArgs);
 
-        // my code
+        // custom code
         // ...
     };
 
     /**
-     * The go method makes the transition from one step to another
+     * This method performs the transition from one step to another
      */
     const parentGo = cls.prototype.go;
     cls.prototype.go = async (...goArgs) => {
         await parentGo(...goArgs);
 
-        // my code
+        // custom code
         // ...
     };
 
     /**
-     * The previous method moves one step back
+     * This method navigates one step back
      */
     const parentPrevious = cls.prototype.previous;
     cls.prototype.previous = async () => {
         await parentPrevious();
 
-        // my code
+        // custom code
         // ...
     };
 
     /**
-     * The next method moves one step forward
+     * This method navigates one step forward
      */
     const parentNext = cls.prototype.next;
     cls.prototype.next = async () => {
         await parentNext();
 
-        // my code
+        // custom code
         // ...
     };
 
     /**
-     * The stop method terminates the guide, deletes created html elements and unsubscribes from window events
+     * This method terminates the tour, deletes created html elements and unsubscribes from window events
      */
     const parentStop = cls.prototype.stop;
     cls.prototype.stop = async () => {
         await parentStop();
 
-        // my code
+        // custom code
         // ...
     };
 };
