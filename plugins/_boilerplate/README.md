@@ -4,12 +4,12 @@ You can contribute to the GuideChimp ecosystem and create your own plugins and e
 
 - Fork GuideChimp repository
 - Copy the `plugins/_boilerplate` folder and rename this (Notation: `pluginName`)
-- Extend GuideChimp functionality
+- [Extend](#plugin-template) GuideChimp functionality
 - Do not forget to test your plugin ☝️
-- Provide installation and usage instructions in the plugin's README.md file
+- Provide installation and usage instructions in the plugin's `README.md` file
 - Create [Pull Request](https://github.com/Labs64/GuideChimp/pull/new/master)
 
-We'll verify your submission and accept Pull Request if this will satisfy our quality requirements.
+We'll verify your submission and accept Pull Request if this will satisfy our [quality requirements](../../CODE_OF_CONDUCT.md).
 
 ## Plugin Template
 
