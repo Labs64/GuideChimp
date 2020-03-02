@@ -118,10 +118,9 @@ const libraryConfig = merge(
 
 const pluginsConfigs = [];
 
-const notAllowedPlugins = ['boilerplate'];
-
 fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(fileName => {
-    if (!notAllowedPlugins.includes(fileName)) {
+    // skip all folders starting with underscore
+    if (fileName[0] !== '_') {
         pluginsConfigs.push(merge(
             baseConfig,
             {

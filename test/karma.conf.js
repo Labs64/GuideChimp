@@ -29,6 +29,7 @@ module.exports = function karmaConfig(config) {
         reporters: ['spec'],
         files: [
             './index.js',
+            '../plugins/**/tests/*.spec.js',
         ],
         preprocessors: {
             './index.js': ['babel', 'webpack', 'sourcemap'],
