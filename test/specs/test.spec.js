@@ -1,4 +1,4 @@
-describe('Test', () => {
-    it('Case 1', async () => {
+describe('Test Suite (Main)', () => {
+    it('TestCase 1', async () => {
     });
 });
