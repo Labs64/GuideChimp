@@ -1,5 +1,3 @@
-/*  eslint-disable no-unused-vars, no-param-reassign */
-
 /**
  * Copyright (C) 2020 Labs64 GmbH
  *
