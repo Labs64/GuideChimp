@@ -1,32 +1,34 @@
-## Plugin tips
+## Plugin Template
+
 ```javascript
 /**
  *
  * @param {Class} cls GuideChimp class
  * @param {Object} factory GuideChimp factory
- * @param {Array} args any arguments for the needs of your plugin, for example: options object
+ * @param {Array} args optional arguments needed for the plugin; for instance, the options object
  */
 module.exports = (cls, factory, ...args) => {
+
     /**
      * extend GuideChimp() class
-     * e.g. add GuideChimp(tour).someMyMethod()
+     * e.g. add GuideChimp(tour).customMethod()
      */
-    cls.prototype.someMyMethod = () => {};
+    cls.prototype.customMethod = () => {};
     
     /**
      * extend GuideChimp factory
-     * e.g. add GuideChimp.someMyMethod()
+     * e.g. add GuideChimp.customMethod()
      */
-    factory.someMyMethod = () => {};
+    factory.customMethod = () => {};
 
  
-     // overriding existing API
+     // override existing API
      // e.g. extend GuideChimp().init()
      const parentInit = cls.prototype.init;
      cls.prototype.init = () => {
          parentInit();
  
-         // some my extra code
+         // custom code
          //...
      };
 
@@ -34,7 +36,7 @@ module.exports = (cls, factory, ...args) => {
     const parentDefaultOptions = cls.prototype.getDefaultOptions;
        cls.getDefaultOptions = () => ({
            ...parentDefaultOptions(),
-           // my default options
+           // custom options
            // ...
        });
  };
