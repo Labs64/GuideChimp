@@ -1,28 +1,10 @@
-### Enable Plugin as ES6 Module
-```javascript
-// core
-import GuideChimp from 'guidechimp';
+## Google Analytics
 
-// plugins
-import googleAnalytics from 'guidechimp/dist/plugins/googleAnalytics';
-
-// enable plugins
-GuideChimp.extend(googleAnalytics);
-```
-
-### Enable Plugin as HTML Dependency
-```html
-<script src="guidechimp/dist/guidechimp.min.js"></script>
-<script src="guidechimp/dist/plugins/googleAnalytics.js"></script>
-
-<!-- Enable plugin as guideChimpPlugin{PluginName} -->
-<script>
-    GuideChimp.extend(guideChimpPluginGoogleAnalytics);
-</script>
-```
+Track tour events with Google Analytics.
 
 
-### Examples:
+### How To Use
+
 Method `gaOn(event, action, parameters = {})`: _Subscribe and send the gtag event on the GuideChimp event_
    * `event`: GuideChimp event
    * `action`: is the string that will appear as the event action in Google Analytics Event reports
