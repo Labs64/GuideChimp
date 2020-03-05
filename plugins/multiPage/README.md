@@ -5,6 +5,8 @@ This plugin allows guided tour usage across multiple pages.
 
 MultiPage plugin adds a new `.continue()` method, which automatically starts the tour in case it needs to be continued.
 
+### How To Use
+
 **first-page.html**
 
 ```html
