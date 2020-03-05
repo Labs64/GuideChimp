@@ -53,7 +53,7 @@ Method: `gaTiming(startEvent, endEvent, parameters = {})`
 
 #### Send Google Analaytics event
 
-Method `gaEvent(action, parameters = {})`
+Method: `gaEvent(action, parameters = {})`
 
 * `action`: Google Analytics event action
 * `parameters`(optional): Google Analytics parameters object
