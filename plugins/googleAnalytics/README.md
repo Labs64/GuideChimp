@@ -66,7 +66,7 @@ Method: `gaEvent(action, parameters = {})`
           {
               title: 'OK',
               onClick() {
-                  guideChimp.gaEvent('OK button pressed', { event_category: 'Button' })
+                  guideChimp.gaEvent('OK button click', { event_category: 'Button' })
               }
           }
       ]
