@@ -9,6 +9,7 @@
 <a href="https://github.com/Labs64/GuideChimp/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache License 2.0"></a>
 </p>
 
+
 Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
 # What can you do with GuideChimp?
@@ -139,11 +140,11 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 |  | Open Source | Commercial |
 | --- | --- | --- |
-| Commercial Use | :white_check_mark: | :white_check_mark: |
+| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Domains | 1 | unlimited |
-| Remove Attribution | :heavy_multiplication_x: | :white_check_mark: |
-| Extensions/Plugins | :heavy_multiplication_x: | :white_check_mark: |
-| Support  | :heavy_multiplication_x: | :white_check_mark: |
+| Remove Attribution | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Extensions/Plugins | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Support  | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 |  | --- | --- |
 |  | [Start Now](https://github.com/Labs64/GuideChimp/wiki/Install) | [Contact Us](https://netlicensing.io/contact/) |
 
