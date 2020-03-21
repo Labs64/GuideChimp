@@ -19,7 +19,7 @@ fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-browser-console.j
 
 ### Prepare website tour
 
-Open tour definition from this path `https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js` (replace *<WEBSITE>*) and execute this in the browser console.
+Open tour definition from this path `https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js` (replace `<WEBSITE>`) and execute this in the browser console.
 
 #### Sample
 
