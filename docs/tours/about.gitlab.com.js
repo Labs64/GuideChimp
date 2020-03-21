@@ -18,3 +18,5 @@ var tour = [
         position: 'left',
     },
 ];
+
+GuideChimp(tour).start();
