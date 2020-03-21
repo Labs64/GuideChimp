@@ -20,6 +20,8 @@ fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-browser-console.j
 ### Prepare website tour
 
 Open content of `https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js` and execute this.
+
+#### Sample
 e.g. https://io.labs64.com/GuideChimp/docs/tours/about.gitlab.com.js
 
 ```javascript
