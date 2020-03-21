@@ -1,4 +1,4 @@
-<a href="https://www.linkedin.com/showcase/guidechimp/"><p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-logo-transparent.png"  alt="GuideChimp - Logo"></p></a>
+<a href="https://www.linkedin.com/showcase/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-logo-transparent.png" alt="GuideChimp - Logo"></p></a>
 
 <p align="center">
 <a href="https://github.com/Labs64/GuideChimp/actions?query=workflow%3A%22GuideChimp+CI%22"><img src="https://github.com/Labs64/GuideChimp/workflows/GuideChimp%20CI/badge.svg" alt="Build Status"></a>
@@ -14,7 +14,7 @@ Deliver the perfect product experience, improve digital product adoption, boost 
 
 # What can you do with GuideChimp?
 
-<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/guidechimp-stage-04-shadow.png"  alt="GuideChimp - Where To Use"></p>
+<p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-stage-04-shadow.png"  alt="GuideChimp - Where To Use"></p>
 
 - <strong>User Experience:</strong> Implement engaging and personalised guides to walk users through your system.
 - <strong>User Onboarding:</strong> Successfully onboard your users from day one with an intuitive step by step walkthroughs.
@@ -50,7 +50,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Lightweight (~ 35KB) and good performance
 - **Last But Not Least:** :point_up: Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
 
-<p align="center"><img src="https://github.com/Labs64/guidechimp/blob/master/docs/img/netlicensing-features-tour.gif"  alt="Labs64 NetLicensing - Features Tour"></p>
+<p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/netlicensing-features-tour.gif"  alt="Labs64 NetLicensing - Features Tour"></p>
 
 
 # How to Use
