@@ -18,14 +18,31 @@ fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-browser-console.j
 ```
 
 ### Prepare website tour
+
+Open content of `https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js` and execute this.
+e.g. https://io.labs64.com/GuideChimp/docs/tours/about.gitlab.com.js
+
 ```javascript
-fetch('https://io.labs64.com/GuideChimp/docs/tours/<website>.js')
-    .then(response => response.text())
-    .then(text => eval(text));
-// e.g.
-fetch('https://io.labs64.com/GuideChimp/docs/tours/about.gitlab.com.js')
-    .then(response => response.text())
-    .then(text => eval(text));
+var tour = [
+    {
+        element: 'div.col-md-4.challenge-box.complexity.js-all-clickable',
+        title: 'Complexity',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        position: 'right',
+    },
+    {
+        element: 'div.col-md-4.challenge-box.speed.js-all-clickable',
+        title: 'Speed',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        position: 'top',
+    },
+    {
+        element: 'div.col-md-4.challenge-box.security.js-all-clickable',
+        title: 'Security',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        position: 'left',
+    },
+];
 ```
 
 ### Run tour
