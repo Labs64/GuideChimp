@@ -3,7 +3,7 @@ You can try GuideChimp on any public website by executing below commands in the 
 ## How To
 
 ### Open website
-e.g. https://about.gitlab.com
+e.g. https://netlicensing.io
 
 ### Open browser console
 - **Firefox:** `Tools` > `Web Developer` > `Web Console`
@@ -27,7 +27,7 @@ replace `<WEBSITE>` with the website domain name.
 
 #### Sample
 ```javascript
-fetch('https://io.labs64.com/GuideChimp/docs/tours/about.gitlab.com.js')
+fetch('https://io.labs64.com/GuideChimp/docs/tours/netlicensing.io.js')
     .then(response => response.text())
     .then(text => eval(text));
 ```
