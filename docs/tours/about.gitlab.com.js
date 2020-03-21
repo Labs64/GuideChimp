@@ -1,4 +1,4 @@
-[
+var tour = [
     {
         element: 'div.col-md-4.challenge-box.complexity.js-all-clickable',
         title: 'Complexity',
