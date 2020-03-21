@@ -6,9 +6,9 @@ You can try GuideChimp on any public website by executing below commands in the 
 e.g. https://about.gitlab.com
 
 ### Open browser console
-- Firefox: `Tools` > `Web Developer` > `Web Console`
-- Chrome:  `More Tools` > `Developer Tools`
-- Safari:  `Develop` > `Show JavaScript Console`
+- **Firefox:** `Tools` > `Web Developer` > `Web Console`
+- **Chrome:**  `More Tools` > `Developer Tools`
+- **Safari:**  `Develop` > `Show JavaScript Console`
 
 ### Load GuideChimp scripts and styles
 ```javascript
@@ -19,10 +19,11 @@ fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-browser-console.j
 
 ### Prepare website tour
 
-Open content of `https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js` and execute this.
+Open tour definition from this path `https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js` (replace *<WEBSITE>*) and execute this in the browser console.
 
 #### Sample
-e.g. https://io.labs64.com/GuideChimp/docs/tours/about.gitlab.com.js
+
+**Tour definition:** https://io.labs64.com/GuideChimp/docs/tours/about.gitlab.com.js
 
 ```javascript
 var tour = [
