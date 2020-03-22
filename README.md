@@ -4,8 +4,8 @@
 <a href="https://github.com/Labs64/GuideChimp/actions?query=workflow%3A%22GuideChimp+CI%22"><img src="https://github.com/Labs64/GuideChimp/workflows/GuideChimp%20CI/badge.svg" alt="Build Status"></a>
 <a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="Build Status"></a>
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="Build Status"></a>
-<a href="https://discord.gg/cgs9JeK"><img src="https://img.shields.io/discord/691194972216754187.svg?label=Join%20Community&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" alt="Join GuideChimp Discord Community"></a>
 <a href="https://github.com/Labs64/GuideChimp/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache License 2.0"></a>
+<a href="https://discord.gg/cgs9JeK"><img src="https://img.shields.io/discord/691194972216754187.svg?label=Join%20Community&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" alt="Join GuideChimp Discord Community"></a>
 </p>
 
 
