@@ -37,4 +37,13 @@ var tour = [
     },
 ];
 
+// Load plugins before using them
+/*
+fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-plugins.js')
+    .then(response => response.text())
+    .then(text => eval(text));
+*/
+
+GuideChimp.extend(guideChimpPluginRemoveAttribution);
+
 GuideChimp(tour).start();
