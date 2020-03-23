@@ -10,5 +10,5 @@ function loadScript(url, onLoad, location) {
     return script;
 }
 
-// load GuideChimp pluging
+// load GuideChimp plugins
 loadScript('https://cdn.jsdelivr.net/npm/guidechimp@1/dist/plugins/removeAttribution.min.js');
