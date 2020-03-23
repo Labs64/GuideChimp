@@ -1,6 +1,6 @@
 You can try GuideChimp on any public website by executing below commands in the browser console.
 
-## How To
+## How to test GuideChimp on your webapp
 
 ### 1) Open website
 
