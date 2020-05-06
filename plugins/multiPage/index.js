@@ -12,7 +12,7 @@ module.exports = (cls) => {
 
     // eslint-disable-next-line func-names,no-param-reassign
     cls.prototype.init = function () {
-        parentInit();
+        parentInit.call(this);
 
         this.on('onBeforeChange', (to) => {
             const { multiPage } = to;

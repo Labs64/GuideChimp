@@ -93,7 +93,7 @@ module.exports = (cls, factory) => {
 
     // eslint-disable-next-line no-param-reassign,func-names
     cls.prototype.init = function () {
-        parentInit();
+        parentInit.call(this);
 
         // set global gtag events
         Array.from(events).forEach(([event, listeners]) => {
