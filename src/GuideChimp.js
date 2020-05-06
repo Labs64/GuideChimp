@@ -25,7 +25,14 @@ export default class GuideChimp {
 
         this.cache = cache;
 
-        this.listeners = [];
+        this.listeners = {};
+
+        // observers
+        this.observers = {};
+
+        if (ResizeObserver) {
+            this.observers.stepElementResizeObserver = new ResizeObserver(() => this.refresh());
+        }
 
         this.setOptions(options);
         this.setTour(tour);
@@ -274,9 +281,6 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async start(number = 0, useIndex = true) {
-        // emit start event
-        await this.emit('onStart');
-
         const isStarted = await this.go(number, useIndex);
 
         if (isStarted) {
@@ -285,11 +289,14 @@ export default class GuideChimp {
 
             // turn on keyboard navigation
             if (this.options.useKeyboard) {
-                this.setUpOnKeydownListener();
+                this.addOnKeydownListener();
             }
 
             // on window resize
-            this.setUpOnWindowResizeListener();
+            this.addOnWindowResizeListener();
+
+            // emit start event
+            await this.emit('onStart');
         }
 
         return isStarted;
@@ -347,7 +354,11 @@ export default class GuideChimp {
             return false;
         }
 
+        // remove all highlighting
         this.resetElementsHighlighting();
+
+        // remove all old steps elements resize observers
+        this.unobserveResizeAllStepsElements();
 
         this.showOverlayLayer();
 
@@ -415,6 +426,8 @@ export default class GuideChimp {
 
         this.highlightElement(el);
 
+        this.observeResizeStepElement(el);
+
         setTimeout(() => {
             this.scrollTo(tooltipLayer, 'smooth');
         }, 300);
@@ -453,6 +466,7 @@ export default class GuideChimp {
             await this.emit('onComplete');
         }
 
+        // emit stop event
         await this.emit('onStop');
 
         this.step = null;
@@ -461,9 +475,12 @@ export default class GuideChimp {
         // remove the class that increase the specificity of the guidechimp classes
         document.body.classList.remove(this.constructor.getBodyClass());
 
-        // shut up events listeners
-        this.shutUpOnKeydownListener();
-        this.shutUpOnWindowResizeListener();
+        // remove events listeners
+        this.removeOnKeydownListener();
+        this.removeOnWindowResizeListener();
+
+        // remove observers
+        this.unobserveResizeAllStepsElements();
 
         this.removePreloaderElement();
         this.removeOverlayLayer();
@@ -1354,7 +1371,7 @@ export default class GuideChimp {
                 }
 
                 if (onClick) {
-                    customButton.onclick = onClick;
+                    customButton.onclick = (e) => onClick.call(this, e);
                 }
 
                 customButtonsLayer.appendChild(customButton);
@@ -1530,9 +1547,7 @@ export default class GuideChimp {
      * Set up keydown event listener
      * @return {this}
      */
-    setUpOnKeydownListener() {
-        this.shutUpOnKeydownListener();
-
+    addOnKeydownListener() {
         // turn on keyboard navigation
         this.cache.set('onKeydownListener', this.getOnKeydownListener());
         window.addEventListener('keydown', this.cache.get('onKeydownListener'), true);
@@ -1574,10 +1589,10 @@ export default class GuideChimp {
     }
 
     /**
-     * Shut up keydown event listener
+     * Remove keydown event listener
      * @return {this}
      */
-    shutUpOnKeydownListener() {
+    removeOnKeydownListener() {
         if (this.cache.has('onKeydownListener')) {
             window.removeEventListener('keydown', this.cache.get('onKeydownListener'), true);
             this.cache.delete('onKeydownListener');
@@ -1587,12 +1602,10 @@ export default class GuideChimp {
     }
 
     /**
-     * Set up window resize event listener
+     * Add window resize event listener
      * @return {this}
      */
-    setUpOnWindowResizeListener() {
-        this.shutUpOnWindowResizeListener();
-
+    addOnWindowResizeListener() {
         // turn on keyboard navigation
         this.cache.set('onWindowResizeListener', this.getOnWindowResizeListener());
         window.addEventListener('resize', this.cache.get('onWindowResizeListener'), true);
@@ -1609,13 +1622,56 @@ export default class GuideChimp {
     }
 
     /**
-     * Shut up window resize event listener
+     * Remove window resize event listener
      * @return {this}
      */
-    shutUpOnWindowResizeListener() {
+    removeOnWindowResizeListener() {
         if (this.cache.has('onWindowResizeListener')) {
             window.removeEventListener('resize', this.cache.get('onWindowResizeListener'), true);
             this.cache.delete('onWindowResizeListener');
+        }
+
+        return this;
+    }
+
+    /**
+     * Observe resize step element
+     * @return {this}
+     */
+    observeResizeStepElement(el, options = { box: 'border-box' }) {
+        const { stepElementResizeObserver: observer } = this.observers;
+
+        if (observer) {
+            observer.observe(el, options);
+        }
+
+        return this;
+    }
+
+    /**
+     * Unobserve resize step element
+     * @param el
+     * @return {this}
+     */
+    unobserveResizeStepElement(el) {
+        const { stepElementResizeObserver: observer } = this.observers;
+
+        if (observer) {
+            observer.unobserve(el);
+        }
+
+        return this;
+    }
+
+    /**
+     * Unobserve all resize steps elements
+     * @return {this}
+     */
+    unobserveResizeAllStepsElements() {
+        const { stepElementResizeObserver: observer } = this.observers;
+
+        if (observer) {
+            observer.disconnect();
         }
 
         return this;
