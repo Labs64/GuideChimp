@@ -1544,7 +1544,7 @@ export default class GuideChimp {
     }
 
     /**
-     * Set up keydown event listener
+     * Add keydown event listener
      * @return {this}
      */
     addOnKeydownListener() {
