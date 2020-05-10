@@ -1,9 +1,9 @@
 
 ## Triggers
 
-This plugin allows you to specify an HTML element(s) as a trigger for such GuideChimp events as "next", "previous", "stop".
+This plugin allows you to trigger GuideChimp events such as `"next"`, `"previous"`, `"stop"` or your custom events upon HTML DOM elements change.
 
-The trigger plugin allows you to set triggers both global and for each step individually
+You can set up triggers globally and for each step individually.
 
 ### How To Use
 
@@ -64,8 +64,7 @@ GuideChimp.extend(guideChimpPluginTriggers);
 </script>
 ```
 
-Trigger can be string(selector), HTMLElement, NodeList or object.
-Moreover you could use single trigger or array of triggers.
+Trigger can be one of: CSS-selector, HTMLElement, NodeList or object. Moreover, you can define a single trigger or array of triggers.
 
 ```javascript
 const previousHTMLElement = document.querySelector('.previous');
@@ -81,8 +80,8 @@ var guide = GuideChimp(tour, {
     });
 ```
 
-By default string(selector), HtmlElement of NodeList triggers use event "click".
-If you need to change an event or even a listener function, you can use the trigger object
+By default string(selector), HTMLElement and NodeList triggers use "click" event.
+Use the trigger object to change an event or event listener function.
 
 ```javascript
 var guide = GuideChimp(tour, {
