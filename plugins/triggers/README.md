@@ -50,7 +50,7 @@ GuideChimp.extend(guideChimpPluginTriggers);
     ];
 
     var guide = GuideChimp(tour, {
-         // global triggers
+        // global triggers
         triggers: {
             next: '.next',
             previous: '.previous',
@@ -71,7 +71,7 @@ const previousHTMLElement = document.querySelector('.previous');
 const stopNodeList = document.querySelector('.stop');
 
 var guide = GuideChimp(tour, {
-         // global triggers
+        // global triggers
         triggers: {
             next: '.next',
             previous: previousHTMLElement,
@@ -85,15 +85,15 @@ Use the trigger object to change an event or event listener function.
 
 ```javascript
 var guide = GuideChimp(tour, {
-         // global triggers
+        // global triggers
         triggers: {
             next: {
-                element: '.next', // it is mandatory property
-                event: 'dblclick', // optional, by default "click"
-                listener(e) { // optional, use if you want to change the standard trigger behavior
+                element: '.next',    // mandatory property
+                event: 'dblclick',   // optional, by default "click"
+                listener(e) {        // optional, use if you want to change the standard trigger behavior
                     var el = e.target;                    
                     
-                    if(el.dataset.step){
+                    if (el.dataset.step) {
                        this.go(el.dataset.step);
                     } else {
                       this.next();
