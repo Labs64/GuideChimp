@@ -107,3 +107,7 @@ var guide = GuideChimp(tour, {
         },   
     });
 ```
+
+### Examples
+
+* Triggers plugin example at CodePen - https://codepen.io/netlicensing/full/PoPawdv
