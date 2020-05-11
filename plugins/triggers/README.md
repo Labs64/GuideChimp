@@ -1,9 +1,13 @@
 
 ## Triggers
 
-This plugin allows you to trigger GuideChimp events such as `"next"`, `"previous"`, `"stop"` or your custom events upon HTML DOM elements change.
+This plugin allows you to trigger GuideChimp events such as `"next"`, `"previous"`, `"stop"` or your custom events upon HTML DOM elements events.
 
 You can set up triggers globally and for each step individually.
+
+### Use Cases
+
+- Show user new function in the system and automatically continue to the next tour step after user performed suggested action
 
 ### How To Use
 
