@@ -5,6 +5,11 @@ This plugin allows guided tour usage across multiple pages.
 
 MultiPage plugin adds a new `.continue()` method, which automatically starts the tour in case it needs to be continued.
 
+### Use Cases
+
+- Change to the new page on the next/prev tour steps
+- Automatically continue tour on the next page
+
 ### How To Use
 
 **first-page.html**
