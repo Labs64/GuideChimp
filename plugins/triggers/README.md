@@ -9,6 +9,10 @@ You can set up triggers globally and for each step individually.
 
 - Show user new function in the system and automatically continue to the next tour step after user performed suggested action
 
+### Installation
+
+Please refer to the plugins' installation and configuration Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
+
 ### How To Use
 
 ```html
