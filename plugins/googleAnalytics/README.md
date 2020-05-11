@@ -9,6 +9,10 @@ Track tour events with Google Analytics.
 - Track time spent on each tour step via Google Analytics events
 - Track step button click via Google Analytics events
 
+### Installation
+
+Please refer to the plugins' installation and configuration Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
+
 ### How To Use
 
 #### Subscribe and send the Google Analytics events for the GuideChimp tour events
