@@ -2,6 +2,12 @@
 
 Track tour events with Google Analytics.
 
+### Use Cases
+
+- Send Google Analytics event before tour step change
+- Send Google Analytics event after tour step change
+- Track time spent on each tour step via Google Analytics events
+- Track step button click via Google Analytics events
 
 ### How To Use
 
