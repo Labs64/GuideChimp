@@ -10,6 +10,10 @@ MultiPage plugin adds a new `.continue()` method, which automatically starts the
 - Change to the new page on the next/prev tour steps
 - Automatically continue tour on the next page
 
+### Installation
+
+Please refer to the plugins' installation and configuration Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
+
 ### How To Use
 
 **first-page.html**
