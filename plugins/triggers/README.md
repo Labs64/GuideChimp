@@ -7,6 +7,7 @@ You can set up triggers globally and for each step individually.
 
 ### Use Cases
 
+- Interact seamlessly with your web application
 - Show user new function in the system and automatically continue to the next tour step after user performed suggested action
 
 ### Installation
