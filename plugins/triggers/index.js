@@ -65,7 +65,7 @@ module.exports = (cls) => {
 
                     listeners.push([event, listener]);
 
-                    document.body.addEventListener(event, listener);
+                    document.body.addEventListener(event, listener, true);
                 });
             });
 
@@ -75,7 +75,7 @@ module.exports = (cls) => {
         const removeTriggersListeners = (listeners) => {
             if (listeners) {
                 listeners.forEach(([type, listener]) => {
-                    document.body.removeEventListener(type, listener);
+                    document.body.removeEventListener(type, listener, true);
                 });
             }
 
