@@ -146,7 +146,7 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 | Extensions/Plugins | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Support  | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 |  | --- | --- |
-|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?shoptoken=1a54fdec-8d00-4728-91c2-f79d1f528caf) | [Get It Now](https://go.netlicensing.io/shop/v2/?shoptoken=85ec199c-bc95-4d17-b3da-294ad681db70) |
+|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?packagetoken=ca350191-e775-45ac-952d-e715b6aca5e1) | [Get It Now](https://go.netlicensing.io/shop/v2/?packagetoken=a2e3fa9c-414b-45f6-a08b-31c8c73230d6) |
 
 
 # Privacy Policy & GDPR
