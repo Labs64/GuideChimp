@@ -111,7 +111,6 @@ See GuideChimp in action in the product walkthrough, showcases and real-world ex
 - [NetLicensing Licensing Models](https://netlicensing.io/licensing-models/?guidechimp=on&tour=licensing-models) - Sample Tour: Licensing Models
 - [NetLicensing Features](https://netlicensing.io/features/?guidechimp=on&tour=features) - Sample Tour: NetLicensing Features
 - [NetLicensing Onboarding](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) - NetLicensing UI: User Onboarding Tour
-- [Labs64 Developers ToolBox](https://io.labs64.com) - Tour at Labs64 Developers ToolBox
 
 
 # How to Contribute
@@ -146,7 +145,7 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 | Extensions/Plugins | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Support  | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 |  | --- | --- |
-|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?packagetoken=ca350191-e775-45ac-952d-e715b6aca5e1) | [Get It Now](https://go.netlicensing.io/shop/v2/?packagetoken=a2e3fa9c-414b-45f6-a08b-31c8c73230d6) |
+|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?shoptoken=1a54fdec-8d00-4728-91c2-f79d1f528caf) | [Get It Now](https://go.netlicensing.io/shop/v2/?shoptoken=85ec199c-bc95-4d17-b3da-294ad681db70) |
 
 
 # Privacy Policy & GDPR

@@ -30,7 +30,7 @@ export default class GuideChimp {
         // observers
         this.observers = {};
 
-        if (ResizeObserver) {
+        if (typeof ResizeObserver !== 'undefined') {
             this.observers.stepElementResizeObserver = new ResizeObserver(() => this.refresh());
         }
 
@@ -63,6 +63,20 @@ export default class GuideChimp {
             interaction: true,
             padding: 10,
             scrollPadding: 10,
+        };
+    }
+
+    static getDefaultKeyboardCodes() {
+        const escCode = 27;
+        const arrowLeftCode = 37;
+        const arrowRightCode = 39;
+        const enterCode = 13;
+        const spaceCode = 32;
+
+        return {
+            previous: [arrowLeftCode],
+            next: [arrowRightCode, enterCode, spaceCode],
+            stop: [escCode],
         };
     }
 
@@ -246,6 +260,10 @@ export default class GuideChimp {
      */
     setTour(tour) {
         this.tour = (Array.isArray(tour)) ? [...tour] : tour;
+
+        // set steps
+        this.steps = this.sortSteps(this.getSteps(this.tour));
+
         return this;
     }
 
@@ -309,13 +327,11 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async go(number, useIndex = true) {
-        if (!this.tour || !this.tour.length) {
+        if (!this.steps.length) {
             return false;
         }
 
         const stepNumber = (useIndex) ? parseInt(number, 10) : number;
-        const fromStep = { ...this.step };
-        let toStep = null;
 
         // skip if this step is already displayed
         const isSameStep = (useIndex)
@@ -326,20 +342,9 @@ export default class GuideChimp {
             return false;
         }
 
-        this.steps = [];
-        // if tour is empty or is string, looks for steps among the data attributes
-        if (typeof this.tour === 'string') {
-            this.steps = this.getDataSteps(this.tour);
-        } else if (Array.isArray(this.tour)) {
-            this.steps = this.getJsSteps(this.tour);
-        }
+        const fromStep = { ...this.step };
+        let toStep = null;
 
-        if (!this.steps.length) {
-            return false;
-        }
-
-        // sort steps by step
-        this.steps = this.sortSteps(this.steps);
         for (let i = 0; i < this.steps.length; i++) {
             const step = this.steps[i];
             const isToStep = (useIndex) ? (i === stepNumber) : (step.step === stepNumber);
@@ -442,21 +447,61 @@ export default class GuideChimp {
     }
 
     async previous() {
-        if (this.step) {
-            const prevStepIndex = (this.steps.indexOf(this.step) - 1);
-            return (prevStepIndex > -1) ? this.go(prevStepIndex, true) : false;
+        if (!this.step) {
+            return false;
         }
 
-        return false;
+        const { onPrevious } = this.step;
+
+        const prevStepIndex = (this.steps.indexOf(this.step) - 1);
+        const prevStep = this.steps[prevStepIndex];
+
+        if (!prevStep) {
+            return false;
+        }
+
+        const results = await this.emit('onPrevious', prevStep, this.step);
+
+        if (results.some((r) => r === false)) {
+            return false;
+        }
+
+        if (onPrevious) {
+            if (await Promise.resolve().then(() => onPrevious.call(this, prevStep, this.step)) === false) {
+                return false;
+            }
+        }
+
+        return this.go(prevStepIndex, true);
     }
 
     async next() {
-        if (this.step) {
-            const nextStepIndex = (this.steps.indexOf(this.step) + 1);
-            return (nextStepIndex < this.steps.length) ? this.go(nextStepIndex, true) : false;
+        if (!this.step) {
+            return false;
         }
 
-        return false;
+        const { onNext } = this.step;
+
+        const nextStepIndex = (this.steps.indexOf(this.step) + 1);
+        const nextStep = this.steps[nextStepIndex];
+
+        if (!nextStep) {
+            return false;
+        }
+
+        const results = await this.emit('onNext', nextStep, this.step);
+
+        if (results.some((r) => r === false)) {
+            return false;
+        }
+
+        if (onNext) {
+            if (await Promise.resolve().then(() => onNext.call(this, nextStep, this.step)) === false) {
+                return false;
+            }
+        }
+
+        return this.go(nextStepIndex, true);
     }
 
     async stop() {
@@ -470,7 +515,6 @@ export default class GuideChimp {
         await this.emit('onStop');
 
         this.step = null;
-        this.steps = [];
 
         // remove the class that increase the specificity of the guidechimp classes
         document.body.classList.remove(this.constructor.getBodyClass());
@@ -491,6 +535,19 @@ export default class GuideChimp {
         this.cache.clear();
 
         return this;
+    }
+
+    getSteps(tour) {
+        if (!tour || !tour.length) {
+            return [];
+        }
+
+        // if tour is is string, looks for steps among the data attributes
+        if (typeof tour === 'string') {
+            return this.getDataSteps(tour);
+        }
+
+        return this.getJsSteps(tour);
     }
 
     getDataSteps(tour) {
@@ -820,16 +877,14 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { style } = tooltipLayer;
+        const { style: tooltipStyle } = tooltipLayer;
 
         // reset tooltip styles
-        style.top = null;
-        style.right = null;
-        style.bottom = null;
-        style.left = null;
-        style.marginLeft = null;
-        style.marginTop = null;
-        style.transform = null;
+        tooltipStyle.top = null;
+        tooltipStyle.right = null;
+        tooltipStyle.bottom = null;
+        tooltipStyle.left = null;
+        tooltipStyle.transform = null;
 
         const {
             top: elTop,
@@ -877,23 +932,59 @@ export default class GuideChimp {
             const positions = ['bottom', 'right', 'left', 'top'];
 
             // check if the tooltip can be placed on top
-            if (tooltipHeight > (elTop - boundaryTop)) {
-                positions.splice(positions.indexOf('top'), 1);
+            {
+                tooltipLayer.setAttribute('data-guidechimp-position', 'top');
+
+                let { marginTop, marginBottom } = getComputedStyle(tooltipLayer);
+
+                marginTop = parseInt(marginTop, 10);
+                marginBottom = parseInt(marginBottom, 10);
+
+                if (tooltipHeight + marginTop + marginBottom > (elTop - boundaryTop)) {
+                    positions.splice(positions.indexOf('top'), 1);
+                }
             }
 
             // check if the tooltip can be placed on bottom
-            if (tooltipHeight > boundaryBottom - elBottom) {
-                positions.splice(positions.indexOf('bottom'), 1);
+            {
+                tooltipLayer.setAttribute('data-guidechimp-position', 'bottom');
+
+                let { marginTop, marginBottom } = getComputedStyle(tooltipLayer);
+
+                marginTop = parseInt(marginTop, 10);
+                marginBottom = parseInt(marginBottom, 10);
+
+                if (tooltipHeight + marginTop + marginBottom > boundaryBottom - elBottom) {
+                    positions.splice(positions.indexOf('bottom'), 1);
+                }
             }
 
             // check if the tooltip can be placed on left
-            if (minTooltipWidth > elLeft - boundaryLeft) {
-                positions.splice(positions.indexOf('left'), 1);
+            {
+                tooltipLayer.setAttribute('data-guidechimp-position', 'left');
+
+                let { marginLeft, marginRight } = getComputedStyle(tooltipLayer);
+
+                marginLeft = parseInt(marginLeft, 10);
+                marginRight = parseInt(marginRight, 10);
+
+                if (minTooltipWidth + marginLeft + marginRight > elLeft - boundaryLeft) {
+                    positions.splice(positions.indexOf('left'), 1);
+                }
             }
 
             // check if the tooltip can be placed on right
-            if (minTooltipWidth > boundaryRight - elRight) {
-                positions.splice(positions.indexOf('right'), 1);
+            {
+                tooltipLayer.setAttribute('data-guidechimp-position', 'right');
+
+                let { marginLeft, marginRight } = getComputedStyle(tooltipLayer);
+
+                marginLeft = parseInt(marginLeft, 10);
+                marginRight = parseInt(marginRight, 10);
+
+                if (minTooltipWidth + marginLeft + marginRight > boundaryRight - elRight) {
+                    positions.splice(positions.indexOf('right'), 1);
+                }
             }
 
             if (positions.length) {
@@ -932,21 +1023,21 @@ export default class GuideChimp {
 
         switch (position) {
             case 'top':
-                style.bottom = `${elHeight + padding}px`;
+                tooltipStyle.bottom = `${elHeight + padding}px`;
                 break;
             case 'right':
-                style.left = `${(elRight + (padding / 2)) - root.clientLeft}px`;
+                tooltipStyle.left = `${(elRight + (padding / 2)) - root.clientLeft}px`;
                 break;
             case 'left':
-                style.right = `${root.clientWidth - (elLeft - (padding / 2))}px`;
+                tooltipStyle.right = `${root.clientWidth - (elLeft - (padding / 2))}px`;
                 break;
             case 'bottom':
-                style.top = `${elHeight + padding}px`;
+                tooltipStyle.top = `${elHeight + padding}px`;
                 break;
             default: {
-                style.left = '50%';
-                style.top = '50%';
-                style.transform = 'translate(-50%,-50%)';
+                tooltipStyle.left = '50%';
+                tooltipStyle.top = '50%';
+                tooltipStyle.transform = 'translate(-50%,-50%)';
             }
         }
 
@@ -957,19 +1048,19 @@ export default class GuideChimp {
 
             switch (alignment) {
                 case 'left': {
-                    style.left = `${elLeft - (padding / 2)}px`;
+                    tooltipStyle.left = `${elLeft - (padding / 2)}px`;
                     break;
                 }
                 case 'right': {
-                    style.right = `${root.clientWidth - elRight - (padding / 2)}px`;
+                    tooltipStyle.right = `${root.clientWidth - elRight - (padding / 2)}px`;
                     break;
                 }
                 default: {
                     if ((elLeft + (elWidth / 2)) < (tooltipWith / 2)
                         || (elLeft + (elWidth / 2) + (tooltipWith / 2)) > root.clientWidth) {
-                        style.left = `${((root.clientWidth) / 2) - (tooltipWith / 2)}px`;
+                        tooltipStyle.left = `${((root.clientWidth) / 2) - (tooltipWith / 2)}px`;
                     } else {
-                        style.left = `${elLeft + (elWidth / 2) - (tooltipWith / 2)}px`;
+                        tooltipStyle.left = `${elLeft + (elWidth / 2) - (tooltipWith / 2)}px`;
                     }
                 }
             }
@@ -1101,7 +1192,12 @@ export default class GuideChimp {
         if (!overlayLayer) {
             overlayLayer = document.createElement('div');
             overlayLayer.className = this.constructor.getOverlayLayerClass();
-            overlayLayer.onclick = (this.options.exitOverlay) ? () => this.stop() : null;
+            overlayLayer.addEventListener('click', () => {
+                if (this.options.exitOverlay) {
+                    this.stop();
+                }
+            });
+
             document.body.appendChild(overlayLayer);
         }
 
@@ -1255,7 +1351,7 @@ export default class GuideChimp {
 
         if (!closeEl) {
             closeEl = document.createElement('div');
-            closeEl.onclick = () => this.stop();
+            closeEl.addEventListener('click', () => this.stop());
             parent.appendChild(closeEl);
         }
 
@@ -1371,7 +1467,7 @@ export default class GuideChimp {
                 }
 
                 if (onClick) {
-                    customButton.onclick = (e) => onClick.call(this, e);
+                    customButton.addEventListener('click', (e) => onClick.call(this, e));
                 }
 
                 customButtonsLayer.appendChild(customButton);
@@ -1424,9 +1520,7 @@ export default class GuideChimp {
                 paginationItem.classList.add(this.constructor.getPaginationCurrentItemClass());
             }
 
-            paginationItem.onclick = () => {
-                this.go(i, true);
-            };
+            paginationItem.addEventListener('click', () => this.go(i, true));
 
             paginationLayer.appendChild(paginationItem);
         });
@@ -1442,18 +1536,18 @@ export default class GuideChimp {
         if (!navigationPrevEl) {
             navigationPrevEl = document.createElement('div');
             this.showNavigation().appendChild(navigationPrevEl);
+
+            navigationPrevEl.addEventListener('click', () => {
+                this.previous();
+            });
         }
-        navigationPrevEl.onclick = null;
+
         navigationPrevEl.className = this.constructor.getNavigationPrevClass();
 
         const stepIndex = this.steps.indexOf(this.step);
 
-        if (stepIndex > -1) {
-            if (stepIndex === 0) {
-                navigationPrevEl.classList.add(this.constructor.getHiddenClass());
-            } else {
-                navigationPrevEl.onclick = () => this.go(stepIndex - 1, true);
-            }
+        if (stepIndex <= 0) {
+            navigationPrevEl.classList.add(this.constructor.getHiddenClass());
         }
 
         this.cache.set('navigationPrevEl', navigationPrevEl);
@@ -1467,21 +1561,18 @@ export default class GuideChimp {
         if (!navigationNextEl) {
             navigationNextEl = document.createElement('div');
             this.showNavigation().appendChild(navigationNextEl);
-        }
 
-        navigationNextEl.onclick = null;
-        navigationNextEl.className = this.constructor.getNavigationNextClass();
+            navigationNextEl.addEventListener('click', () => {
+                this.next();
+            });
+        }
 
         const stepIndex = this.steps.indexOf(this.step);
 
-        if (stepIndex > -1) {
-            if ((stepIndex === this.steps.length - 1) || this.steps.length === 1) {
-                navigationNextEl.classList.add(this.constructor.getHiddenClass());
-            } else {
-                navigationNextEl.onclick = () => {
-                    this.go(stepIndex + 1, true);
-                };
-            }
+        navigationNextEl.className = this.constructor.getNavigationNextClass();
+
+        if (stepIndex < 0 || (stepIndex === this.steps.length - 1 || this.steps.length === 1)) {
+            navigationNextEl.classList.add(this.constructor.getHiddenClass());
         }
 
         this.cache.set('navigationNextEl', navigationNextEl);
@@ -1563,26 +1654,25 @@ export default class GuideChimp {
         return (event) => {
             const { keyCode } = event;
 
-            const escCode = 27;
-            const arrowLeftCode = 37;
-            const arrowRightCode = 39;
-            const enterCode = 13;
-            const spaceCode = 32;
+            const { previous: previousCodes, next: nextCodes, stop: stopCodes } = {
+                ...this.constructor.getDefaultKeyboardCodes(),
+                ...this.options.useKeyboard,
+            };
 
-            // exit key pressed, stop tour
-            if (keyCode === escCode) {
+            //  stop tour
+            if (stopCodes && stopCodes.includes(keyCode)) {
                 this.stop();
                 return;
             }
 
-            // if the left arrow is pressed, go to the previous step
-            if (keyCode === arrowLeftCode) {
+            // go to the previous step
+            if (previousCodes && previousCodes.includes(keyCode)) {
                 this.previous();
                 return;
             }
 
-            // if the right arrow, enter or space is pressed, go to the next step
-            if (keyCode === arrowRightCode || keyCode === enterCode || keyCode === spaceCode) {
+            // go to the next step
+            if (nextCodes && nextCodes.includes(keyCode)) {
                 this.next();
             }
         };
@@ -1606,7 +1696,6 @@ export default class GuideChimp {
      * @return {this}
      */
     addOnWindowResizeListener() {
-        // turn on keyboard navigation
         this.cache.set('onWindowResizeListener', this.getOnWindowResizeListener());
         window.addEventListener('resize', this.cache.get('onWindowResizeListener'), true);
 

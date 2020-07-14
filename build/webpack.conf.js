@@ -49,11 +49,29 @@ const baseConfig = {
                     emitWarning: true,
                 },
             },
+            {
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                        }
+                    },
+                    'sass-loader',
+                ],
+            },
         ],
     },
     plugins: [
         new BannerPlugin({
             banner: `${libraryName} v${version} | Copyright (C) ${(new Date()).getFullYear()} Labs64 GmbH`,
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
         }),
     ],
     performance: { hints: false },
@@ -63,6 +81,9 @@ const baseConfig = {
                 include: /\.min\.js$/,
                 sourceMap: true,
                 parallel: true,
+            }),
+            new OptimizeCSSAssetsPlugin({
+                assetNameRegExp: /\.min\.css$/g,
             }),
         ],
     },
@@ -80,37 +101,6 @@ const libraryConfig = merge(
             filename: '[name].js',
             library: libraryName,
             libraryTarget: 'umd',
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.(sa|sc|c)ss$/,
-                    use: [
-                        {
-                            loader: MiniCssExtractPlugin.loader,
-                        },
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: true,
-                            }
-                        },
-                        'sass-loader',
-                    ],
-                },
-            ],
-        },
-        plugins: [
-            new MiniCssExtractPlugin({
-                filename: '[name].css',
-            }),
-        ],
-        optimization: {
-            minimizer: [
-                new OptimizeCSSAssetsPlugin({
-                    assetNameRegExp: /\.min\.css$/g,
-                }),
-            ],
         },
     },
 );
