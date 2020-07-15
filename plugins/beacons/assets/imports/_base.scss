@@ -1,13 +1,12 @@
 .gc-beacon {
   position: absolute;
-  background-color: $primary;
+  background: linear-gradient($primary, darken($primary, 10%));
   height: 20px;
   width: 20px;
   border-radius: 50%;
   cursor: pointer;
   z-index: 64;
-  //box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 0 1px darken($primary, 10%) inset, 0 5px 5px rgba(darken($primary, 40%), 0.17), -1px 3px rgba(#fff, 0.25) inset;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 
   &:before {
     position: absolute;
