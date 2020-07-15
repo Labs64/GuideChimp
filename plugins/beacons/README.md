@@ -18,8 +18,34 @@ Please refer to the plugins' installation and configuration Wiki [page](https://
 ```
 
 ```javascript
+<script>
+    GuideChimp.extend(guideChimpPluginBeacons);
+
+    const beacons = [
+        {
+            element: '#try-and-buy',
+            position: 'top-left',
+            onClick() {
+                alert('click');
+            }
+        },
+        {
+            element: '#subscription',
+            position: 'bottom',
+            tour: 'first',
+        },
+        {
+            element: '#pricing-table',
+            position: 'middle',
+            tour: { steps: [{ title: 'Title', description: 'Description' }], options: { position: 'left' } },
+        }
+    ];
+
+
+    (GuideChimp.beacons(beacons, { boundary: 'outer' })).showAll();
+</script>
 ```
 
 ### Examples
 
-* Beacons plugin example at CodePen - https://codepen.io/netlicensing/full/PoPawdv
+* Beacons plugin example at CodePen - https://codepen.io/netlicensing/full/gOPdjwG
