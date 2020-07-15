@@ -1,4 +1,3 @@
-
 ## MultiPage
 
 This plugin allows guided tour usage across multiple pages.

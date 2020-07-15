@@ -1,4 +1,3 @@
-
 ## Triggers
 
 This plugin allows you to trigger GuideChimp events such as `"next"`, `"previous"`, `"stop"` or your custom events upon HTML DOM elements events.
@@ -101,7 +100,7 @@ var guide = GuideChimp(tour, {
                 event: 'dblclick',   // optional, by default "click"
                 listener(e) {        // optional, use if you want to change the standard trigger behavior
                     var el = e.target;                    
-                    
+
                     if (el.dataset.step) {
                        this.go(el.dataset.step);
                     } else {
