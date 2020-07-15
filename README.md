@@ -46,7 +46,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - HTML code can be also used in the tooltip text
 - Support of extra-large tooltip description texts
 - Ability to set callback ("onBeforeChange", "onAfterChange") functions for each step in the tour
-- Lightweight (~ 35KB) and good performance
+- Lightweight (< 45KB) and good performance
 - **Last But Not Least:** :point_up: Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
 
 <p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/netlicensing-features-tour.gif"  alt="Labs64 NetLicensing - Features Tour"></p>
