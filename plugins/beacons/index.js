@@ -7,7 +7,7 @@
  */
 
 import GuideChimpBeacons from './GuideChimpBeacons';
-import './assets/scss/style.scss';
+import './assets/style.scss';
 
 module.exports = (cls, factory) => {
     // eslint-disable-next-line no-param-reassign

@@ -44,7 +44,7 @@ export default class GuideChimpBeacons extends Beacons {
                 } else if (beacon.tour instanceof GuideChimp) {
                     guide = beacon.tour;
                 } else if (typeof beacon.tour === 'object') {
-                    const { steps, options } = beacon;
+                    const { steps, options } = beacon.tour;
                     guide = new GuideChimp(steps, options);
                 }
 

@@ -14,7 +14,7 @@ import GuideChimp from './GuideChimp';
  *
  * Import the library styling.
  */
-import './assets/scss/style.scss';
+import './assets/style.scss';
 
 const guideChimp = (...args) => new GuideChimp(...args);
 

@@ -108,20 +108,20 @@ const libraryConfig = merge(
 
 const pluginsConfigs = [];
 
-fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(fileName => {
+fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(folderName => {
     // skip all folders starting with underscore
-    if (fileName[0] !== '_') {
+    if (folderName[0] !== '_') {
         pluginsConfigs.push(merge(
             baseConfig,
             {
                 entry: {
-                    [fileName]: `./plugins/${fileName}`,
-                    [`${fileName}.min`]: `./plugins/${fileName}`,
+                    [folderName]: `./plugins/${folderName}`,
+                    [`${folderName}.min`]: `./plugins/${folderName}`,
                 },
                 output: {
                     path: path.resolve(__dirname, '../dist/plugins'),
                     filename: '[name].js',
-                    library: `${camelize(`${libraryName} plugin ${fileName}`)}`,
+                    library: `${camelize(`${libraryName} plugin ${folderName}`)}`,
                     libraryTarget: 'umd',
                 },
             },
