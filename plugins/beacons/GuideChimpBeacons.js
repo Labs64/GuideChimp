@@ -49,12 +49,6 @@ export default class GuideChimpBeacons extends Beacons {
                 }
 
                 if (guide) {
-                    this.hide(beacon);
-
-                    guide.on('onStop', () => {
-                        this.show(beacon);
-                    });
-
                     guide.start();
                 }
             });
