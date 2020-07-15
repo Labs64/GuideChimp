@@ -59,6 +59,10 @@ the "position" option is defined for each specific beacon.-->
         Third & Fourth beacons
 </div>
 
+<script>
+  const guideChimpBeacons = GuideChimp.beacons();
+  guideChimpBeacons.showAll();
+</script>
 ```
 **Attention!!! Do not use the “-" symbol in your identifiers**
 
