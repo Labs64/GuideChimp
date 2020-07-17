@@ -167,7 +167,7 @@ export default (cls, factory, ...args) => {
      * This method starts the tour and initiates the necessary event listeners
      */
     const parentStart = cls.prototype.start;
-    cls.prototype.start = async (...startArgs) => {
+    cls.prototype.start = async function (...startArgs) {
         await parentStart.apply(this, startArgs);
 
         // custom code
@@ -178,7 +178,7 @@ export default (cls, factory, ...args) => {
      * This method performs the transition from one step to another
      */
     const parentGo = cls.prototype.go;
-    cls.prototype.go = async (...goArgs) => {
+    cls.prototype.go = async function (...goArgs) {
         await parentGo.apply(this, goArgs);
 
         // custom code
@@ -189,7 +189,7 @@ export default (cls, factory, ...args) => {
      * This method navigates one step back
      */
     const parentPrevious = cls.prototype.previous;
-    cls.prototype.previous = async () => {
+    cls.prototype.previous = async function () {
         await parentPrevious.call(this);
 
         // custom code
@@ -200,7 +200,7 @@ export default (cls, factory, ...args) => {
      * This method navigates one step forward
      */
     const parentNext = cls.prototype.next;
-    cls.prototype.next = async () => {
+    cls.prototype.next = async function () {
         await parentNext.call(this);
 
         // custom code
@@ -211,7 +211,7 @@ export default (cls, factory, ...args) => {
      * This method terminates the tour, deletes created html elements and unsubscribes from window events
      */
     const parentStop = cls.prototype.stop;
-    cls.prototype.stop = async () => {
+    cls.prototype.stop = async function () {
         await parentStop.call(this);
 
         // custom code
