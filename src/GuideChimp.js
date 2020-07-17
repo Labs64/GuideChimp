@@ -260,10 +260,6 @@ export default class GuideChimp {
      */
     setTour(tour) {
         this.tour = (Array.isArray(tour)) ? [...tour] : tour;
-
-        // set steps
-        this.steps = this.sortSteps(this.getSteps(this.tour));
-
         return this;
     }
 
@@ -327,11 +323,13 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async go(number, useIndex = true) {
-        if (!this.steps.length) {
+        if (!this.tour || !this.tour.length) {
             return false;
         }
 
         const stepNumber = (useIndex) ? parseInt(number, 10) : number;
+        const fromStep = { ...this.step };
+        let toStep = null;
 
         // skip if this step is already displayed
         const isSameStep = (useIndex)
@@ -342,9 +340,14 @@ export default class GuideChimp {
             return false;
         }
 
-        const fromStep = { ...this.step };
-        let toStep = null;
+        this.steps = this.getSteps(this.tour);
 
+        if (!this.steps.length) {
+            return false;
+        }
+
+        // sort steps by step
+        this.steps = this.sortSteps(this.steps);
         for (let i = 0; i < this.steps.length; i++) {
             const step = this.steps[i];
             const isToStep = (useIndex) ? (i === stepNumber) : (step.step === stepNumber);
@@ -515,6 +518,7 @@ export default class GuideChimp {
         await this.emit('onStop');
 
         this.step = null;
+        this.steps = [];
 
         // remove the class that increase the specificity of the guidechimp classes
         document.body.classList.remove(this.constructor.getBodyClass());
@@ -1192,12 +1196,7 @@ export default class GuideChimp {
         if (!overlayLayer) {
             overlayLayer = document.createElement('div');
             overlayLayer.className = this.constructor.getOverlayLayerClass();
-            overlayLayer.addEventListener('click', () => {
-                if (this.options.exitOverlay) {
-                    this.stop();
-                }
-            });
-
+            overlayLayer.onclick = (this.options.exitOverlay) ? () => this.stop() : null;
             document.body.appendChild(overlayLayer);
         }
 
@@ -1351,7 +1350,7 @@ export default class GuideChimp {
 
         if (!closeEl) {
             closeEl = document.createElement('div');
-            closeEl.addEventListener('click', () => this.stop());
+            closeEl.onclick = () => this.stop();
             parent.appendChild(closeEl);
         }
 
@@ -1467,7 +1466,7 @@ export default class GuideChimp {
                 }
 
                 if (onClick) {
-                    customButton.addEventListener('click', (e) => onClick.call(this, e));
+                    customButton.onclick = (e) => onClick.call(this, e);
                 }
 
                 customButtonsLayer.appendChild(customButton);
@@ -1520,7 +1519,7 @@ export default class GuideChimp {
                 paginationItem.classList.add(this.constructor.getPaginationCurrentItemClass());
             }
 
-            paginationItem.addEventListener('click', () => this.go(i, true));
+            paginationItem.onclick = () => this.go(i, true);
 
             paginationLayer.appendChild(paginationItem);
         });
@@ -1535,20 +1534,14 @@ export default class GuideChimp {
 
         if (!navigationPrevEl) {
             navigationPrevEl = document.createElement('div');
+            navigationPrevEl.className = this.constructor.getNavigationPrevClass();
+            navigationPrevEl.onclick = () => this.previous();
             this.showNavigation().appendChild(navigationPrevEl);
-
-            navigationPrevEl.addEventListener('click', () => {
-                this.previous();
-            });
         }
-
-        navigationPrevEl.className = this.constructor.getNavigationPrevClass();
 
         const stepIndex = this.steps.indexOf(this.step);
 
-        if (stepIndex <= 0) {
-            navigationPrevEl.classList.add(this.constructor.getHiddenClass());
-        }
+        navigationPrevEl.classList.toggle(this.constructor.getHiddenClass(), (stepIndex <= 0));
 
         this.cache.set('navigationPrevEl', navigationPrevEl);
 
@@ -1560,20 +1553,17 @@ export default class GuideChimp {
 
         if (!navigationNextEl) {
             navigationNextEl = document.createElement('div');
+            navigationNextEl.onclick = () => this.next();
+            navigationNextEl.className = this.constructor.getNavigationNextClass();
             this.showNavigation().appendChild(navigationNextEl);
-
-            navigationNextEl.addEventListener('click', () => {
-                this.next();
-            });
         }
 
         const stepIndex = this.steps.indexOf(this.step);
 
-        navigationNextEl.className = this.constructor.getNavigationNextClass();
-
-        if (stepIndex < 0 || (stepIndex === this.steps.length - 1 || this.steps.length === 1)) {
-            navigationNextEl.classList.add(this.constructor.getHiddenClass());
-        }
+        navigationNextEl.classList.toggle(
+            this.constructor.getHiddenClass(),
+            (stepIndex < 0 || (stepIndex === this.steps.length - 1 || this.steps.length === 1)),
+        );
 
         this.cache.set('navigationNextEl', navigationNextEl);
 
@@ -1696,6 +1686,7 @@ export default class GuideChimp {
      * @return {this}
      */
     addOnWindowResizeListener() {
+        // turn on keyboard navigation
         this.cache.set('onWindowResizeListener', this.getOnWindowResizeListener());
         window.addEventListener('resize', this.cache.get('onWindowResizeListener'), true);
 
