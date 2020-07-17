@@ -38,6 +38,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Tour steps can be defined in two ways: HTML elements data attributes and JavaScript object properties
 - Library installation possible through HTML and es6 import
 - Use multiple listeners on tour events
+- Internationalization [support](https://github.com/Labs64/GuideChimp/wiki/Examples)
 - Ability to add steps on-the-fly / programmatically
 - Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event
 - Ability to define custom action buttons
