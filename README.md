@@ -52,6 +52,11 @@ The world's smartest companies using our GuideChimp to boost their user experien
 <p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/netlicensing-features-tour.gif"  alt="Labs64 NetLicensing - Features Tour"></p>
 
 
+# 📖 Documentation
+
+Please visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki).
+
+
 # How to Use
 
 In order to use GuideChimp, you must include the compiled and minified JavaScript file in your project. There are multiple options for including these pre-compiled files, also known as a distribution, in your website or application.
@@ -95,11 +100,6 @@ Include the compiled files in your HTML page:
 <script src="guidechimp/dist/guidechimp.min.js"></script>
 <link rel="stylesheet" href="guidechimp/dist/guidechimp.min.css">
 ```
-
-
-# Documentation
-
-Please visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki).
 
 
 # Demo
