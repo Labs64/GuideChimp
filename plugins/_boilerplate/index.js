@@ -23,8 +23,8 @@ export default (cls, factory, ...args) => {
      * Add setup logic without having to override the constructor.
      */
     const parentInit = cls.prototype.init;
-    cls.prototype.init = () => {
-        parentInit();
+    cls.prototype.init = function () {
+        parentInit.call(this);
 
         /**
          * Custom event listener
@@ -168,7 +168,7 @@ export default (cls, factory, ...args) => {
      */
     const parentStart = cls.prototype.start;
     cls.prototype.start = async (...startArgs) => {
-        await parentStart(...startArgs);
+        await parentStart.apply(this, startArgs);
 
         // custom code
         // ...
@@ -179,7 +179,7 @@ export default (cls, factory, ...args) => {
      */
     const parentGo = cls.prototype.go;
     cls.prototype.go = async (...goArgs) => {
-        await parentGo(...goArgs);
+        await parentGo.apply(this, goArgs);
 
         // custom code
         // ...
@@ -190,7 +190,7 @@ export default (cls, factory, ...args) => {
      */
     const parentPrevious = cls.prototype.previous;
     cls.prototype.previous = async () => {
-        await parentPrevious();
+        await parentPrevious.call(this);
 
         // custom code
         // ...
@@ -201,7 +201,7 @@ export default (cls, factory, ...args) => {
      */
     const parentNext = cls.prototype.next;
     cls.prototype.next = async () => {
-        await parentNext();
+        await parentNext.call(this);
 
         // custom code
         // ...
@@ -212,7 +212,7 @@ export default (cls, factory, ...args) => {
      */
     const parentStop = cls.prototype.stop;
     cls.prototype.stop = async () => {
-        await parentStop();
+        await parentStop.call(this);
 
         // custom code
         // ...
