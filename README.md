@@ -5,6 +5,8 @@
 <a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="Build Status"></a>
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="Build Status"></a>
 <a href="https://github.com/Labs64/GuideChimp/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache License 2.0"></a>
+<br>
+<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/Plugins-5-E14817.svg" alt="GuideChimp Plugins"></a>
 <a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/📖%20Documentation-Wiki-AB6543.svg" alt="📖 Documentation"></a>
 <a href="https://discord.gg/cgs9JeK"><img src="https://img.shields.io/discord/691194972216754187.svg?label=Join%20Community&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" alt="Join GuideChimp Discord Community"></a>
 </p>
@@ -39,7 +41,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Tour steps can be defined in two ways: HTML elements data attributes and JavaScript object properties
 - Library installation possible through HTML and es6 import
 - Use multiple listeners on tour events
-- Internationalization [support](https://github.com/Labs64/GuideChimp/wiki/Examples)
+- Internationalization / i18n [support](https://github.com/Labs64/GuideChimp/wiki/Examples)
 - Ability to add steps on-the-fly / programmatically
 - Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event
 - Ability to define custom action buttons
