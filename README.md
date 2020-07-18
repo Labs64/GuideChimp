@@ -142,15 +142,15 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 ## Terms of Use
 
-|  | Open Source | Commercial |
-| --- | --- | --- |
-| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Domains | 1 | unlimited |
-| Remove Attribution | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Extensions/Plugins | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Support  | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-|  | --- | --- |
-|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?shoptoken=1a54fdec-8d00-4728-91c2-f79d1f528caf) | [Get It Now](https://go.netlicensing.io/shop/v2/?shoptoken=85ec199c-bc95-4d17-b3da-294ad681db70) |
+|  | Open Source | Commercial | Enterprise |
+| --- | --- | --- | --- |
+| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Domains | 1 | 5 | unlimited |
+| Remove Attribution | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Extensions/Plugins | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Support  | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+|  | --- | --- | --- |
+|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?shoptoken=1a54fdec-8d00-4728-91c2-f79d1f528caf) | [Get It Now](https://go.netlicensing.io/shop/v2/?shoptoken=85ec199c-bc95-4d17-b3da-294ad681db70) | [Contact Us](https://www.labs64.com/contact/) |
 
 
 # Privacy Policy & GDPR
