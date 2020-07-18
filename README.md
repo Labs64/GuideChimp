@@ -30,12 +30,13 @@ The world's smartest companies using our GuideChimp to boost their user experien
 
 - Seamless integration with any web app.
 - GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
-- Let GuideChimp look like an integral part of your software product by configuring its look & feel.
+- Let GuideChimp look like an integral part of your software product by configuring its look & feel
 - GuideChimp works well with tools you already use (e.g. WordPress, Confluence, etc.).
 - [Beacons](https://github.com/Labs64/GuideChimp/tree/master/plugins/beacons) 🟠 Hotspots 🟠 Hints: Raise visitors attention by adding an additional description to any element on the web page.
 - Tours: Flows, Walkthroughs, Guides, Tutorials
 - Support of *Single Page Applications* build with Angular, Vue.js, React, etc.
-- Extendable using out-of-the-box and third-party [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins).
+- Extendable using out-of-the-box and third-party [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins)
+- Detailed installation and configuration [documentation](https://github.com/Labs64/GuideChimp/wiki)
 - Tooltip auto-positioning on an element
 - Easy styling through SCSS and clean CSS
 - Tour steps can be defined in two ways: HTML elements data attributes and JavaScript object properties
@@ -50,7 +51,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - HTML code can be also used in the tooltip text
 - Support of extra-large tooltip description texts
 - Ability to set callback ("onBeforeChange", "onAfterChange") functions for each step in the tour
-- Lightweight (< 45KB) and good performance
+- Lightweight (*< 45KB*) and good performance
 - **Last But Not Least:** :point_up: Dual-Licensed - [Apache 2.0](LICENSE) and Commercial (including great support, maintenance and customized implementation)
 
 <p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/netlicensing-features-tour.gif"  alt="Labs64 NetLicensing - Features Tour"></p>
@@ -58,7 +59,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 
 # 📖 Documentation
 
-Please visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki).
+Visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki) for installation and configuration tips, customizations and plugins, as well as [examples](https://github.com/Labs64/GuideChimp/wiki/Examples) on how to use GuideChimp in the real-world scenarios.
 
 
 # How to Use
