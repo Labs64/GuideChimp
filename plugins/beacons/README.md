@@ -94,6 +94,17 @@ const guideChimpBeacons = GuideChimp.beacons(beacons, { boundary: 'outer' });
 guideChimpBeacons.showAll();
 ```
 
+### Options
+
+Following options can be used to configure beacons via JavaScript:
+
+* `element`: Query selector string or HTML element; if not defined, the tooltip will be centred on the screen. [Verify selector](https://gist.github.com/r-brown/e0d4fde1e14e792b4ec155b0f6f06e7a)
+* `position`: Beacon position (values: top-left, top, top-right, center-left, center, center-right, bottom-left, bottom, bottom-right)
+* `boundary`: Beacon container position (values: outer, inner)
+* `tour`: ...
+* `class`: ...
+* `onClick()`: Listener function called on the beacon click
+
 ### Examples
 
 * Beacons plugin example at CodePen - https://codepen.io/netlicensing/full/gOPdjwG
