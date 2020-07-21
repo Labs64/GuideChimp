@@ -101,8 +101,8 @@ Following options can be used to configure beacons via JavaScript:
 * `element`: Query selector string or HTML element; if not defined, the tooltip will be centred on the screen. [Verify selector](https://gist.github.com/r-brown/e0d4fde1e14e792b4ec155b0f6f06e7a)
 * `position`: Beacon position (values: top-left, top, top-right, center-left, center, center-right, bottom-left, bottom, bottom-right)
 * `boundary`: Beacon container position (values: outer, inner)
-* `tour`: ...
-* `class`: ...
+* `tour`: tour reference or definition to be started on beacon click
+* `class`: CSS class to be assigned to the beacon
 * `onClick()`: Listener function called on the beacon click
 
 ### Examples
