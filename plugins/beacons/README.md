@@ -1,5 +1,7 @@
 ## Beacons
 
+<img src="https://github.com/Labs64/GuideChimp/blob/master/plugins/beacons/guidechimp-beacons.gif" alt="GuideChimp Beacons"/>
+
 This plugin allows you to add *Beacons 🟠 Hotspots 🟠 Hints* to any element on the web page.
 
 ### Use Cases
