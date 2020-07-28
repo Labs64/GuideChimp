@@ -9,6 +9,8 @@
 <a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/Plugins-5-E14817.svg" alt="GuideChimp Plugins"></a>
 <a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/📖%20Documentation-Wiki-AB6543.svg" alt="📖 Documentation"></a>
 <a href="https://discord.gg/cgs9JeK"><img src="https://img.shields.io/discord/691194972216754187.svg?label=Join%20Community&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" alt="Join GuideChimp Discord Community"></a>
+<br>
+<a href="https://www.producthunt.com/posts/guidechimp?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-guidechimp" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=182973&theme=light" alt="GuideChimp - Simplify user onboarding with interactive walkthroughs | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
 </p>
 
 
