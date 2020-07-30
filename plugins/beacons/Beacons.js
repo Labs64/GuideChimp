@@ -88,19 +88,6 @@ export default class Beacons {
     }
 
     /**
-     * Get element offset
-     * @param el
-     * @return {{top: number, left: number, width: number, height: number}}
-     */
-    static getElementOffset(el) {
-        const { body, documentElement } = document;
-        const scrollTop = window.pageYOffset || documentElement.scrollTop || body.scrollTop;
-        const scrollLeft = window.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
-        const { top, right, bottom, left, width, height, x, y } = el.getBoundingClientRect();
-        return { right, bottom, width, height, x, y, top: top + scrollTop, left: left + scrollLeft };
-    }
-
-    /**
      * Set beacons options
      * @param options
      * @return {this}
@@ -137,7 +124,11 @@ export default class Beacons {
                     beaconEl.classList.add(this.constructor.getFixedClass());
                 }
 
-                document.body.append(beaconEl);
+                const parentEl = (!el.parentElement || el.parentElement === document.body)
+                    ? document.body
+                    : el.parentElement;
+
+                parentEl.append(beaconEl);
                 this.cache.set(beacon, beaconEl);
 
                 this.setBeaconPosition(el, beaconEl, beacon);
@@ -292,8 +283,7 @@ export default class Beacons {
         boundary = boundary || this.options.boundary;
         boundary = (boundary === 'inner') ? 'inner' : 'outer';
 
-        const { width: elWidth, height: elHeight, top: elTop, left: elLeft } = this.constructor.getElementOffset(el);
-
+        const { left: elLeft, top: elTop, width: elWidth, height: elHeight } = el.getBoundingClientRect();
         const { style: beaconStyle } = beaconEl;
 
         let { width: beaconWidth, height: beaconHeight } = getComputedStyle(beaconEl);
