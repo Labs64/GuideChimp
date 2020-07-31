@@ -283,9 +283,8 @@ export default class Beacons {
         boundary = boundary || this.options.boundary;
         boundary = (boundary === 'inner') ? 'inner' : 'outer';
 
-        const { left: elLeft, top: elTop, width: elWidth, height: elHeight } = el.getBoundingClientRect();
+        const { offsetLeft: elLeft, offsetTop: elTop, offsetWidth: elWidth, offsetHeight: elHeight } = el;
         const { style: beaconStyle } = beaconEl;
-
         let { width: beaconWidth, height: beaconHeight } = getComputedStyle(beaconEl);
 
         beaconWidth = parseInt(beaconWidth, 10);
