@@ -38,7 +38,7 @@ module.exports = (Class, factory) => {
                 }
             });
 
-            return beacons;
+            return data;
         }
 
         createBeaconEl(beacon) {
