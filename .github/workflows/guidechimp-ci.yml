@@ -1,4 +1,4 @@
-name: GuideChimp CI
+name: GuideChimp - CI
 
 on: [push]
 
