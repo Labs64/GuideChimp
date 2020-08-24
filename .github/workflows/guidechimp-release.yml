@@ -1,4 +1,4 @@
-name: GuideChimp Release
+name: GuideChimp - Release
 
 on:
   release:
