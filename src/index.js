@@ -19,9 +19,13 @@ import './assets/style.scss';
 const guideChimp = (...args) => new GuideChimp(...args);
 
 guideChimp.prototype = GuideChimp.prototype;
+guideChimp.plugins = new Set();
 
 guideChimp.extend = (plugin, ...args) => {
-    plugin(GuideChimp, guideChimp, ...args);
+    if (!guideChimp.plugins.has(plugin)) {
+        guideChimp.plugins.add(plugin);
+        plugin(GuideChimp, guideChimp, ...args);
+    }
     return guideChimp;
 };
 
