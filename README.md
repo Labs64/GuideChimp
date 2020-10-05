@@ -149,8 +149,8 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 |  | Open Source | Commercial | Enterprise |
 | --- | --- | --- | --- |
-| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> \* | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Extensions/Plugins | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> \** | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> (\*) | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Extensions/Plugins | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> (\**) | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Remove Attribution | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Customization | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Support  | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
@@ -159,7 +159,7 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 \*) [European Union Public License, version 1.2](LICENSE)
 
-\**) Open source and community plugins only
+\**) Open source and community [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins) only
 
 # Privacy Policy
 
