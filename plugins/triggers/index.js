@@ -54,10 +54,13 @@ module.exports = (cls) => {
                             els = [el];
                         }
 
-                        if (els.length && els.includes(target)) {
-                            if (customListener && typeof customListener === 'function') {
-                                customListener.call(this, e);
-                            } else {
+                        if (els.length) {
+                            if (els.includes(target) || els.some((n) => n.contains(target))) {
+                                if (customListener && typeof customListener === 'function') {
+                                    customListener.call(this, e);
+                                    return;
+                                }
+
                                 this.emit(`onTrigger.${k}`, e);
                             }
                         }
