@@ -157,7 +157,7 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 |  | --- | --- | --- |
 |  | [Start Now Free](https://go.netlicensing.io/shop/v2/?packagetoken=0448250a-ef3a-4cbd-a031-98deeaa65111) | [Get It Now](https://go.netlicensing.io/shop/v2/?packagetoken=4505d572-5861-496c-bbc7-2823776d9e1e) | [Contact Us](https://www.labs64.com/contact/) |
 
-* own domains
+*) own domains
 
 # Privacy Policy
 
