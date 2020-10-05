@@ -117,7 +117,7 @@ See GuideChimp in action in the product walkthrough, showcases and real-world ex
 - [NetLicensing Licensing Models](https://netlicensing.io/licensing-models/?guidechimp=on&tour=licensing-models) - Sample Tour: Licensing Models
 - [NetLicensing Features](https://netlicensing.io/features/?guidechimp=on&tour=features) - Sample Tour: NetLicensing Features
 - [NetLicensing Onboarding](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) - NetLicensing UI: User Onboarding Tour
-- [React Example](https://209hg.csb.app) ([source](https://codesandbox.io/s/guidechimp-react-example-209hg)) at CodeSandbox by @giubatt
+- [React Example](https://209hg.csb.app) ([source](https://codesandbox.io/s/guidechimp-react-example-209hg)) at CodeSandbox by [@giubatt](https://github.com/giubatt)
 
 
 # How to Contribute
