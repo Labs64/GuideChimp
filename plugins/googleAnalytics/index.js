@@ -1,9 +1,8 @@
 /**
  * Copyright (C) 2020 Labs64 GmbH
  *
- * This source code is licensed under the Apache License 2.0 license
- * located in the LICENSE file and
- * NOTICE file corresponding to the section 4 d of the Apache License, Version 2.0
+ * This source code is licensed under the European Union Public License, version 1.2
+ * located in the LICENSE file
  */
 const events = new Map();
 
