@@ -149,10 +149,10 @@ If you choose to pay for a Commercial License, you are not required to disclose 
 
 |  | Open Source | Commercial | Enterprise |
 | --- | --- | --- | --- |
-| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Domains | 1 | 3 | unlimited * |
+| Commercial Use | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Extensions/Plugins | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Remove Attribution | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Extensions/Plugins | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
+| Customization | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 | Support  | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
 |  | --- | --- | --- |
 |  | [Start Now Free](https://go.netlicensing.io/shop/v2/?packagetoken=0448250a-ef3a-4cbd-a031-98deeaa65111) | [Get It Now](https://go.netlicensing.io/shop/v2/?packagetoken=4505d572-5861-496c-bbc7-2823776d9e1e) | [Contact Us](https://www.labs64.com/contact/) |
