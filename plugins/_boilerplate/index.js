@@ -12,6 +12,18 @@
  * @param {Array} args optional arguments needed for the plugin; for instance, the options object
  */
 export default (cls, factory, ...args) => {
+    /**
+     * Plugin dependency
+     * If your plugin depends on another plugin, you can use the plugin dependency system.
+     * To check if the required plugin is enabled, use the "factory.plugins" property, which is an object of the "Set"
+     * class and contains all enabled plugins (functions).
+     *  @see https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Set
+     */
+    const triggersPlugin = import('../triggers');
+    if (!factory.plugins.has(triggersPlugin)) {
+        console.warn('Plugin cannot be enabled, please enable triggers plugin first');
+        return;
+    }
 
     /**
      * INITIALIZATION & OPTIONS
