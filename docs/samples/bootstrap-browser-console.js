@@ -22,6 +22,6 @@ function loadStyles(href, location) {
 }
 
 // load GuideChimp script
-loadScript('https://cdn.jsdelivr.net/npm/guidechimp@1/dist/guidechimp.min.js');
+loadScript('https://cdn.jsdelivr.net/npm/guidechimp@2/dist/guidechimp.min.js');
 // load GuideChimp styles
-loadStyles('https://cdn.jsdelivr.net/npm/guidechimp@1/dist/guidechimp.min.css');
+loadStyles('https://cdn.jsdelivr.net/npm/guidechimp@2/dist/guidechimp.min.css');
