@@ -1,12 +1,19 @@
 ## VueRouter
 
-This plugin allows you to use "vue-router" to display the tour on different routes.
+This plugin allows you to use "vue-router" to display the tour on different [Vue.js](https://vuejs.org) routes.
+
+### Use Cases
+
+- Enable guided tours fo your Vue.js applications
+- Navigate to the defined route on the next/prev tour steps
+- Automatically continue tour on the next route / page / view
 
 ### Installation
 
 Please refer to the plugins' installation and configuration Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
 
 ### How To Use
+
 **main.js**
 
 ```javascript
