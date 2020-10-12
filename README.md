@@ -1,4 +1,4 @@
-<a href="https://www.linkedin.com/showcase/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-logo-transparent.png" alt="GuideChimp - Logo"></p></a>
+<a href="https://www.labs64.com/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-logo-transparent.png" alt="GuideChimp - Logo"></p></a>
 
 <p align="center">
 <a href="https://github.com/Labs64/GuideChimp/actions?query=workflow%3A%22GuideChimp+CI%22"><img src="https://github.com/Labs64/GuideChimp/workflows/GuideChimp%20CI/badge.svg" alt="Build Status"></a>
