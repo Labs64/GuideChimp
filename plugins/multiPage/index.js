@@ -5,15 +5,29 @@
  * located in the LICENSE file
  */
 
+const sha256Tour = async (tour) => {
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder('utf-8').encode(JSON.stringify(tour));
+
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string
+    return hashArray.map((b) => (`00${b.toString(16)}`).slice(-2)).join('');
+};
+
 module.exports = (cls) => {
-    const storageKey = 'GUIDECHIMP_MULTIPAGE_STEP';
+    const storageKey = 'GUIDECHIMP_MULTIPAGE';
     const parentInit = cls.prototype.init;
 
     // eslint-disable-next-line func-names,no-param-reassign
     cls.prototype.init = function () {
         parentInit.call(this);
 
-        this.on('onBeforeChange', (to) => {
+        this.on('onBeforeChange', async (to) => {
             const { multiPage } = to;
 
             if (multiPage) {
@@ -25,7 +39,14 @@ module.exports = (cls) => {
                         url.href = page;
 
                         if (url.href !== window.location.href) {
-                            sessionStorage.setItem(storageKey, this.steps.indexOf(to));
+                            const storage = (sessionStorage.getItem(storageKey))
+                                ? JSON.parse(sessionStorage.getItem(storageKey))
+                                : {};
+
+                            const tourHash = await sha256Tour(this.tour);
+                            storage[tourHash] = this.steps.indexOf(to);
+
+                            sessionStorage.setItem(storageKey, JSON.stringify(storage));
                             window.location.href = page;
                             return false;
                         }
@@ -39,10 +60,22 @@ module.exports = (cls) => {
 
     // eslint-disable-next-line no-param-reassign,func-names
     cls.prototype.continue = async function () {
-        const stepIndex = sessionStorage.getItem(storageKey);
+        const tourHash = await sha256Tour(this.tour);
+        const storage = (sessionStorage.getItem(storageKey))
+            ? JSON.parse(sessionStorage.getItem(storageKey))
+            : {};
 
-        if (stepIndex !== null) {
-            sessionStorage.removeItem(storageKey);
+        const stepIndex = storage[tourHash];
+
+        if (stepIndex !== undefined && stepIndex !== null) {
+            delete storage[tourHash];
+
+            if (!Object.keys(storage).length) {
+                sessionStorage.removeItem(storageKey);
+            } else {
+                sessionStorage.setItem(storageKey, JSON.stringify(storage));
+            }
+
             return this.start(stepIndex, true);
         }
 
