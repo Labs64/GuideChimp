@@ -1,47 +1,10 @@
-You can try GuideChimp on any public website by executing below commands in the browser console.
+<a href="https://www.linkedin.com/showcase/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-logo-transparent-chrome.png" alt="GuideChimp Chrome Extension - Logo"></p></a>
 
-## How to test GuideChimp on your webapp
+Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
 
-### 1) Open website
+# Features
 
-e.g. https://netlicensing.io
-
-### 2) Open browser console
-- **Firefox:** `Tools` > `Web Developer` > `Web Console`
-- **Chrome:**  `More Tools` > `Developer Tools`
-- **Safari:**  `Develop` > `Show JavaScript Console`
-
-### 3) Load GuideChimp scripts and styles
-
-```javascript
-fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-browser-console.js')
-    .then(response => response.text())
-    .then(text => eval(text));
-```
-
-### 4) (optional) Load GuideChimp built-in plugins
-
-Some of the websites tours might use GuideChimp [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins).
-In this case, you need to load these using below command:
-
-```javascript
-fetch('https://io.labs64.com/GuideChimp/docs/samples/bootstrap-plugins.js')
-    .then(response => response.text())
-    .then(text => eval(text));
-```
-
-### 5) Run tour
-
-```javascript
-fetch('https://io.labs64.com/GuideChimp/docs/tours/<WEBSITE>.js')
-    .then(response => response.text())
-    .then(text => eval(text));
-```
-replace `<WEBSITE>` with the website domain name.
-
-#### Sample
-```javascript
-fetch('https://io.labs64.com/GuideChimp/docs/tours/netlicensing.io.js')
-    .then(response => response.text())
-    .then(text => eval(text));
-```
+- Enable guided tours on any public website just by installing *GuideChimp Chrome Extension*
+- No website modifications or dependencies needed
+- Open repository for the [public guided tours](https://github.com/Labs64/GuideChimp/tree/master/docs/tours)
+- <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> Access to all powerful GuideChimp [features](https://github.com/Labs64/GuideChimp#features)
