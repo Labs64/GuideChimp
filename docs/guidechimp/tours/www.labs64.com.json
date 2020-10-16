@@ -1,9 +1,14 @@
 {
     "/guidechimp/": [
         {
-            "element": "[data-id="id-9"]",
-            "title": "Node-Locked",
-            "description": "Software is licensed for use only on one or more <i>named computer systems</i>. Usually, CPU serial number verification is used to enforce this type of license."
+            "element": "guidechimp-demo",
+            "title": "GuideChimp Demo",
+            "description": "See GuideChimp in action."
+        },
+        {
+            "element": "documentation",
+            "title": "GuideChimp Documentation",
+            "description": "View GuideChimp installation and configuration documentation."
         }
     ]
 }
