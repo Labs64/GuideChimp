@@ -1,1 +1,0 @@
-**DEPRECATED** => see https://github.com/Labs64/GuideChimp/tree/master/docs/guidechimp/tours
