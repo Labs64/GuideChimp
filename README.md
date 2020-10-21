@@ -142,26 +142,6 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 # License
 
-GuideChimp is made available under the [European Union Public License, version 1.2](LICENSE) or [Commercial License](https://www.labs64.com/legal/terms-of-service/website/).
+GuideChimp is made available under the [European Union Public License, version 1.2](LICENSE) or [Commercial License](https://www.labs64.com/guidechimp/#guidechimp-licensing).
 The Commercial License requires the payment of a fee for each designated commercial application. If you choose not to pay a fee and use the European Union Public License, version 1.2, you are required to release the source code of any program that you distribute that uses GuideChimp.
 If you choose to pay for a Commercial License, you are not required to disclose your source code.
-
-## Terms of Use
-
-|  | Open Source | Commercial | Enterprise |
-| --- | --- | --- | --- |
-| Commercial Use | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> \* | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Extensions/Plugins | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> \** | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Remove Attribution | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Customization | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-| Support  | :heavy_multiplication_x: | :heavy_multiplication_x: | <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> |
-|  | --- | --- | --- |
-|  | [Start Now Free](https://go.netlicensing.io/shop/v2/?packagetoken=0448250a-ef3a-4cbd-a031-98deeaa65111) | [Get It Now](https://go.netlicensing.io/shop/v2/?packagetoken=4505d572-5861-496c-bbc7-2823776d9e1e) | [Contact Us](https://www.labs64.com/contact/) |
-
-\*) [European Union Public License, version 1.2](LICENSE)
-
-\**) Open source and community [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins) only
-
-# Privacy Policy
-
-The applicable data protection provisions may be retrieved under [Privacy Policy](privacy-policy.md).
