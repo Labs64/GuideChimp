@@ -18,7 +18,7 @@ Deliver the perfect product experience, improve digital product adoption, boost 
 
 # What can you do with GuideChimp?
 
-<p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-stage-04-shadow.png"  alt="GuideChimp - Where To Use"></p>
+<a href="https://www.labs64.com/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-stage-04-shadow.png"  alt="GuideChimp - Where To Use"></p></a>
 
 - <strong>User Experience:</strong> Implement engaging and personalised guides to walk users through your system.
 - <strong>User Onboarding:</strong> Successfully onboard your users from day one with an intuitive step by step walkthroughs.
