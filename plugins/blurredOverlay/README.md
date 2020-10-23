@@ -2,7 +2,7 @@
 
 ### Use Cases
 
-- Add blur effect to  overlay 
+- Add blurred background effect to the tour overlay 
 
 ### Installation
 
@@ -30,17 +30,16 @@ import GuideChimp from 'guidechimp';
 import blurredOverlay from 'guidechimp/dist/plugins/blurredOverlay';
 import 'guidechimp/dist/plugins/blurredOverlay.min.css';
 
-
 GuideChimp.extend(blurredOverlay);
 ```
 
 ### How to change blur effect strength
-To change the strength of the blur effect, you need to change the "filter: blur([YOUR STRENGTH VALUE])" value:
 
-For example:
+To change the strength of the blur effect, modify value at `filter: blur(...)`
+
+**Example:**
 ```css
 body.gc * {
-  filter: blur(1.5em);
+    filter: blur(1.5em);
 }
 ```
-
