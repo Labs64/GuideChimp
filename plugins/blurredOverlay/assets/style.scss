@@ -1,0 +1,11 @@
+body.gc {
+  & * {
+    filter: blur(2px);
+  }
+
+  & [class*="gc-"],
+  & .gc-tooltip *,
+  & .gc-highlighted * {
+    filter: none;
+  }
+}
