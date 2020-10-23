@@ -418,7 +418,7 @@ export default class GuideChimp {
         this.showPagination();
         this.showNavigationNext();
 
-        const isNeedHideNavigation = Array.from(navigationLayer.children)
+        const isNeedHideNavigation = [...navigationLayer.children]
             .every((v) => v.classList.contains(this.constructor.getHiddenClass()));
 
         if (isNeedHideNavigation) {
