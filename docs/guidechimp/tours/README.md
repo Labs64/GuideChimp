@@ -6,5 +6,5 @@ Deliver the perfect product experience, improve digital product adoption, boost 
 
 - Enable guided tours on any public website just by installing *GuideChimp Chrome Extension*
 - No website modifications or dependencies needed
-- Open repository for the [public guided tours](https://github.com/Labs64/GuideChimp/tree/master/docs/tours)
-- <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> Access to all powerful GuideChimp [features](https://github.com/Labs64/GuideChimp#features)
+- Open repository for the [public guided tours](https://github.com/Labs64/GuideChimp/tree/master/docs/guidechimp/tours)
+- <img src="https://raw.githubusercontent.com/Labs64/GuideChimp/master/docs/img/guidechimp-icon-32x32.png"> Access to all powerful GuideChimp [features](https://www.labs64.com/guidechimp/#Examples)
