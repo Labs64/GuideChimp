@@ -31,6 +31,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 # Features
 
 - Seamless integration with any web app.
+- Start guided tour on any website with [GuideChimp Chrome Extension](https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng) and... ZERO! code.
 - GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
 - Let GuideChimp look like an integral part of your software product by configuring its look & feel
 - GuideChimp works well with tools you already use (e.g. WordPress, Confluence, etc.).
