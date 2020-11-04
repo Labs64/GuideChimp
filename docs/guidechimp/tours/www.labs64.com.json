@@ -1,14 +1,24 @@
 {
     "/guidechimp/": [
         {
-            "element": "guidechimp-demo",
+            "element": "#guidechimp-demo",
             "title": "GuideChimp Demo",
-            "description": "See GuideChimp in action."
+            "description": "See GuideChimp in action, right here & now, on your screen."
         },
         {
-            "element": "documentation",
+            "element": "#guidechimp-documentation",
             "title": "GuideChimp Documentation",
-            "description": "View GuideChimp installation and configuration documentation."
+            "description": "In <a href='https://github.com/Labs64/GuideChimp/wiki' target='_blank'>GuideChimp Wiki</a>, you will see how to install and configure GuideChimp for your needs, as well as lots of useful examples and tips."
+        },
+        {
+            "element": "#guidechimp-examples",
+            "title": "GuideChimp Examples",
+            "description": "See all <a href='https://github.com/Labs64/GuideChimp/wiki/Examples' target='_blank'>GuideChimp examples</a> in action at CodePen and live Websites."
+        },
+        {
+            "element": "#guidechimp-github",
+            "title": "GuideChimp is Open Source",
+            "description": "If you like GuideChimp, give us a star on GitHub <a href='https://github.com/Labs64/GuideChimp/stargazers' target='_blank'>⭐</a>"
         }
     ],
     "/legal/privacy-policy/2-5/": [
