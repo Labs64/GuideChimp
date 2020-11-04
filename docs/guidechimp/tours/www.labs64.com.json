@@ -16,6 +16,11 @@
             "description": "See all <a href='https://github.com/Labs64/GuideChimp/wiki/Examples' target='_blank'>GuideChimp examples</a> in action at CodePen and live Websites."
         },
         {
+            "element": "#feature-guidechimp-chrome-extension",
+            "title": "GuideChimp Chrome Extension",
+            "description": "Start guided tour on any website with <a href='https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng' target='_blank'>GuideChimp Chrome Extension</a> and ZERO! code."
+        },
+        {
             "element": "#guidechimp-github",
             "title": "GuideChimp is Open Source",
             "description": "If you like GuideChimp, give us a star on GitHub <a href='https://github.com/Labs64/GuideChimp/stargazers' target='_blank'>⭐</a>"
