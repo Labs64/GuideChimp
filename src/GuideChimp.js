@@ -376,11 +376,13 @@ export default class GuideChimp {
         const results = await this.emit('onBeforeChange', toStep, fromStep);
 
         if (results.some((r) => r === false)) {
+            this.stopPreloader();
             return false;
         }
 
         if (onBeforeChange) {
             if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
+                this.stopPreloader();
                 return false;
             }
         }
