@@ -691,8 +691,12 @@ export default class GuideChimp {
 
         const { scrollPadding } = this.options;
 
-        if (!(top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth)) {
-            window.scrollBy({ behavior, top: top - scrollPadding, left: left - scrollPadding });
+        if (!(left >= 0 && right <= innerWidth)) {
+            window.scrollBy({ behavior, left: left - scrollPadding });
+        }
+
+        if (!(top >= 0 && bottom <= innerHeight)) {
+            window.scrollBy({ behavior, top: top - scrollPadding });
         }
 
         return this;
