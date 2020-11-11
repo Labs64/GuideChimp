@@ -46,7 +46,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Use multiple listeners on tour events
 - Internationalization / i18n [support](https://github.com/Labs64/GuideChimp/wiki/Examples)
 - Ability to add steps on-the-fly / programmatically
-- Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event
+- Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event or [Lazy-loading plugin](https://github.com/Labs64/GuideChimp/tree/master/plugins/lazyLoading)
 - Ability to define custom action buttons
 - Flexibility and modularity; GuideChimp is designed as a JS class, so you can easily inherit from it and change / add custom methods
 - Improved usability - pagination, navigation and progress bar
