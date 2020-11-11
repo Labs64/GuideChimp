@@ -5,7 +5,7 @@ Wait for lazy-loaded or delayed elements on the page before showing related tour
 ### Use Cases
 
 - Plugin makes GuideChimp wait for lazy-loaded or delayed elements (post-rendering, rerouting, etc.)
-- Support of dynamic frameworks, such as Angular, Vue.js, React, etc.
+- Support dynamically created DOM elements with the frameworks, such as Angular, Vue.js, React, etc.
 
 ### Installation
 
