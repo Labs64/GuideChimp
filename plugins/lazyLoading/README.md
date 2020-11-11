@@ -1,4 +1,4 @@
-## Lazy loading
+## Lazy-loading
 
 Wait for lazy-loaded or delayed elements on the page before showing related tour step.
 
@@ -23,4 +23,5 @@ GuideChimp.extend(guideChimpLazyLoading, { timeout: 15000, frequency: 500 });
 
 ### Examples
 
--  Lazy-loading - https://codepen.io/netlicensing/full/yLJRbeY 
+-  Lazy-loading (plugin) - https://codepen.io/netlicensing/full/TODO
+-  Lazy-loading (using `onBeforeChange()`) - https://codepen.io/netlicensing/full/yLJRbeY
