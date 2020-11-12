@@ -1,0 +1,14 @@
+{
+    "/crm/*/tab/Home/begin": [
+        {
+            "element": "#compLogo",
+            "title": "Company Logo",
+            "description": "This is your company logo."
+        },
+        {
+            "element": "[data-value='Leads']",
+            "title": "Leads",
+            "description": "Leads menu item"
+        }
+    ]
+}
