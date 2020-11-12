@@ -11,15 +11,15 @@ Wait for lazy-loaded or delayed elements on the page before showing related tour
 
 Please refer to the plugins' installation and configuration Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
 
+### Options
+- `timeout`: time (in milliseconds) after which waiting for an element will be interrupted (default: 5000)
+- `frequency`: indicates how often (in milliseconds) an element availability check will be performed (default: 100)
+
 ### How To Use
 
 ```javascript
 GuideChimp.extend(guideChimpPluginLazyLoading, { timeout: 15000, frequency: 500 });
 ```
-
-### Options
-- `timeout`: time (in milliseconds) after which waiting for an element will be interrupted (default: 5000)
-- `frequency`: indicates how often (in milliseconds) an element availability check will be performed (default: 100)
 
 ### Examples
 
