@@ -124,7 +124,7 @@ var tour = [
     title: 'Welcome to %companyName%',
     description: 'Welcome to %companyName%',
     placeholders: {
-      companyName: 'BestCompany'
+      companyName: 'Labs64'
     }
   }
 ]
