@@ -103,8 +103,10 @@ var tour = [
 
 #### Placeholder template
 
-Sometimes it is necessary to change the template of a placeholder, for example when it conflicts with other libraries or frameworks. To do this, you can pass a new placeholder template in the guideСhimp options.
+Sometimes it is necessary to change the template of a placeholder, for example when it conflicts with other libraries or frameworks. To do this, you can pass a new placeholder template in the plugin options.
 ```javascript
+GuideChimp.extend(guideChimpPluginPlaceholders, { template: '%*%' });
+
 var tour = [
         {
             title: 'Welcome to %companyName%',
@@ -113,7 +115,7 @@ var tour = [
         },
     ]
 
-var guide = GuideChimp(tour, { placeholderTemplate: '%*%' });
+var guide = GuideChimp(tour);
 ```
 
 ### Examples
