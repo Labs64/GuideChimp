@@ -14,7 +14,7 @@ Please refer to the plugins' installation and configuration Wiki [page](https://
 ### How To Use
 
 ```javascript
-GuideChimp.extend(guideChimpLazyLoading, { timeout: 15000, frequency: 500 });
+GuideChimp.extend(guideChimpPluginLazyLoading, { timeout: 15000, frequency: 500 });
 ```
 
 ### Options
