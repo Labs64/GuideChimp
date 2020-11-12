@@ -23,5 +23,5 @@ GuideChimp.extend(guideChimpPluginLazyLoading, { timeout: 15000, frequency: 500 
 
 ### Examples
 
--  Lazy-loading (plugin) - https://codepen.io/netlicensing/full/TODO
+-  Lazy-loading (plugin) - https://codepen.io/netlicensing/full/PozXbPR
 -  Lazy-loading (using `onBeforeChange()`) - https://codepen.io/netlicensing/full/yLJRbeY
