@@ -10,5 +10,12 @@
             "title": "Leads",
             "description": "Leads menu item"
         }
+    ],
+    "/crm/*/tab/Leads/*": [
+        {
+            "element": "#lv_left_filter",
+            "title": "Leads - Left Navigation",
+            "description": "Left Navigation menu."
+        }
     ]
 }
