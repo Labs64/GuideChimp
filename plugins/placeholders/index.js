@@ -12,8 +12,10 @@
  * @param {Object} factory GuideChimp factory
  * @param {Object} options the options object
  */
-module.exports = (cls) => {
+module.exports = (cls, factory, options = {}) => {
     const parentInit = cls.prototype.init;
+
+    const { template = '{*}' } = options;
 
     // eslint-disable-next-line no-param-reassign
     cls.placeholders = {};
@@ -60,8 +62,6 @@ module.exports = (cls) => {
     cls.prototype.init = function () {
         parentInit.call(this);
 
-        const { placeholderTemplate = '{*}' } = this.options;
-
         this.on('onBeforeChange', async (toStep, ...args) => {
             let { placeholders } = toStep;
 
@@ -76,7 +76,7 @@ module.exports = (cls) => {
             if (placeholdersKeys.length) {
                 const replacePlaceholders = (object) => {
                     placeholdersKeys.forEach((placeholderKey) => {
-                        const placeholderSearch = placeholderTemplate.replace('*', placeholderKey);
+                        const search = template.replace('*', placeholderKey);
 
                         Object.keys(object).forEach((key) => {
                             const value = toStep[key];
@@ -88,7 +88,7 @@ module.exports = (cls) => {
 
                             if (typeof value === 'string') {
                                 // eslint-disable-next-line no-param-reassign
-                                object[key] = value.replace(placeholderSearch, placeholders[placeholderKey]);
+                                object[key] = value.replaceAll(search, placeholders[placeholderKey]);
                             }
                         });
                     });
