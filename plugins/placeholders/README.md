@@ -4,7 +4,8 @@ Use dynamic placeholders in the tour definition.
 
 ### Use Cases
 
-- TODO
+- Define dynamic placeholders for tour steps; e.g. _"Hello User!"_
+- Describe dynamically created elements
 
 ### Installation
 
@@ -15,14 +16,14 @@ Please refer to the plugins' installation and configuration Wiki [page](https://
 - `setPlaceholders(placeholders)` - set (overwrite) global placeholders
     - `placeholders` (Object) - placeholders object
 - `addPlaceholder(key, value)` - add global placeholder
-    - `key` (string) - placeholder key(without braces)
+    - `key` (string) - placeholder key (without braces)
     - `value` (string or number) - placeholder value
 - `addPlaceholders(placeholders)` - add global placeholders
     - `placeholders` (Object) - key:value object
 - `removePlaceholder(key)` - remove global placeholder
     - `key` (string) - placeholder key
 - `removePlaceholders(keys)` - remove global placeholders
-    - `keys` (Array or null) - an array of placeholder keys, if not specified, will remove all global placeholders
+    - `keys` (Array or null) - an array of placeholder keys; if not specified, all global placeholders will be removed
 
 ### How To Use
 
