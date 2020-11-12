@@ -1,5 +1,5 @@
 {
-    "/crm/*/tab/Home/begin": [
+    "/crm/.*/tab/Home/begin": [
         {
             "element": "#compLogo",
             "title": "Company Logo",
@@ -11,7 +11,7 @@
             "description": "Leads menu item"
         }
     ],
-    "/crm/*/tab/Leads/*": [
+    "/crm/.*/tab/Leads/.*": [
         {
             "element": "#lv_left_filter",
             "title": "Leads - Left Navigation",
