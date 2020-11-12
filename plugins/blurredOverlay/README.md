@@ -43,3 +43,7 @@ body.gc * {
     filter: blur(1.5em);
 }
 ```
+
+### Examples
+
+- Blurred Overlay - https://codepen.io/netlicensing/full/pobRyEO
