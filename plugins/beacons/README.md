@@ -17,7 +17,7 @@ Please refer to the plugins' installation and configuration Wiki [page](https://
 
 Following options can be used to configure beacons via JavaScript:
 
-* `element`: Query selector string or HTML element; if not defined, the tooltip will be centred on the screen. [Verify selector](https://netlicensing.io/blog/2020/10/12/validate-css-selectors/)
+* `element`: Query selector string or HTML element; if not defined, the tooltip will be centred on the screen; see  [How to verify CSS selector](https://netlicensing.io/blog/2020/10/12/validate-css-selectors/)
 * `position`: Beacon position (values: top-left, top, top-right, center-left, center, center-right, bottom-left, bottom, bottom-right)
 * `boundary`: Beacon container position (values: outer, inner)
 * `tour`: tour reference or definition to be started on beacon click
