@@ -78,15 +78,15 @@ guide.setPlaceholders({
 
 #### Asynchronous fetching of placeholders
 
-It often happens that you need to perform some action before you can return a placeholder object. For example, get the values of placeholders after ajax query. In such cases, it will be convenient to use the step property `placeholders` as a function.
+In the case, action needs to be performed before a placeholder object is set and the placeholders values will be available after AJAX query, step property placeholders can be defined in a function.
 
 ```javascript
 var tour = [{
     title: 'Hello {username}',
-    description: 'We are glad that you have used the services of the {companyName} company',
+    description: 'Thank you for choosing {productName}!',
     // step placeholders as function
     placeholders() {
-      // GuideChimp will wait for promises to end
+      // Wait for promises
       return fetch('http://jsonplaceholder.typicode.com/users/1')
         .then((response) => {
           return response.json();
@@ -101,14 +101,13 @@ var tour = [{
   /* Output:
    * {
    *      title: 'Hello Leanne Graham',
-   *      description: 'We are glad that you have used the services of the BestCompany company',
+   *      description: 'Thank you for choosing GuideChimp!',
    * }
    */
 ]
 
 var guide = GuideChimp(tour);
-
-guide.addPlaceholder('companyName', 'BestCompany');
+guide.addPlaceholder('productName', 'GuideChimp');
 ```
 
 #### Placeholder template
