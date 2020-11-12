@@ -49,7 +49,7 @@ var tour = [
   {
     element: '#logo-{id}',
     title: 'Thank you {username}',
-    description: 'Thank you {username} for choising {productName}!',
+    description: 'Thank you {username} for choosing {productName}!',
     // step placeholders
     placeholders: {
       id: 'main'
@@ -59,7 +59,7 @@ var tour = [
    * {
    *      element: '#logo-main',
    *      title: 'Thank you John Doe',
-   *      description: 'Thank you John Doe for choising GuideChimp!',
+   *      description: 'Thank you John Doe for choosing GuideChimp!',
    * }
    */
 ]
@@ -113,23 +113,26 @@ guide.addPlaceholder('companyName', 'BestCompany');
 
 #### Placeholder template
 
-Sometimes it is necessary to change the template of a placeholder, for example when it conflicts with other libraries or frameworks. To do this, you can pass a new placeholder template in the plugin options.
+Sometimes it is necessary to change the template of a placeholder, for instance, if placeholder format conflicts with other libraries or frameworks. In this case, a new placeholder template can be defined in the plugin options.
+
 ```javascript
 GuideChimp.extend(guideChimpPluginPlaceholders, {
   template: '%*%'
 });
 
-var tour = [{
-  title: 'Welcome to %companyName%',
-  description: 'We are glad to welcome you to the site of an %companyName% company, take this tour to get acquainted with the product.',
-  placeholders: {
-    companyName: 'BestCompany'
-  },
-}, ]
+var tour = [
+  {
+    title: 'Welcome to %companyName%',
+    description: 'Welcome to %companyName%',
+    placeholders: {
+      companyName: 'BestCompany'
+    }
+  }
+]
 
 var guide = GuideChimp(tour);
 ```
 
 ### Examples
 
-- Placeholders plugin example at CodePen - https://codepen.io/netlicensing/full/TODO
+- Placeholders plugin example at CodePen - https://codepen.io/netlicensing/full/GRqPxrL
