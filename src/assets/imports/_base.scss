@@ -236,6 +236,10 @@
       border-radius: 0 0 2px 2px;
     }
   }
+
+  &.gc-hidden {
+    display: none;
+  }
 }
 
 .gc-default {
