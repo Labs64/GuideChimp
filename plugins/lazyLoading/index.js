@@ -24,6 +24,11 @@ module.exports = (cls, factory, options) => {
         parentInit.call(this);
 
         this.on('onBeforeChange', ({ element }) => new Promise((resolve) => {
+            if (!element) {
+                resolve();
+                return;
+            }
+
             let el = document.querySelector(element);
 
             if (el) {
