@@ -79,7 +79,7 @@ module.exports = (cls, factory, options = {}) => {
                         const search = template.replace('*', placeholderKey);
 
                         Object.keys(object).forEach((key) => {
-                            const value = toStep[key];
+                            const value = object[key];
 
                             if (value != null && typeof value === 'object') {
                                 replacePlaceholders(value);

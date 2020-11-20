@@ -375,16 +375,16 @@ export default class GuideChimp {
 
         const results = await this.emit('onBeforeChange', toStep, fromStep);
 
-        if (results.some((r) => r === false)) {
-            this.stopPreloader();
-            return false;
-        }
-
         if (onBeforeChange) {
             if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
                 this.stopPreloader();
                 return false;
             }
+        }
+
+        if (results.some((r) => r === false)) {
+            this.stopPreloader();
+            return false;
         }
 
         this.stopPreloader();
@@ -441,11 +441,11 @@ export default class GuideChimp {
             this.scrollTo(tooltipLayer, 'smooth');
         }, 300);
 
-        this.emit('onAfterChange', toStep, fromStep);
-
         if (onAfterChange) {
             onAfterChange.call(this, toStep, fromStep);
         }
+
+        this.emit('onAfterChange', toStep, fromStep);
 
         return true;
     }
