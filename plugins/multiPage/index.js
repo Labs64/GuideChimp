@@ -27,8 +27,8 @@ module.exports = (cls) => {
     cls.prototype.init = function () {
         parentInit.call(this);
 
-        this.on('onBeforeChange', async (to) => {
-            const { multiPage } = to;
+        this.on('onBeforeChange', async (toStep, ...args) => {
+            const { multiPage } = toStep;
 
             if (multiPage) {
                 if (typeof this.tour !== 'string') {
@@ -36,7 +36,10 @@ module.exports = (cls) => {
 
                     if (page) {
                         const url = document.createElement('a');
-                        url.href = page;
+
+                        url.href = (typeof page === 'function')
+                            ? await Promise.resolve().then(() => page.call(this, toStep, ...args))
+                            : page;
 
                         if (url.href !== window.location.href) {
                             const storage = (sessionStorage.getItem(storageKey))
@@ -44,10 +47,10 @@ module.exports = (cls) => {
                                 : {};
 
                             const tourHash = await sha256Tour(this.tour);
-                            storage[tourHash] = this.steps.indexOf(to);
+                            storage[tourHash] = this.steps.indexOf(toStep);
 
                             sessionStorage.setItem(storageKey, JSON.stringify(storage));
-                            window.location.href = page;
+                            window.location.href = url.href;
                             return false;
                         }
                     }
