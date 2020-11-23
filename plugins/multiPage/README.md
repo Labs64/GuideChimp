@@ -11,8 +11,7 @@ MultiPage plugin adds a new `.continue()` method, which automatically starts the
 
 ### Installation
 
-Please refer to the plugins' installation and configuration
-Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
+Please refer to the plugins' installation and configuration Wiki [page](https://github.com/Labs64/GuideChimp/wiki/Configure#plugins).
 
 ### How To Use
 
