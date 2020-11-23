@@ -34,12 +34,13 @@ module.exports = (cls) => {
                 if (typeof this.tour !== 'string') {
                     const { page } = multiPage;
 
-                    if (page) {
-                        const url = document.createElement('a');
+                    const href = (typeof page === 'function')
+                        ? await Promise.resolve().then(() => page.call(this, toStep, ...args))
+                        : page;
 
-                        url.href = (typeof page === 'function')
-                            ? await Promise.resolve().then(() => page.call(this, toStep, ...args))
-                            : page;
+                    if (href) {
+                        const url = document.createElement('a');
+                        url.href = String(href);
 
                         if (url.href !== window.location.href) {
                             const storage = (sessionStorage.getItem(storageKey))
