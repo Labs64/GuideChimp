@@ -52,6 +52,13 @@ module.exports = (cls) => {
 
                             sessionStorage.setItem(storageKey, JSON.stringify(storage));
                             window.location.href = url.href;
+
+                            // wait page loading
+                            await new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve();
+                                }, 300000); // wait 5 minutes
+                            });
                             return false;
                         }
                     }
