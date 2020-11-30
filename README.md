@@ -148,3 +148,8 @@ GuideChimp is made available under the [European Union Public License, version 1
 The Commercial License requires the payment of a fee for each designated commercial application.
 - If you choose not to pay a fee and use the *European Union Public License, version 1.2*, you are required to release the source code of any program that you distribute that uses GuideChimp.
 - If you choose to pay for a *Commercial License*, you are not required to disclose your source code.
+
+
+# Privacy Policy
+
+The applicable data protection provisions may be retrieved under [Privacy Policy](privacy-policy.md).
