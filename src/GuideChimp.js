@@ -62,6 +62,7 @@ export default class GuideChimp {
             interaction: true,
             padding: 10,
             scrollPadding: 10,
+            scrollBehavior: 'auto',
         };
     }
 
@@ -193,9 +194,9 @@ export default class GuideChimp {
      * @return {{top: number, left: number, width: number, height: number}}
      */
     static getElementOffset(el) {
-        const { body, documentElement } = document;
-        const scrollTop = window.pageYOffset || documentElement.scrollTop || body.scrollTop;
-        const scrollLeft = window.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
+        const { body, documentElement, defaultView: view } = el.ownerDocument;
+        const scrollTop = view.pageYOffset || documentElement.scrollTop || body.scrollTop;
+        const scrollLeft = view.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
         const { top, right, bottom, left, width, height, x, y } = el.getBoundingClientRect();
         return { right, bottom, width, height, x, y, top: top + scrollTop, left: left + scrollLeft };
     }
@@ -361,6 +362,8 @@ export default class GuideChimp {
             return false;
         }
 
+        this.step = toStep;
+
         // remove all highlighting
         this.resetElementsHighlighting();
 
@@ -373,30 +376,36 @@ export default class GuideChimp {
 
         const { onBeforeChange, onAfterChange } = toStep;
 
-        const results = await this.emit('onBeforeChange', toStep, fromStep);
-
         if (onBeforeChange) {
             if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
                 this.stopPreloader();
+                this.step = fromStep;
                 return false;
             }
         }
 
+        const results = await this.emit('onBeforeChange', toStep, fromStep);
+
         if (results.some((r) => r === false)) {
             this.stopPreloader();
+            this.step = fromStep;
             return false;
         }
 
         this.stopPreloader();
 
-        this.step = toStep;
+        const { scrollBehavior } = this.options;
 
-        const { element, position, buttons } = this.step;
-        const el = this.getStepElement(element);
+        // get step element
+        this.step.$element = this.getStepElement(this.step);
 
-        this.scrollParentToChildElement(el);
-        this.scrollTo(el);
+        const { $element: el, title, description, position, buttons } = this.step;
 
+        // scroll to element
+        this.scrollParentsToStepElement(this.step);
+        this.scrollTo(el, scrollBehavior);
+
+        // show all layers
         const highlightLayer = this.showHighlightLayer();
         const interactionLayer = this.showInteractionLayer();
         const controlLayer = this.showControlLayer();
@@ -409,13 +418,14 @@ export default class GuideChimp {
         this.showTooltipTail();
 
         this.showProgressbar();
-        this.showTitle(this.step.title);
-        this.showDescription(this.step.description);
+        this.showTitle(title);
+        this.showDescription(description);
         this.showClose();
 
         this.showCustomButtonsLayer(buttons);
 
-        const navigationLayer = this.showNavigation();
+        const navigationLayer = this.showNavigationLayer();
+
         this.showNavigationPrev();
         this.showPagination();
         this.showNavigationNext();
@@ -438,7 +448,7 @@ export default class GuideChimp {
         this.observeResizeStepElement(el);
 
         setTimeout(() => {
-            this.scrollTo(tooltipLayer, 'smooth');
+            this.scrollTo(tooltipLayer, scrollBehavior);
         }, 300);
 
         if (onAfterChange) {
@@ -518,9 +528,6 @@ export default class GuideChimp {
         // emit stop event
         await this.emit('onStop');
 
-        this.step = null;
-        this.steps = [];
-
         // remove the class that increase the specificity of the guidechimp classes
         document.body.classList.remove(this.constructor.getBodyClass());
 
@@ -538,6 +545,9 @@ export default class GuideChimp {
         this.removeInteractionLayer();
         this.resetElementsHighlighting();
         this.cache.clear();
+
+        this.step = null;
+        this.steps = [];
 
         return this;
     }
@@ -620,7 +630,12 @@ export default class GuideChimp {
         });
     }
 
-    getStepElement(selector) {
+    getStepElement(step) {
+        const { element } = step || {};
+        return this.getElement(element);
+    }
+
+    getElement(selector) {
         let el = (selector instanceof HTMLElement)
             ? selector
             : document.querySelector(selector);
@@ -632,55 +647,69 @@ export default class GuideChimp {
         return el;
     }
 
-    getScrollableParentElement(el, axis = ['x', 'y']) {
+    getScrollableParentsElements(el) {
+        const parents = [];
+        let htmlEl = el;
+
+        while (htmlEl && htmlEl !== htmlEl.ownerDocument.body) {
+            htmlEl = this.getScrollableParentElement(htmlEl);
+            parents.push(htmlEl);
+        }
+
+        return parents;
+    }
+
+    getScrollableParentElement(el) {
         const regex = /(auto|scroll)/;
-
         const elStyle = getComputedStyle(el);
+        const elDocument = el.ownerDocument;
 
-        const getScrollableParent = (parent) => {
-            if (!parent || parent === document.body) {
-                return document.body;
+        const getClosestScrollableParent = (parent) => {
+            if (!parent || parent === elDocument.body) {
+                return elDocument.body;
             }
 
             const parentStyle = getComputedStyle(parent);
 
             if (elStyle.getPropertyValue('position') === 'fixed'
                 && parentStyle.getPropertyValue('position') === 'static') {
-                return getScrollableParent(parent.parentElement);
+                return getClosestScrollableParent(parent.parentElement);
             }
 
-            let overflow = '';
+            const overflowX = parentStyle.getPropertyValue('overflow-x');
+            const overflowY = parentStyle.getPropertyValue('overflow-y');
 
-            const overflowAxis = (Array.isArray(axis)) ? axis : [axis];
+            if (regex.test(overflowX) || regex.test(overflowY)) {
+                return parent;
+            }
 
-            overflowAxis.forEach((v) => {
-                overflow += parentStyle.getPropertyValue(`overflow-${v}`);
-            });
-
-            const isScrollable = regex.test(overflow);
-
-            return (isScrollable) ? parent : getScrollableParent(parent.parentElement);
+            return getClosestScrollableParent(parent.parentElement);
         };
 
         return (elStyle.getPropertyValue('position') === 'fixed')
-            ? document.body
-            : getScrollableParent(el.parentElement);
+            ? elDocument.body
+            : getClosestScrollableParent(el.parentElement);
     }
 
-    scrollParentToChildElement(el) {
-        const scrollableParentElX = this.getScrollableParentElement(el, 'x');
-        const scrollableParentElY = this.getScrollableParentElement(el, 'y');
+    scrollParentsToStepElement(step) {
+        const { $element: el = this.getStepElement(step) } = step;
+        return this.scrollParentsToElement(el);
+    }
+
+    scrollParentsToElement(el) {
+        // get all scrollable parents
+        const parents = this.getScrollableParentsElements(el);
 
         const { scrollPadding } = this.options;
 
-        // scroll a parent scrollable element to a child element
-        if (scrollableParentElY !== document.body) {
-            scrollableParentElY.scrollTop = el.offsetTop - scrollableParentElY.offsetTop - scrollPadding;
-        }
-
-        if (scrollableParentElX !== document.body) {
-            scrollableParentElX.scrollLeft = el.offsetLeft - scrollableParentElX.offsetLeft - scrollPadding;
-        }
+        parents.forEach((parent) => {
+            if (parent !== document.body) {
+                // eslint-disable-next-line no-param-reassign
+                parent.scrollTop = el.offsetTop - parent.offsetTop - scrollPadding;
+                // eslint-disable-next-line no-param-reassign
+                parent.scrollLeft = el.offsetLeft - parent.offsetLeft - scrollPadding;
+            }
+        });
 
         return this;
     }
@@ -706,7 +735,7 @@ export default class GuideChimp {
         let parentEl = el.parentElement;
 
         while (parentEl) {
-            if (parentEl === document.body) {
+            if (parentEl === el.ownerDocument.body) {
                 break;
             }
 
@@ -839,8 +868,8 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { pageXOffset } = window;
-        const { width: docElWidth } = document.documentElement.getBoundingClientRect();
+        const { pageXOffset } = el.ownerDocument.defaultView;
+        const { width: docElWidth } = el.ownerDocument.documentElement.getBoundingClientRect();
         const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getElementOffset(el);
 
         const height = elHeight + padding;
@@ -919,8 +948,8 @@ export default class GuideChimp {
 
         let boundaryRect = {};
 
-        if (boundary === window) {
-            boundaryRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
+        if (boundary instanceof Window) {
+            boundaryRect = new DOMRect(0, 0, boundary.innerWidth, boundary.innerHeight);
         } else {
             const { x, y } = boundary.getBoundingClientRect();
             boundaryRect = new DOMRect(x, y, boundary.scrollWidth, boundary.scrollHeight);
@@ -1157,7 +1186,7 @@ export default class GuideChimp {
     showDefaultElement() {
         let defaultEl = this.cache.get('defaultEl');
 
-        if (!defaultEl) {
+        if (!defaultEl || !defaultEl.parentNode) {
             defaultEl = document.createElement('div');
             document.body.appendChild(defaultEl);
         }
@@ -1172,7 +1201,7 @@ export default class GuideChimp {
     showPreloaderElement() {
         let preloaderEl = this.cache.get('preloaderEl');
 
-        if (!preloaderEl) {
+        if (!preloaderEl || !preloaderEl.parentNode) {
             preloaderEl = document.createElement('div');
             preloaderEl.className = this.constructor.getPreloaderClass();
             document.body.appendChild(preloaderEl);
@@ -1198,7 +1227,7 @@ export default class GuideChimp {
     showOverlayLayer() {
         let overlayLayer = this.cache.get('overlayLayer');
 
-        if (!overlayLayer) {
+        if (!overlayLayer || !overlayLayer.parentNode) {
             overlayLayer = document.createElement('div');
             overlayLayer.className = this.constructor.getOverlayLayerClass();
             overlayLayer.onclick = (this.options.exitOverlay) ? () => this.stop() : null;
@@ -1251,7 +1280,7 @@ export default class GuideChimp {
     showControlLayer() {
         let controlLayer = this.cache.get('controlLayer');
 
-        if (!controlLayer) {
+        if (!controlLayer || !controlLayer.parentNode) {
             controlLayer = document.createElement('div');
             controlLayer.className = this.constructor.getControlLayerClass();
             document.body.appendChild(controlLayer);
@@ -1278,7 +1307,7 @@ export default class GuideChimp {
         // get or create interaction layer
         let interactionLayer = this.cache.get('interactionLayer');
 
-        if (!interactionLayer) {
+        if (!interactionLayer || !interactionLayer.parentNode) {
             interactionLayer = document.createElement('div');
             document.body.appendChild(interactionLayer);
         }
@@ -1318,7 +1347,7 @@ export default class GuideChimp {
 
         let tooltipLayer = this.cache.get('tooltipLayer');
 
-        if (!tooltipLayer) {
+        if (!tooltipLayer || !tooltipLayer.parentNode) {
             tooltipLayer = document.createElement('div');
             tooltipLayer.setAttribute('role', 'dialog');
             parent.appendChild(tooltipLayer);
@@ -1336,7 +1365,7 @@ export default class GuideChimp {
 
         let tooltipTailEl = this.cache.get('tooltipTailEl');
 
-        if (!tooltipTailEl) {
+        if (!tooltipTailEl || !tooltipTailEl.parentNode) {
             tooltipTailEl = document.createElement('div');
             parent.appendChild(tooltipTailEl);
         }
@@ -1353,7 +1382,7 @@ export default class GuideChimp {
 
         let closeEl = this.cache.get('closeEl');
 
-        if (!closeEl) {
+        if (!closeEl || !closeEl.parentNode) {
             closeEl = document.createElement('div');
             closeEl.onclick = () => this.stop();
             parent.appendChild(closeEl);
@@ -1371,7 +1400,7 @@ export default class GuideChimp {
 
         let progressbarEl = this.cache.get('progressbarEl');
 
-        if (!progressbarEl) {
+        if (!progressbarEl || !progressbarEl.parentNode) {
             progressbarEl = document.createElement('div');
             progressbarEl.setAttribute('role', 'progress');
             progressbarEl.setAttribute('aria-valuemin', 0);
@@ -1401,7 +1430,7 @@ export default class GuideChimp {
     showTitle(title) {
         let titleEl = this.cache.get('titleEl');
 
-        if (!titleEl) {
+        if (!titleEl || !titleEl.parentNode) {
             titleEl = document.createElement('div');
             this.showTooltipLayer().appendChild(titleEl);
         }
@@ -1422,7 +1451,7 @@ export default class GuideChimp {
     showDescription(description) {
         let descriptionEl = this.cache.get('descriptionEl');
 
-        if (!descriptionEl) {
+        if (!descriptionEl || !descriptionEl.parentNode) {
             descriptionEl = document.createElement('div');
             this.showTooltipLayer().appendChild(descriptionEl);
         }
@@ -1443,7 +1472,7 @@ export default class GuideChimp {
     showCustomButtonsLayer(buttons = []) {
         let customButtonsLayer = this.cache.get('customButtonsLayer');
 
-        if (!customButtonsLayer) {
+        if (!customButtonsLayer || !customButtonsLayer.parentNode) {
             customButtonsLayer = document.createElement('div');
             this.showTooltipLayer().appendChild(customButtonsLayer);
         }
@@ -1483,10 +1512,10 @@ export default class GuideChimp {
         return customButtonsLayer;
     }
 
-    showNavigation() {
+    showNavigationLayer() {
         let navigationLayer = this.cache.get('navigationLayer');
 
-        if (!navigationLayer) {
+        if (!navigationLayer || !navigationLayer.parentNode) {
             navigationLayer = document.createElement('div');
             this.showTooltipLayer().appendChild(navigationLayer);
         }
@@ -1501,9 +1530,9 @@ export default class GuideChimp {
     showPagination() {
         let paginationLayer = this.cache.get('paginationLayer');
 
-        if (!paginationLayer) {
+        if (!paginationLayer || !paginationLayer.parentNode) {
             paginationLayer = document.createElement('div');
-            this.showNavigation().appendChild(paginationLayer);
+            this.showNavigationLayer().appendChild(paginationLayer);
         }
 
         paginationLayer.className = this.constructor.getPaginationLayerClass();
@@ -1537,11 +1566,11 @@ export default class GuideChimp {
     showNavigationPrev() {
         let navigationPrevEl = this.cache.get('navigationPrevEl');
 
-        if (!navigationPrevEl) {
+        if (!navigationPrevEl || !navigationPrevEl.parentNode) {
             navigationPrevEl = document.createElement('div');
             navigationPrevEl.className = this.constructor.getNavigationPrevClass();
             navigationPrevEl.onclick = () => this.previous();
-            this.showNavigation().appendChild(navigationPrevEl);
+            this.showNavigationLayer().appendChild(navigationPrevEl);
         }
 
         const stepIndex = this.steps.indexOf(this.step);
@@ -1556,11 +1585,11 @@ export default class GuideChimp {
     showNavigationNext() {
         let navigationNextEl = this.cache.get('navigationNextEl');
 
-        if (!navigationNextEl) {
+        if (!navigationNextEl || !navigationNextEl.parentNode) {
             navigationNextEl = document.createElement('div');
             navigationNextEl.onclick = () => this.next();
             navigationNextEl.className = this.constructor.getNavigationNextClass();
-            this.showNavigation().appendChild(navigationNextEl);
+            this.showNavigationLayer().appendChild(navigationNextEl);
         }
 
         const stepIndex = this.steps.indexOf(this.step);
@@ -1578,7 +1607,7 @@ export default class GuideChimp {
     showCopyright() {
         let copyrightEl = this.cache.get('copyrightEl');
 
-        if (!copyrightEl) {
+        if (!copyrightEl || !copyrightEl.parentNode) {
             copyrightEl = document.createElement('div');
             this.showTooltipLayer().appendChild(copyrightEl);
         }
@@ -1770,9 +1799,9 @@ export default class GuideChimp {
         if (!this.step) {
             return this;
         }
+        this.step.$element = this.getStepElement(this.step);
 
-        const { element, position } = this.step;
-        const el = this.getStepElement(element);
+        const { $element: el, position } = this.step;
 
         if (this.cache.has('highlightLayer')) {
             this.setHighlightLayerPosition(this.cache.get('highlightLayer'), el);
