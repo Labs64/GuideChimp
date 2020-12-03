@@ -22,7 +22,7 @@ jobs:
       with:
         path: guidechimp-plugins
         repository: Labs64/GuideChimp-plugins
-        token: ${{ secrets.GitHub_PAT }}
+        token: ${{ secrets.GUIDECHIMP_PAT }}
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
