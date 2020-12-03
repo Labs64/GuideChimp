@@ -7,10 +7,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x]
-
     steps:
     - name: Checkout GuideChimp
       uses: actions/checkout@v2
@@ -24,14 +20,13 @@ jobs:
         repository: Labs64/GuideChimp-plugins
         token: ${{ secrets.GUIDECHIMP_PAT }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 12
 
     - name: npm install, build, and test
       run: |
-        ls -la -R .
-        ls -la -R guidechimp-core/
-        ls -la -R guidechimp-plugins/
-        ls -la -R dist/
+        ls -la .
+        ls -la guidechimp-core/
+        ls -la guidechimp-plugins/
