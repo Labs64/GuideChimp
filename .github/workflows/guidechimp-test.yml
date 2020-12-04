@@ -52,4 +52,4 @@ jobs:
         ls -la -R ../guidechimp-core/dist
         head -n 5 ../guidechimp-core/dist/plugins/lazyLoading.js
         head -n 5 ../guidechimp-core/dist/plugins/triggers.js
-        head -n 10 ../guidechimp-core/dist/plugins/iFrames.js
+        head -n 5 ../guidechimp-core/dist/plugins/iFrames.js
