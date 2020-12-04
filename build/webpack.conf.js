@@ -119,7 +119,7 @@ fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(folderName => {
                 patterns: [
                     {
                         from: path.resolve(__dirname, `../plugins/${folderName}/README.md`),
-                        to: path.resolve(__dirname, `../dist/${folderName}-[name].[ext]`),
+                        to: path.resolve(__dirname, `../dist/plugins/${folderName}-[name].[ext]`),
                     },
                 ],
             }),
