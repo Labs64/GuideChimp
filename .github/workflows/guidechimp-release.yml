@@ -5,32 +5,63 @@ on:
     types: [created]
 
 jobs:
-  build:
+
+  publish-npm:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: |
+          registry-url: https://registry.npmjs.org/
+
+      - name: Checkout GuideChimp
+        uses: actions/checkout@v2
+        with:
+          path: guidechimp-core
+
+      - name: Read GuideChimp Plugins version
+        id: guidechimp_plugins_version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: './guidechimp-core/package.json'
+          prop_path: 'plugins.guidechimp-plugins'
+
+      - name: Checkout GuideChimp Plugins (v${{steps.guidechimp_plugins_version.outputs.prop}})
+        uses: actions/checkout@v2
+        with:
+          path: guidechimp-plugins
+          repository: Labs64/GuideChimp-plugins
+          ref: ${{steps.guidechimp_plugins_version.outputs.prop}}
+          token: ${{ secrets.GUIDECHIMP_PAT }}
+
+      - name: Build and test package
+        run: |
+          ls -la .
+          ls -la guidechimp-core/
+          ls -la guidechimp-plugins/
+          cd guidechimp-core
           npm ci
           npm run build --if-present
           npm test
           ls -la -R dist/
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-      - run: |
+          cd ../guidechimp-plugins
           npm ci
           npm run build --if-present
           ls -la -R dist/
-      - run: npm publish
+          rsync -av dist/ ../guidechimp-core/dist/plugins
+          ls -la -R ../guidechimp-core/dist
+          head -n 5 ../guidechimp-core/dist/plugins/lazyLoading.js
+          head -n 5 ../guidechimp-core/dist/plugins/triggers.js
+          head -n 5 ../guidechimp-core/dist/plugins/iFrames.js
+
+      - name: Publish to npmjs.org
+        run: |
+          cd guidechimp-core
+          ls -la -R dist/
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
