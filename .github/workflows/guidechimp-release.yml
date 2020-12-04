@@ -50,7 +50,6 @@ jobs:
           npm run build --if-present
           ls -la -R dist/
           rsync -av dist/ ../guidechimp-core/dist/plugins
-          ls -la -R ../guidechimp-core/dist
 
       - name: Publish to npmjs.org
         run: |
