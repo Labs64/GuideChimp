@@ -48,7 +48,7 @@ jobs:
         npm ci
         npm run build --if-present
         ls -la -R dist/
-        yes | cp -rf dist/* ../guidechimp-core/dist
+        rsync -av dist/ ../guidechimp-core/dist
         ls -la -R ../guidechimp-core/dist/plugins
         cat ../guidechimp-core/dist/plugins/lazyLoading.js
         cat ../guidechimp-core/dist/plugins/triggers.js
