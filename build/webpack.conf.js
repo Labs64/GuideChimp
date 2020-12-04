@@ -9,6 +9,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BannerPlugin } = require('webpack');
 
 const { name, version } = pkg;
+const slug = 'GuideChimp';
 const libraryName = 'GuideChimp';
 
 function resolve(dir) {
@@ -121,7 +122,7 @@ fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(folderName => {
                 output: {
                     path: path.resolve(__dirname, '../dist/plugins'),
                     filename: '[name].js',
-                    library: `${camelize(`${libraryName} plugin ${folderName}`)}`,
+                    library: `${camelize(`${slug} plugin ${folderName}`)}`,
                     libraryTarget: 'umd',
                 },
             },
