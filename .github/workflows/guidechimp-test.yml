@@ -8,16 +8,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Get JSON Property
+      id: guidechimp_plugins_version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'package.json'
+        prop_path: 'plugins.guidechimp-plugins'
+
     - name: Checkout GuideChimp
       uses: actions/checkout@v2
       with:
         path: guidechimp-core
+      run: echo ${{steps.guidechimp_plugins_version.outputs.prop}} 
     
     - name: Checkout GuideChimp Plugins
       uses: actions/checkout@v2
       with:
         path: guidechimp-plugins
         repository: Labs64/GuideChimp-plugins
+        ref: '0.0.1'
         token: ${{ secrets.GUIDECHIMP_PAT }}
 
     - name: Node.js
