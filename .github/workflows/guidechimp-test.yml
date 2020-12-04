@@ -9,6 +9,11 @@ jobs:
 
     steps:
 
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
     - name: Checkout GuideChimp
       uses: actions/checkout@v2
       with:
@@ -21,21 +26,13 @@ jobs:
         path: './guidechimp-core/package.json'
         prop_path: 'plugins.guidechimp-plugins'
 
-    - name: Print guidechimp_plugins_version
-      run: echo ${{steps.guidechimp_plugins_version.outputs.prop}}
-
-    - name: Checkout GuideChimp Plugins
+    - name: Checkout GuideChimp Plugins (v${{steps.guidechimp_plugins_version.outputs.prop}})
       uses: actions/checkout@v2
       with:
         path: guidechimp-plugins
         repository: Labs64/GuideChimp-plugins
-        ref: '0.0.1'
+        ref: ${{steps.guidechimp_plugins_version.outputs.prop}}
         token: ${{ secrets.GUIDECHIMP_PAT }}
-
-    - name: Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
 
     - name: npm install, build, and test
       run: |
