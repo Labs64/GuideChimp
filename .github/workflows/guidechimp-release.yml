@@ -55,6 +55,6 @@ jobs:
       - name: Publish to npmjs.org
         run: |
           ls -la -R guidechimp-core/dist
-          npm publish guidechimp-core --dry-run
+          npm publish guidechimp-core
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
