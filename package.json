@@ -58,7 +58,9 @@
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
         "lint": "eslint --ext .js,.vue src test"
     },
-    "dependencies": {},
+    "dependencies": {
+        "copy-webpack-plugin": "^6.3.2"
+    },
     "devDependencies": {
         "@babel/core": "^7.10.4",
         "@babel/plugin-proposal-class-properties": "^7.10.4",
