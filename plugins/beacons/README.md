@@ -1,3 +1,6 @@
+See [Beacons](https://github.com/Labs64/GuideChimp/wiki/Beacons)
+
+
 ## Beacons
 
 <img src="https://github.com/Labs64/GuideChimp/blob/master/plugins/beacons/guidechimp-beacons.gif" alt="GuideChimp Beacons"/>
