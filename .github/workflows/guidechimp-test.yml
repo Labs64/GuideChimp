@@ -44,3 +44,8 @@ jobs:
         npm run build --if-present
         npm test
         ls -la -R dist/
+        cd ../guidechimp-plugins
+        npm run build --if-present
+        ls -la -R dist/
+        cp dist/* ../guidechimp-core/dist
+        ls -la -R ../guidechimp-core/dist
