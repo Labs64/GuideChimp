@@ -7,7 +7,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BannerPlugin } = require('webpack');
-const CopyPlugin = require("copy-webpack-plugin");
 
 const { name, version } = pkg;
 const libraryName = 'GuideChimp';
@@ -112,21 +111,8 @@ const pluginsConfigs = [];
 fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(folderName => {
     // skip all folders starting with underscore
     if (folderName[0] !== '_') {
-        const baseConfigCopy = { ...baseConfig };
-
-        baseConfigCopy.plugins.push(
-            new CopyPlugin({
-                patterns: [
-                    {
-                        from: path.resolve(__dirname, `../plugins/${folderName}/README.md`),
-                        to: path.resolve(__dirname, `../dist/plugins/${folderName}-[name].[ext]`),
-                    },
-                ],
-            }),
-        );
-
         pluginsConfigs.push(merge(
-            baseConfigCopy,
+            baseConfig,
             {
                 entry: {
                     [folderName]: `./plugins/${folderName}`,
