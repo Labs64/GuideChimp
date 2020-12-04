@@ -34,11 +34,11 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
 - Let GuideChimp look like an integral part of your software product by configuring its look & feel
 - GuideChimp works well with tools you already use (e.g. WordPress, Confluence, etc.).
-- [Beacons](https://github.com/Labs64/GuideChimp/tree/master/plugins/beacons) 🟠 Hotspots 🟠 Hints: Raise visitors attention by adding an additional description to any element on the web page.
+- [Beacons](https://github.com/Labs64/GuideChimp/wiki/Beacons-plugin) 🟠 Hotspots 🟠 Hints: Raise visitors attention by adding an additional description to any element on the web page.
 - Tours: Flows, Walkthroughs, Guides, Tutorials
 - Support of *Single Page Applications* build with Angular, Vue.js, React, etc.
 - Extendable using out-of-the-box and third-party [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins)
-- Dynamic [placeholders](https://github.com/Labs64/GuideChimp/tree/master/plugins/placeholders) in the tour definition
+- Dynamic [placeholders](https://github.com/Labs64/GuideChimp/wiki/Placeholders-plugin) in the tour definition
 - Detailed installation and configuration [documentation](https://github.com/Labs64/GuideChimp/wiki)
 - Tooltip auto-positioning on an element
 - Easy styling through SCSS and clean CSS
@@ -47,7 +47,7 @@ The world's smartest companies using our GuideChimp to boost their user experien
 - Use multiple listeners on tour events
 - Internationalization / i18n [support](https://github.com/Labs64/GuideChimp/wiki/Examples)
 - Ability to add steps on-the-fly / programmatically
-- Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event or [Lazy-loading plugin](https://github.com/Labs64/GuideChimp/tree/master/plugins/lazyLoading)
+- Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event or [Lazy-loading plugin](https://github.com/Labs64/GuideChimp/wiki/Lazy-loading-plugin)
 - Ability to define custom action buttons
 - Flexibility and modularity; GuideChimp is designed as a JS class, so you can easily inherit from it and change / add custom methods
 - Improved usability - pagination, navigation and progress bar
