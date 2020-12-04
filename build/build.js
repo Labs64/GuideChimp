@@ -6,7 +6,7 @@ const chalk = require('chalk');
 const webpack = require('webpack');
 const webpackConfig = require('./webpack.conf.js');
 
-const spinner = ora('building for production...');
+const spinner = ora('Build for production...');
 spinner.start();
 
 rm(path.resolve(__dirname, '../dist'), (e) => {
