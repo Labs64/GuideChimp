@@ -636,9 +636,9 @@ export default class GuideChimp {
     }
 
     getElement(selector) {
-        let el = (selector instanceof HTMLElement)
-            ? selector
-            : document.querySelector(selector);
+        let el = (typeof selector === 'string')
+            ? document.querySelector(selector)
+            : selector;
 
         if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
             el = this.showDefaultElement();
