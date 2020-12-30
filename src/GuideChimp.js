@@ -6,9 +6,6 @@
  * located in the LICENSE file
  */
 
-// global cache
-const cache = new Map();
-
 export default class GuideChimp {
     /**
      * GuideChimp constructor
@@ -16,24 +13,19 @@ export default class GuideChimp {
      * @param options
      */
     constructor(tour, options = {}) {
-        this.step = null;
-        this.steps = [];
+        this.setDefaults();
 
-        this.tour = null;
-        this.options = {};
-
-        this.cache = cache;
+        this.cache = new Map();
 
         this.listeners = {};
 
-        // observers
         this.observers = {};
+        this.setupResizeObserver();
 
-        if (typeof ResizeObserver !== 'undefined') {
-            this.observers.stepElementResizeObserver = new ResizeObserver(() => this.refresh());
-        }
-
+        this.options = {};
         this.setOptions(options);
+
+        this.tour = null;
         this.setTour(tour);
 
         this.init();
@@ -80,6 +72,10 @@ export default class GuideChimp {
         };
     }
 
+    static getEventListenersPriorities() {
+        return ['low', 'medium', 'high', 'critical'];
+    }
+
     static getBodyClass() {
         return 'gc';
     }
@@ -88,19 +84,23 @@ export default class GuideChimp {
         return 'gc-default';
     }
 
-    static getFixStackingContext() {
+    static getFixStackingContextClass() {
         return 'gc-fix-stacking-context';
     }
 
-    static getHighlightElementClass() {
+    static getHighlightedClass() {
         return 'gc-highlighted';
+    }
+
+    static getLoadingClass() {
+        return 'gc-loading';
     }
 
     static getPreloaderClass() {
         return 'gc-preloader';
     }
 
-    static getOverlayLayerClass() {
+    static getOverlayClass() {
         return 'gc-overlay';
     }
 
@@ -108,19 +108,19 @@ export default class GuideChimp {
         return 'gc-fixed';
     }
 
-    static getHighlightLayerClass() {
+    static getHighlightClass() {
         return 'gc-highlight';
     }
 
-    static getControlLayerClass() {
+    static getControlClass() {
         return 'gc-control';
     }
 
-    static getInteractionLayerClass() {
+    static getInteractionClass() {
         return 'gc-interaction';
     }
 
-    static getTooltipLayerClass() {
+    static getTooltipClass() {
         return 'gc-tooltip';
     }
 
@@ -136,7 +136,7 @@ export default class GuideChimp {
         return 'gc-description';
     }
 
-    static getCustomButtonsLayerClass() {
+    static getCustomButtonsClass() {
         return 'gc-custom-buttons';
     }
 
@@ -156,7 +156,7 @@ export default class GuideChimp {
         return 'gc-close';
     }
 
-    static getPaginationLayerClass() {
+    static getPaginationClass() {
         return 'gc-pagination';
     }
 
@@ -193,7 +193,7 @@ export default class GuideChimp {
      * @param el
      * @return {{top: number, left: number, width: number, height: number}}
      */
-    static getElementOffset(el) {
+    static getOffset(el) {
         const { body, documentElement, defaultView: view } = el.ownerDocument;
         const scrollTop = view.pageYOffset || documentElement.scrollTop || body.scrollTop;
         const scrollLeft = view.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
@@ -206,7 +206,7 @@ export default class GuideChimp {
      * @param el
      * @return {boolean}
      */
-    static isElementFixed(el) {
+    static isFixed(el) {
         const { parentNode } = el;
 
         if (!parentNode || parentNode.nodeName === 'HTML') {
@@ -219,7 +219,7 @@ export default class GuideChimp {
             return true;
         }
 
-        return this.isElementFixed(parentNode);
+        return this.isFixed(parentNode);
     }
 
     /**
@@ -227,7 +227,7 @@ export default class GuideChimp {
      * @param el
      * @param className
      */
-    static addElementClass(el, className) {
+    static addClass(el, className) {
         if (el instanceof SVGElement) {
             el.setAttribute('class', `${el.getAttribute('class') || ''} ${className}`);
             return;
@@ -241,7 +241,7 @@ export default class GuideChimp {
      * @param el
      * @param className
      */
-    static removeElementClass(el, className) {
+    static removeClass(el, className) {
         if (el instanceof SVGElement) {
             const classes = el.getAttribute('class') || '';
             classes.replace(className, '');
@@ -253,19 +253,36 @@ export default class GuideChimp {
         el.classList.remove(className);
     }
 
+    setDefaults() {
+        this.previousStep = null;
+        this.currentStep = null;
+        this.nextStep = null;
+        this.fromStep = null;
+        this.toStep = null;
+
+        this.previousStepIndex = -1;
+        this.currentStepIndex = -1;
+        this.nextStepIndex = -1;
+        this.fromStepIndex = -1;
+        this.toStepIndex = -1;
+
+        this.steps = [];
+
+        return this;
+    }
+
     /**
      * Set tour name or steps
      * @param tour
      * @return {this}
      */
     setTour(tour) {
-        this.tour = (Array.isArray(tour)) ? [...tour] : tour;
+        this.tour = [...tour];
         return this;
     }
 
     /**
      * Get tour name or steps
-     * @return {null}
      */
     getTour() {
         return this.tour;
@@ -295,12 +312,33 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async start(number = 0, useIndex = true) {
+        this.mountOverlayLayer();
+        this.startPreloader();
+
+        // emit start event
+        await this.emit('onStart');
+
+        this.stopPreloader();
+        this.removeOverlayLayer();
+
+        if (!this.tour || !this.tour.length) {
+            return false;
+        }
+
+        this.steps = this.sortSteps(this.getSteps(this.tour));
+
+        if (!this.steps.length) {
+            return false;
+        }
+
+        // add a class that increase the specificity of the classes
+        document.body.classList.add(this.constructor.getBodyClass());
+
         const isStarted = await this.go(number, useIndex);
 
-        if (isStarted) {
-            // add a class that increase the specificity of guidechimp classes
-            document.body.classList.add(this.constructor.getBodyClass());
+        document.body.classList.toggle(this.constructor.getBodyClass(), isStarted);
 
+        if (isStarted) {
             // turn on keyboard navigation
             if (this.options.useKeyboard) {
                 this.addOnKeydownListener();
@@ -308,9 +346,6 @@ export default class GuideChimp {
 
             // on window resize
             this.addOnWindowResizeListener();
-
-            // emit start event
-            await this.emit('onStart');
         }
 
         return isStarted;
@@ -323,231 +358,191 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async go(number, useIndex = true) {
-        if (!this.tour || !this.tour.length) {
-            return false;
-        }
-
-        const stepNumber = (useIndex) ? parseInt(number, 10) : number;
-        const fromStep = { ...this.step };
-        let toStep = null;
-
-        // skip if this step is already displayed
-        const isSameStep = (useIndex)
-            ? (this.steps.indexOf(this.step) === stepNumber)
-            : (this.step && this.step.step === stepNumber);
-
-        if (isSameStep) {
-            return false;
-        }
-
-        this.steps = this.getSteps(this.tour);
-
         if (!this.steps.length) {
             return false;
         }
 
-        // sort steps by step
-        this.steps = this.sortSteps(this.steps);
-        for (let i = 0; i < this.steps.length; i++) {
-            const step = this.steps[i];
-            const isToStep = (useIndex) ? (i === stepNumber) : (step.step === stepNumber);
+        const stepNumber = (useIndex) ? parseInt(number, 10) : number;
 
-            if (isToStep) {
-                toStep = step;
-                break;
-            }
-        }
+        if (this.currentStep) {
+            // skip if this step is already displayed
+            const isSameStep = (useIndex)
+                ? (this.currentStepIndex === stepNumber)
+                : (this.currentStep.step === stepNumber);
 
-        if (!toStep) {
-            return false;
-        }
-
-        this.step = toStep;
-
-        // remove all highlighting
-        this.resetElementsHighlighting();
-
-        // remove all old steps elements resize observers
-        this.unobserveResizeAllStepsElements();
-
-        this.showOverlayLayer();
-
-        this.startPreloader();
-
-        const { onBeforeChange, onAfterChange } = toStep;
-
-        if (onBeforeChange) {
-            if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
-                this.stopPreloader();
-                this.step = fromStep;
+            if (isSameStep) {
                 return false;
             }
         }
 
-        const results = await this.emit('onBeforeChange', toStep, fromStep);
+        const fromStep = this.currentStep;
+        const fromStepIndex = this.currentStepIndex;
 
-        if (results.some((r) => r === false)) {
+        const currentStep = (useIndex)
+            ? this.steps[stepNumber]
+            : this.steps.filter(({ step }) => step === stepNumber)[0];
+
+        if (!currentStep) {
+            return false;
+        }
+
+        const currentStepIndex = this.steps.indexOf(currentStep);
+
+        const toStep = currentStep;
+        const toStepIndex = currentStepIndex;
+
+        const { onBeforeChange, onAfterChange } = toStep;
+
+        this.mountOverlayLayer();
+        this.startPreloader();
+
+        if (onBeforeChange) {
+            if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
+                this.stopPreloader();
+                return false;
+            }
+        }
+
+        if ((await this.emit('onBeforeChange', toStep, fromStep)).some((r) => r === false)) {
             this.stopPreloader();
-            this.step = fromStep;
             return false;
         }
 
         this.stopPreloader();
 
+        this.cleanupAfterPreviousStep();
+
+        this.toStep = toStep;
+        this.toStepIndex = toStepIndex;
+
+        this.currentStep = currentStep;
+        this.currentStepIndex = currentStepIndex;
+
+        this.fromStep = fromStep;
+        this.fromStepIndex = fromStepIndex;
+
+        this.previousStep = this.steps[this.currentStepIndex - 1] || null;
+        this.previousStepIndex = (this.previousStep) ? this.currentStepIndex - 1 : -1;
+
+        this.nextStep = this.steps[this.currentStepIndex + 1] || null;
+        this.nextStepIndex = (this.nextStep) ? this.currentStepIndex + 1 : -1;
+
         const { scrollBehavior } = this.options;
 
         // get step element
-        this.step.$element = this.getStepElement(this.step);
-
-        const { $element: el, title, description, position, buttons } = this.step;
+        const el = this.getStepElement(this.currentStep, true);
 
         // scroll to element
-        this.scrollParentsToStepElement(this.step);
+        this.scrollParentsToStepElement();
         this.scrollTo(el, scrollBehavior);
 
-        // show all layers
-        const highlightLayer = this.showHighlightLayer();
-        const interactionLayer = this.showInteractionLayer();
-        const controlLayer = this.showControlLayer();
+        this.mountStepTemplate();
 
-        this.setHighlightLayerPosition(highlightLayer, el);
-        this.setInteractionLayerPosition(interactionLayer, el);
-        this.setControlLayerPosition(controlLayer, el);
+        this.highlightStepElement();
+        this.observeResizeStepElement();
 
-        const tooltipLayer = this.showTooltipLayer();
-        this.showTooltipTail();
-
-        this.showProgressbar();
-        this.showTitle(title);
-        this.showDescription(description);
-        this.showClose();
-
-        this.showCustomButtonsLayer(buttons);
-
-        const navigationLayer = this.showNavigationLayer();
-
-        this.showNavigationPrev();
-        this.showPagination();
-        this.showNavigationNext();
-
-        const isNeedHideNavigation = [...navigationLayer.children]
-            .every((v) => v.classList.contains(this.constructor.getHiddenClass()));
-
-        if (isNeedHideNavigation) {
-            navigationLayer.classList.add(this.constructor.getHiddenClass());
-        } else {
-            navigationLayer.classList.remove(this.constructor.getHiddenClass());
+        if (this.findTooltipElement()) {
+            setTimeout(() => {
+                this.scrollTo(this.findTooltipElement(), scrollBehavior);
+            }, 300);
         }
-
-        this.showCopyright();
-
-        this.setTooltipLayerPosition(tooltipLayer, el, { position, boundary: document.documentElement });
-
-        this.highlightElement(el);
-
-        this.observeResizeStepElement(el);
-
-        setTimeout(() => {
-            this.scrollTo(tooltipLayer, scrollBehavior);
-        }, 300);
 
         if (onAfterChange) {
-            onAfterChange.call(this, toStep, fromStep);
+            onAfterChange.call(this, this.toStep, this.fromStep);
         }
 
-        this.emit('onAfterChange', toStep, fromStep);
+        this.emit('onAfterChange', this.toStep, this.fromStep);
 
         return true;
     }
 
     async previous() {
-        if (!this.step) {
+        if (!this.currentStep || !this.previousStep) {
             return false;
         }
 
-        const { onPrevious } = this.step;
+        const { onPrevious } = this.currentStep;
 
-        const prevStepIndex = (this.steps.indexOf(this.step) - 1);
-        const prevStep = this.steps[prevStepIndex];
-
-        if (!prevStep) {
-            return false;
-        }
-
-        const results = await this.emit('onPrevious', prevStep, this.step);
-
-        if (results.some((r) => r === false)) {
-            return false;
-        }
+        this.startPreloader();
 
         if (onPrevious) {
-            if (await Promise.resolve().then(() => onPrevious.call(this, prevStep, this.step)) === false) {
+            if (await Promise.resolve()
+                .then(() => onPrevious.call(this, this.previousStep, this.currentStep)) === false) {
+                this.stopPreloader();
                 return false;
             }
         }
 
-        return this.go(prevStepIndex, true);
+        if ((await this.emit('onPrevious', this.previousStep, this.currentStep)).some((r) => r === false)) {
+            this.stopPreloader();
+            return false;
+        }
+
+        this.stopPreloader();
+
+        return this.go(this.previousStepIndex, true);
     }
 
     async next() {
-        if (!this.step) {
+        if (!this.currentStep || !this.nextStep) {
             return false;
         }
 
-        const { onNext } = this.step;
+        const { onNext } = this.currentStep;
 
-        const nextStepIndex = (this.steps.indexOf(this.step) + 1);
-        const nextStep = this.steps[nextStepIndex];
-
-        if (!nextStep) {
-            return false;
-        }
-
-        const results = await this.emit('onNext', nextStep, this.step);
-
-        if (results.some((r) => r === false)) {
-            return false;
-        }
+        this.startPreloader();
 
         if (onNext) {
-            if (await Promise.resolve().then(() => onNext.call(this, nextStep, this.step)) === false) {
+            if (await Promise.resolve().then(() => onNext.call(this, this.nextStep, this.currentStep)) === false) {
+                this.stopPreloader();
                 return false;
             }
         }
 
-        return this.go(nextStepIndex, true);
+        if ((await this.emit('onNext', this.nextStep, this.currentStep)).some((r) => r === false)) {
+            this.stopPreloader();
+            return false;
+        }
+
+        this.stopPreloader();
+
+        return this.go(this.nextStepIndex, true);
     }
 
     async stop() {
-        const stepIndex = this.steps.indexOf(this.step);
-
-        if (stepIndex === this.steps.length - 1) {
+        if (this.currentStepIndex === this.steps.length - 1) {
+            this.startPreloader();
             await this.emit('onComplete');
+            this.stopPreloader();
         }
+
+        this.startPreloader();
 
         // emit stop event
         await this.emit('onStop');
 
-        // remove the class that increase the specificity of the guidechimp classes
+        this.stopPreloader();
+
+        // remove the class that increase the specificity of the classes
         document.body.classList.remove(this.constructor.getBodyClass());
 
+        // clean up after previous step
+        this.cleanupAfterPreviousStep();
+
         // remove events listeners
-        this.removeOnKeydownListener();
-        this.removeOnWindowResizeListener();
+        this.removeListeners();
 
         // remove observers
-        this.unobserveResizeAllStepsElements();
+        this.unobserveAllObservers();
 
-        this.removePreloaderElement();
-        this.removeOverlayLayer();
-        this.removeControlLayer();
-        this.removeHighlightLayer();
-        this.removeInteractionLayer();
-        this.resetElementsHighlighting();
+        // remove all layers and keys
+        this.removeStepTemplate();
+
+        // clean cache
         this.cache.clear();
 
-        this.step = null;
-        this.steps = [];
+        // set step variables to defaults
+        this.setDefaults();
 
         return this;
     }
@@ -557,12 +552,9 @@ export default class GuideChimp {
             return [];
         }
 
-        // if tour is is string, looks for steps among the data attributes
-        if (typeof tour === 'string') {
-            return this.getDataSteps(tour);
-        }
-
-        return this.getJsSteps(tour);
+        return (typeof tour === 'string')
+            ? this.getDataSteps(tour)
+            : this.getJsSteps(tour);
     }
 
     getDataSteps(tour) {
@@ -630,21 +622,36 @@ export default class GuideChimp {
         });
     }
 
-    getStepElement(step) {
+    getStepElement(step, force = false) {
         const { element } = step || {};
-        return this.getElement(element);
+
+        if (!element) {
+            return this.mountDefaultElement();
+        }
+
+        // check cache
+        const elsCache = this.cache.get('els') || new Map();
+
+        let el = (elsCache.has(element) && !force)
+            ? elsCache.get(element)
+            : this.getElement(element, null);
+
+        if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
+            el = this.mountDefaultElement();
+        }
+
+        elsCache.set(element, el);
+        this.cache.set('els', elsCache);
+
+        return el;
     }
 
-    getElement(selector) {
-        let el = (typeof selector === 'string')
+    getElement(selector, def = null) {
+        const el = (typeof selector === 'string')
             ? document.querySelector(selector)
             : selector;
 
-        if ((!el || (el.style.display === 'none' || el.style.visibility === 'hidden'))) {
-            el = this.showDefaultElement();
-        }
-
-        return el;
+        return el || def;
     }
 
     getScrollableParentsElements(el) {
@@ -691,9 +698,8 @@ export default class GuideChimp {
             : getClosestScrollableParent(el.parentElement);
     }
 
-    scrollParentsToStepElement(step) {
-        const { $element: el = this.getStepElement(step) } = step;
-        return this.scrollParentsToElement(el);
+    scrollParentsToStepElement() {
+        return this.scrollParentsToElement(this.getStepElement(this.currentStep));
     }
 
     scrollParentsToElement(el) {
@@ -731,6 +737,10 @@ export default class GuideChimp {
         return this;
     }
 
+    highlightStepElement() {
+        return this.highlightElement(this.getStepElement(this.currentStep));
+    }
+
     highlightElement(el) {
         let parentEl = el.parentElement;
 
@@ -740,8 +750,8 @@ export default class GuideChimp {
             }
 
             if (el instanceof SVGElement && parentEl.tagName.toLowerCase() === 'svg') {
-                this.constructor.addElementClass(parentEl, `${this.constructor.getHighlightElementClass()}`);
-                this.constructor.addElementClass(parentEl, this.constructor.getRelativePositionClass());
+                this.constructor.addClass(parentEl, `${this.constructor.getHighlightedClass()}`);
+                this.constructor.addClass(parentEl, this.constructor.getRelativePositionClass());
             }
 
             const parentElStyle = getComputedStyle(parentEl);
@@ -751,38 +761,38 @@ export default class GuideChimp {
             const transform = parentElStyle.getPropertyValue('transform');
 
             if (/[0-9]+/.test(zIndex) || opacity < 1 || (transform && transform !== 'none')) {
-                this.constructor.addElementClass(parentEl, this.constructor.getFixStackingContext());
+                this.constructor.addClass(parentEl, this.constructor.getFixStackingContextClass());
             }
 
             parentEl = parentEl.parentElement;
         }
 
-        this.constructor.addElementClass(el, this.constructor.getHighlightElementClass());
+        this.constructor.addClass(el, this.constructor.getHighlightedClass());
 
         const elStyle = getComputedStyle(el);
 
         if (!['absolute', 'relative', 'fixed'].includes(elStyle.getPropertyValue('position'))) {
-            this.constructor.addElementClass(el, this.constructor.getRelativePositionClass());
+            this.constructor.addClass(el, this.constructor.getRelativePositionClass());
         }
 
-        const highlightEls = this.cache.get('highlightEls') || new Set();
+        const highlightElements = this.cache.get('highlightElements') || new Set();
 
-        highlightEls.add(el);
+        highlightElements.add(el);
 
-        this.cache.set('highlightEls', highlightEls);
+        this.cache.set('highlightElements', highlightElements);
 
         return this;
     }
 
-    resetElementHighlighting(el) {
+    resetHighlighting(el) {
         if (el) {
-            const highlightEls = this.cache.get('highlightEls');
+            const els = this.cache.get('highlightElements');
 
-            if (highlightEls) {
-                highlightEls.delete(el);
+            if (els) {
+                els.delete(el);
             }
 
-            el.classList.remove(this.constructor.getHighlightElementClass());
+            el.classList.remove(this.constructor.getHighlightedClass());
             el.classList.remove(this.constructor.getRelativePositionClass());
 
             let parentEl = el.parentElement;
@@ -792,7 +802,7 @@ export default class GuideChimp {
                     break;
                 }
 
-                parentEl.classList.remove(this.constructor.getFixStackingContext());
+                parentEl.classList.remove(this.constructor.getFixStackingContextClass());
                 parentEl = parentEl.parentElement;
             }
         }
@@ -800,14 +810,14 @@ export default class GuideChimp {
         return this;
     }
 
-    resetElementsHighlighting() {
-        const highlightEls = this.cache.get('highlightEls');
+    resetHighlightingAll() {
+        let els = this.cache.get('highlightElements');
 
-        if (highlightEls) {
-            const highlightElsArray = Array.from(highlightEls);
-            if (highlightElsArray.length) {
-                highlightEls.forEach((el) => {
-                    this.resetElementHighlighting(el);
+        if (els) {
+            els = Array.from(els);
+            if (els.length) {
+                els.forEach((el) => {
+                    this.resetHighlighting(el);
                 });
             }
         }
@@ -815,7 +825,9 @@ export default class GuideChimp {
         return this;
     }
 
-    setLayerPosition(layer, el) {
+    setLayerPosition(layer) {
+        const el = this.getStepElement(this.currentStep);
+
         if (!layer || !el) {
             return this;
         }
@@ -828,12 +840,12 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { width, height, top, left } = this.constructor.getElementOffset(el);
+        const { width, height, top, left } = this.constructor.getOffset(el);
 
-        if (this.constructor.isElementFixed(el)) {
-            this.constructor.addElementClass(layer, this.constructor.getFixedClass());
+        if (this.constructor.isFixed(el)) {
+            this.constructor.addClass(layer, this.constructor.getFixedClass());
         } else {
-            this.constructor.removeElementClass(layer, this.constructor.getFixedClass());
+            this.constructor.removeClass(layer, this.constructor.getFixedClass());
         }
 
         const { style: layerStyle } = layer;
@@ -855,7 +867,9 @@ export default class GuideChimp {
         return this.setLayerPosition(...args);
     }
 
-    setControlLayerPosition(layer, el) {
+    setControlLayerPosition(layer) {
+        const el = this.getStepElement(this.currentStep);
+
         if (!layer || !el) {
             return this;
         }
@@ -870,7 +884,7 @@ export default class GuideChimp {
 
         const { pageXOffset } = el.ownerDocument.defaultView;
         const { width: docElWidth } = el.ownerDocument.documentElement.getBoundingClientRect();
-        const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getElementOffset(el);
+        const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getOffset(el);
 
         const height = elHeight + padding;
         const top = elTop - (padding / 2);
@@ -879,10 +893,10 @@ export default class GuideChimp {
             ? docElWidth
             : (elRight + (padding / 2));
 
-        if (this.constructor.isElementFixed(el)) {
-            this.constructor.addElementClass(layer, this.constructor.getFixedClass());
+        if (this.constructor.isFixed(el)) {
+            this.constructor.addClass(layer, this.constructor.getFixedClass());
         } else {
-            this.constructor.removeElementClass(layer, this.constructor.getFixedClass());
+            this.constructor.removeClass(layer, this.constructor.getFixedClass());
         }
 
         const { style: layerStyle } = layer;
@@ -896,18 +910,26 @@ export default class GuideChimp {
         return this;
     }
 
-    setTooltipLayerPosition(tooltipLayer, el, options = {}) {
-        let { position, boundary } = options;
+    setTooltipElementPosition(layer, options = {}) {
+        if (!this.currentStep) {
+            return this;
+        }
 
+        const el = this.getStepElement(this.currentStep);
+
+        if (!layer || !el) {
+            return this;
+        }
+
+        let { boundary, position } = options;
+        let { padding } = this.options;
+
+        boundary = boundary || window;
+
+        position = position || this.currentStep.position;
         position = position || this.options.position;
 
         let alignment = null;
-
-        if (!boundary) {
-            boundary = window;
-        }
-
-        let { padding } = this.options;
 
         const elStyle = getComputedStyle(el);
 
@@ -915,7 +937,7 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { style: tooltipStyle } = tooltipLayer;
+        const { style: tooltipStyle } = layer;
 
         // reset tooltip styles
         tooltipStyle.top = null;
@@ -933,24 +955,22 @@ export default class GuideChimp {
             height: elHeight,
         } = el.getBoundingClientRect();
 
-        const { height: tooltipHeight, width: tooltipWith } = tooltipLayer.getBoundingClientRect();
+        const { height: tooltipHeight, width: tooltipWith } = layer.getBoundingClientRect();
 
         // find out min tooltip width
-        const cloneTooltip = tooltipLayer.cloneNode();
+        const cloneTooltip = layer.cloneNode();
         cloneTooltip.style.visibility = 'hidden';
         cloneTooltip.innerHTML = '';
 
-        tooltipLayer.parentElement.appendChild(cloneTooltip);
+        layer.parentElement.appendChild(cloneTooltip);
 
         const { width: minTooltipWidth } = cloneTooltip.getBoundingClientRect();
 
         cloneTooltip.parentElement.removeChild(cloneTooltip);
 
-        let boundaryRect = {};
+        let boundaryRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
 
-        if (boundary instanceof Window) {
-            boundaryRect = new DOMRect(0, 0, boundary.innerWidth, boundary.innerHeight);
-        } else {
+        if (!(boundary instanceof Window)) {
             const { x, y } = boundary.getBoundingClientRect();
             boundaryRect = new DOMRect(x, y, boundary.scrollWidth, boundary.scrollHeight);
         }
@@ -969,60 +989,36 @@ export default class GuideChimp {
             // calculate position
             const positions = ['bottom', 'right', 'left', 'top'];
 
+            let {
+                marginTop: tooltipMarginTop,
+                marginLeft: tooltipMarginLeft,
+                marginRight: tooltipMarginRight,
+                marginBottom: tooltipMarginBottom,
+            } = getComputedStyle(layer);
+
+            tooltipMarginTop = parseInt(tooltipMarginTop, 10);
+            tooltipMarginLeft = parseInt(tooltipMarginLeft, 10);
+            tooltipMarginRight = parseInt(tooltipMarginRight, 10);
+            tooltipMarginBottom = parseInt(tooltipMarginBottom, 10);
+
             // check if the tooltip can be placed on top
-            {
-                tooltipLayer.setAttribute('data-guidechimp-position', 'top');
-
-                let { marginTop, marginBottom } = getComputedStyle(tooltipLayer);
-
-                marginTop = parseInt(marginTop, 10);
-                marginBottom = parseInt(marginBottom, 10);
-
-                if (tooltipHeight + marginTop + marginBottom > (elTop - boundaryTop)) {
-                    positions.splice(positions.indexOf('top'), 1);
-                }
+            if (tooltipHeight + tooltipMarginTop + tooltipMarginBottom > (elTop - boundaryTop)) {
+                positions.splice(positions.indexOf('top'), 1);
             }
 
             // check if the tooltip can be placed on bottom
-            {
-                tooltipLayer.setAttribute('data-guidechimp-position', 'bottom');
-
-                let { marginTop, marginBottom } = getComputedStyle(tooltipLayer);
-
-                marginTop = parseInt(marginTop, 10);
-                marginBottom = parseInt(marginBottom, 10);
-
-                if (tooltipHeight + marginTop + marginBottom > boundaryBottom - elBottom) {
-                    positions.splice(positions.indexOf('bottom'), 1);
-                }
+            if (tooltipHeight + tooltipMarginTop + tooltipMarginBottom > boundaryBottom - elBottom) {
+                positions.splice(positions.indexOf('bottom'), 1);
             }
 
             // check if the tooltip can be placed on left
-            {
-                tooltipLayer.setAttribute('data-guidechimp-position', 'left');
-
-                let { marginLeft, marginRight } = getComputedStyle(tooltipLayer);
-
-                marginLeft = parseInt(marginLeft, 10);
-                marginRight = parseInt(marginRight, 10);
-
-                if (minTooltipWidth + marginLeft + marginRight > elLeft - boundaryLeft) {
-                    positions.splice(positions.indexOf('left'), 1);
-                }
+            if (minTooltipWidth + tooltipMarginLeft + tooltipMarginRight > elLeft - boundaryLeft) {
+                positions.splice(positions.indexOf('left'), 1);
             }
 
             // check if the tooltip can be placed on right
-            {
-                tooltipLayer.setAttribute('data-guidechimp-position', 'right');
-
-                let { marginLeft, marginRight } = getComputedStyle(tooltipLayer);
-
-                marginLeft = parseInt(marginLeft, 10);
-                marginRight = parseInt(marginRight, 10);
-
-                if (minTooltipWidth + marginLeft + marginRight > boundaryRight - elRight) {
-                    positions.splice(positions.indexOf('right'), 1);
-                }
+            if (minTooltipWidth + tooltipMarginLeft + tooltipMarginRight > boundaryRight - elRight) {
+                positions.splice(positions.indexOf('right'), 1);
             }
 
             if (positions.length) {
@@ -1056,8 +1052,7 @@ export default class GuideChimp {
 
         const root = document.documentElement;
 
-        tooltipLayer.removeAttribute('data-guidechimp-position');
-        tooltipLayer.setAttribute('data-guidechimp-position', position);
+        layer.setAttribute('data-guidechimp-position', position);
 
         switch (position) {
             case 'top':
@@ -1079,10 +1074,10 @@ export default class GuideChimp {
             }
         }
 
-        tooltipLayer.removeAttribute('data-guidechimp-alignment');
+        layer.removeAttribute('data-guidechimp-alignment');
 
         if (alignment) {
-            tooltipLayer.setAttribute('data-guidechimp-alignment', alignment);
+            layer.setAttribute('data-guidechimp-alignment', alignment);
 
             switch (alignment) {
                 case 'left': {
@@ -1108,517 +1103,640 @@ export default class GuideChimp {
     }
 
     startPreloader() {
-        const highlightLayer = this.cache.has('highlightLayer')
-            ? this.cache.get('highlightLayer')
-            : document.body.querySelector(`.${this.constructor.getHighlightLayerClass()}`);
+        document.body.classList.add(this.constructor.getLoadingClass());
+        const preloader = this.mountPreloaderElement(document.body);
 
-        if (highlightLayer) {
-            highlightLayer.style.visibility = 'hidden';
-        }
+        preloader.classList.add(this.constructor.getHiddenClass());
 
-        const controlLayer = this.cache.has('controlLayer')
-            ? this.cache.get('controlLayer')
-            : document.body.querySelector(`.${this.constructor.getControlLayerClass()}`);
-
-        if (controlLayer) {
-            controlLayer.style.visibility = 'hidden';
-        }
-
-        const interactionLayer = this.cache.has('interactionLayer')
-            ? this.cache.get('interactionLayer')
-            : document.body.querySelector(`.${this.constructor.getInteractionLayerClass()}`);
-
-        if (interactionLayer) {
-            interactionLayer.style.visibility = 'hidden';
-        }
-
-        const tooltipLayer = this.cache.has('tooltipLayer')
-            ? this.cache.get('tooltipLayer')
-            : document.body.querySelector(`.${this.constructor.getTooltipLayerClass()}`);
-
-        if (tooltipLayer) {
-            tooltipLayer.style.visibility = 'hidden';
-        }
-
-        this.showPreloaderElement();
+        setTimeout(() => {
+            preloader.classList.remove(this.constructor.getHiddenClass());
+        }, 100);
 
         return this;
     }
 
     stopPreloader() {
-        const highlightLayer = this.cache.has('highlightLayer')
-            ? this.cache.get('highlightLayer')
-            : document.body.querySelector(`.${this.constructor.getHighlightLayerClass()}`);
-
-        if (highlightLayer) {
-            highlightLayer.style.visibility = 'visible';
-        }
-
-        const controlLayer = this.cache.has('controlLayer')
-            ? this.cache.get('controlLayer')
-            : document.body.querySelector(`.${this.constructor.getControlLayerClass()}`);
-
-        if (controlLayer) {
-            controlLayer.style.visibility = 'visible';
-        }
-
-        const interactionLayer = this.cache.has('interactionLayer')
-            ? this.cache.get('interactionLayer')
-            : document.body.querySelector(`.${this.constructor.getInteractionLayerClass()}`);
-
-        if (interactionLayer) {
-            interactionLayer.style.visibility = 'visible';
-        }
-
-        const tooltipLayer = this.cache.has('tooltipLayer')
-            ? this.cache.get('tooltipLayer')
-            : document.body.querySelector(`.${this.constructor.getTooltipLayerClass()}`);
-
-        if (tooltipLayer) {
-            tooltipLayer.style.visibility = 'visible';
-        }
-
+        document.body.classList.remove(this.constructor.getLoadingClass());
         this.removePreloaderElement();
+        return this;
+    }
+
+    /**
+     * @param parent {HTMLElement}
+     * @returns {this}
+     */
+    mountStepTemplate() {
+        // mount main layers
+        this.mountHighlight(document.body);
+        this.mountInteraction(document.body);
+        this.mountControl(document.body);
 
         return this;
     }
 
-    showDefaultElement() {
-        let defaultEl = this.cache.get('defaultEl');
+    removeStepTemplate() {
+        this.removeOverlayLayer();
+        this.removeControlLayer();
+        this.removeHighlightLayer();
+        this.removeInteractionLayer();
 
-        if (!defaultEl || !defaultEl.parentNode) {
-            defaultEl = document.createElement('div');
-            document.body.appendChild(defaultEl);
-        }
+        this.removeDefaultElement();
 
-        defaultEl.className = this.constructor.getDefaultElementClass();
-
-        this.cache.set('defaultEl', defaultEl);
-
-        return defaultEl;
+        return this;
     }
 
-    showPreloaderElement() {
-        let preloaderEl = this.cache.get('preloaderEl');
+    mountElement(el, parent) {
+        if (el.parentElement !== parent) {
+            if (el.parentElement) {
+                this.removeElement(el);
+            }
 
-        if (!preloaderEl || !preloaderEl.parentNode) {
-            preloaderEl = document.createElement('div');
-            preloaderEl.className = this.constructor.getPreloaderClass();
-            document.body.appendChild(preloaderEl);
+            parent.appendChild(el);
         }
 
-        this.cache.set('preloaderEl', preloaderEl);
+        return el;
+    }
 
-        return preloaderEl;
+    removeElement(el) {
+        if (el && el.parentElement) {
+            el.parentElement.removeChild(el);
+        }
+
+        return this;
+    }
+
+    findDefaultElement(def = null) {
+        return this.cache.get('defaultEl') || def;
+    }
+
+    createDefaultElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getDefaultElementClass();
+        return el;
+    }
+
+    mountDefaultElement(parent = document.body) {
+        let el = this.findDefaultElement();
+
+        if (!el) {
+            el = this.createDefaultElement();
+            this.cache.set('defaultEl', el);
+        }
+
+        return this.mountElement(el, parent);
+    }
+
+    removeDefaultElement() {
+        this.removeElement(this.findDefaultElement());
+        this.cache.delete('defaultEl');
+        return this;
+    }
+
+    findPreloaderElement(def = null) {
+        return this.cache.get('preloaderEl') || def;
+    }
+
+    createPreloaderElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getPreloaderClass();
+        return el;
+    }
+
+    mountPreloaderElement(parent = document.body) {
+        let el = this.findPreloaderElement();
+
+        if (!el) {
+            el = this.createPreloaderElement();
+            this.cache.set('preloaderEl', el);
+        }
+
+        return this.mountElement(el, parent);
     }
 
     removePreloaderElement() {
-        const preloaderEl = this.cache.get('preloaderEl');
-
-        if (preloaderEl) {
-            preloaderEl.parentElement.removeChild(preloaderEl);
-        }
-
+        this.removeElement(this.findPreloaderElement());
         this.cache.delete('preloaderEl');
-
         return this;
     }
 
-    showOverlayLayer() {
-        let overlayLayer = this.cache.get('overlayLayer');
+    findOverlayLayer(def = null) {
+        return this.cache.get('overlayLayer') || def;
+    }
 
-        if (!overlayLayer || !overlayLayer.parentNode) {
-            overlayLayer = document.createElement('div');
-            overlayLayer.className = this.constructor.getOverlayLayerClass();
-            overlayLayer.onclick = (this.options.exitOverlay) ? () => this.stop() : null;
-            document.body.appendChild(overlayLayer);
+    createOverlayLayer() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getOverlayClass();
+        el.onclick = () => {
+            const { exitOverlay } = this.options;
+
+            if (exitOverlay) {
+                this.stop();
+            }
+        };
+
+        return el;
+    }
+
+    mountOverlayLayer(parent = document.body) {
+        let el = this.findOverlayLayer();
+
+        if (!el) {
+            el = this.createOverlayLayer();
+            this.cache.set('overlayLayer', el);
         }
 
-        this.cache.set('overlayLayer', overlayLayer);
-
-        return overlayLayer;
+        return this.mountElement(el, parent);
     }
 
     removeOverlayLayer() {
-        const overlayLayer = this.cache.get('overlayLayer');
-
-        if (overlayLayer) {
-            overlayLayer.parentElement.removeChild(overlayLayer);
-        }
-
+        this.removeElement(this.findOverlayLayer());
         this.cache.delete('overlayLayer');
-
         return this;
     }
 
-    showHighlightLayer() {
-        let highlightLayer = this.cache.get('highlightLayer');
+    mountHighlight(parent = document.body) {
+        const el = this.mountHighlightLayer(parent);
+        this.setHighlightLayerPosition(el);
+        return el;
+    }
 
-        if (!highlightLayer) {
-            highlightLayer = document.createElement('div');
-            highlightLayer.className = this.constructor.getHighlightLayerClass();
-            document.body.appendChild(highlightLayer);
+    findHighlightLayer(def = null) {
+        return this.cache.get('highlightLayer') || def;
+    }
+
+    createHighlightLayer() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getHighlightClass();
+        return el;
+    }
+
+    mountHighlightLayer(parent = document.body) {
+        let el = this.findHighlightLayer();
+
+        if (!el) {
+            el = this.createHighlightLayer();
+            this.cache.set('highlightLayer', el);
         }
 
-        this.cache.set('highlightLayer', highlightLayer);
-
-        return highlightLayer;
+        return this.mountElement(el, parent);
     }
 
     removeHighlightLayer() {
-        const highlightLayer = this.cache.get('highlightLayer');
-
-        if (highlightLayer) {
-            highlightLayer.parentElement.removeChild(highlightLayer);
-        }
-
+        this.removeElement(this.findHighlightLayer());
         this.cache.delete('highlightLayer');
-
         return this;
     }
 
-    showControlLayer() {
-        let controlLayer = this.cache.get('controlLayer');
-
-        if (!controlLayer || !controlLayer.parentNode) {
-            controlLayer = document.createElement('div');
-            controlLayer.className = this.constructor.getControlLayerClass();
-            document.body.appendChild(controlLayer);
-        }
-
-        this.cache.set('controlLayer', controlLayer);
-
-        return controlLayer;
+    mountInteraction(parent = document.body) {
+        const el = this.mountInteractionLayer(parent);
+        this.setInteractionLayerPosition(el);
+        return el;
     }
 
-    removeControlLayer() {
-        const controlLayer = this.cache.get('controlLayer');
-
-        if (controlLayer) {
-            controlLayer.parentElement.removeChild(controlLayer);
-        }
-
-        this.cache.delete('controlLayer');
-
-        return this;
+    findInteractionLayer(def = null) {
+        return this.cache.get('interactionLayer') || def;
     }
 
-    showInteractionLayer() {
-        // get or create interaction layer
-        let interactionLayer = this.cache.get('interactionLayer');
+    createInteractionLayer() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getInteractionClass();
+        return el;
+    }
 
-        if (!interactionLayer || !interactionLayer.parentNode) {
-            interactionLayer = document.createElement('div');
-            document.body.appendChild(interactionLayer);
+    mountInteractionLayer(parent = document.body) {
+        let el = this.findInteractionLayer();
+
+        if (!el) {
+            el = this.createInteractionLayer();
+            this.cache.set('interactionLayer', el);
         }
-
-        interactionLayer.className = this.constructor.getInteractionLayerClass();
 
         let { interaction } = this.options;
 
-        if (this.step && typeof this.step.interaction === 'boolean') {
-            interaction = this.step.interaction;
+        if (this.currentStep && typeof this.currentStep.interaction === 'boolean') {
+            interaction = this.currentStep.interaction;
         }
 
-        // disable interaction
-        if (!interaction) {
-            interactionLayer.classList.add(this.constructor.getDisableInteractionClass());
-        }
+        // disable/enable interaction
+        el.classList.toggle(this.constructor.getDisableInteractionClass(), !interaction);
 
-        this.cache.set('interactionLayer', interactionLayer);
-
-        return interactionLayer;
+        return this.mountElement(el, parent);
     }
 
     removeInteractionLayer() {
-        const interactionLayer = this.cache.get('interactionLayer');
-
-        if (interactionLayer) {
-            interactionLayer.parentElement.removeChild(interactionLayer);
-        }
-
+        this.removeElement(this.findInteractionLayer());
         this.cache.delete('interactionLayer');
-
         return this;
     }
 
-    showTooltipLayer() {
-        const parent = this.showControlLayer();
-
-        let tooltipLayer = this.cache.get('tooltipLayer');
-
-        if (!tooltipLayer || !tooltipLayer.parentNode) {
-            tooltipLayer = document.createElement('div');
-            tooltipLayer.setAttribute('role', 'dialog');
-            parent.appendChild(tooltipLayer);
-        }
-
-        tooltipLayer.className = this.constructor.getTooltipLayerClass();
-
-        this.cache.set('tooltipLayer', tooltipLayer);
-
-        return tooltipLayer;
+    mountControl(parent = document.body) {
+        const el = this.mountControlLayer(parent);
+        this.mountTooltip(el);
+        this.setControlLayerPosition(el);
+        return el;
     }
 
-    showTooltipTail() {
-        const parent = this.showTooltipLayer();
-
-        let tooltipTailEl = this.cache.get('tooltipTailEl');
-
-        if (!tooltipTailEl || !tooltipTailEl.parentNode) {
-            tooltipTailEl = document.createElement('div');
-            parent.appendChild(tooltipTailEl);
-        }
-
-        tooltipTailEl.className = this.constructor.getTooltipTailClass();
-
-        this.cache.set('tooltipTailEl', tooltipTailEl);
-
-        return tooltipTailEl;
+    findControlLayer(def = null) {
+        return this.cache.get('controlLayer') || def;
     }
 
-    showClose() {
-        const parent = this.showTooltipLayer();
-
-        let closeEl = this.cache.get('closeEl');
-
-        if (!closeEl || !closeEl.parentNode) {
-            closeEl = document.createElement('div');
-            closeEl.onclick = () => this.stop();
-            parent.appendChild(closeEl);
-        }
-
-        closeEl.className = this.constructor.getCloseClass();
-
-        this.cache.set('closeEl', closeEl);
-
-        return closeEl;
+    createControlLayer() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getControlClass();
+        return el;
     }
 
-    showProgressbar() {
-        const parent = this.showTooltipLayer();
+    mountControlLayer(parent = document.body) {
+        let el = this.findControlLayer();
 
-        let progressbarEl = this.cache.get('progressbarEl');
-
-        if (!progressbarEl || !progressbarEl.parentNode) {
-            progressbarEl = document.createElement('div');
-            progressbarEl.setAttribute('role', 'progress');
-            progressbarEl.setAttribute('aria-valuemin', 0);
-            progressbarEl.setAttribute('aria-valuemax', 100);
-            parent.appendChild(progressbarEl);
+        if (!el) {
+            el = this.createControlLayer();
+            this.cache.set('controlLayer', el);
         }
 
-        const stepIndex = this.steps.indexOf(this.step);
-
-        if (stepIndex >= 0 && this.steps.length) {
-            const progress = ((stepIndex + 1) / this.steps.length) * 100;
-            progressbarEl.setAttribute('aria-valuenow', progress);
-            progressbarEl.style.cssText = `width: ${progress}%;`;
-        }
-
-        progressbarEl.className = this.constructor.getProgressbarClass();
-
-        if (!this.options.showProgressbar) {
-            progressbarEl.classList.add(this.constructor.getHiddenClass());
-        }
-
-        this.cache.set('progressbarEl', progressbarEl);
-
-        return progressbarEl;
+        return this.mountElement(el, parent);
     }
 
-    showTitle(title) {
-        let titleEl = this.cache.get('titleEl');
-
-        if (!titleEl || !titleEl.parentNode) {
-            titleEl = document.createElement('div');
-            this.showTooltipLayer().appendChild(titleEl);
-        }
-
-        titleEl.className = this.constructor.getTitleClass();
-
-        if (!title) {
-            titleEl.classList.add(this.constructor.getHiddenClass());
-        }
-
-        titleEl.innerHTML = title || '';
-
-        this.cache.set('titleEl', titleEl);
-
-        return titleEl;
+    removeControlLayer() {
+        this.removeElement(this.findControlLayer());
+        this.cache.delete('controlLayer');
+        return this;
     }
 
-    showDescription(description) {
-        let descriptionEl = this.cache.get('descriptionEl');
+    mountTooltip(parent) {
+        const tooltip = this.mountTooltipElement(parent);
+        this.mountTooltipTailElement(tooltip);
+        this.mountProgressbarElement(tooltip);
+        this.mountTitleElement(tooltip);
+        this.mountDescriptionElement(tooltip);
+        this.mountCloseElement(tooltip);
+        this.mountCustomButtonsElement(tooltip);
+        this.mountNavigation(tooltip);
+        this.mountCopyrightElement(tooltip);
 
-        if (!descriptionEl || !descriptionEl.parentNode) {
-            descriptionEl = document.createElement('div');
-            this.showTooltipLayer().appendChild(descriptionEl);
-        }
+        this.setTooltipElementPosition(tooltip, { boundary: document.documentElement });
 
-        descriptionEl.className = this.constructor.getDescriptionClass();
-
-        if (!description) {
-            descriptionEl.classList.add(this.constructor.getHiddenClass());
-        }
-
-        descriptionEl.innerHTML = description || '';
-
-        this.cache.set('descriptionEl', descriptionEl);
-
-        return descriptionEl;
+        return tooltip;
     }
 
-    showCustomButtonsLayer(buttons = []) {
-        let customButtonsLayer = this.cache.get('customButtonsLayer');
+    findTooltipElement(def = null) {
+        return this.cache.get('tooltipLayer') || def;
+    }
 
-        if (!customButtonsLayer || !customButtonsLayer.parentNode) {
-            customButtonsLayer = document.createElement('div');
-            this.showTooltipLayer().appendChild(customButtonsLayer);
+    createTooltipElement() {
+        const el = document.createElement('div');
+        el.setAttribute('role', 'dialog');
+        el.className = this.constructor.getTooltipClass();
+        return el;
+    }
+
+    mountTooltipElement(parent) {
+        let el = this.findTooltipElement();
+
+        if (!el) {
+            el = this.createTooltipElement();
+            this.cache.set('tooltipLayer', el);
         }
 
-        customButtonsLayer.className = this.constructor.getCustomButtonsLayerClass();
+        return this.mountElement(el, parent);
+    }
 
-        if (!buttons.length) {
-            customButtonsLayer.classList.add(this.constructor.getHiddenClass());
+    findTooltipTailElement(def = null) {
+        return this.cache.get('tooltipTailEl') || def;
+    }
+
+    createTooltipTailElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getTooltipTailClass();
+        return el;
+    }
+
+    mountTooltipTailElement(parent) {
+        let el = this.findTooltipTailElement();
+
+        if (!el) {
+            el = this.createTooltipTailElement();
+            this.cache.set('tooltipTailEl', el);
         }
 
-        while (customButtonsLayer.firstChild) {
-            customButtonsLayer.removeChild(customButtonsLayer.firstChild);
+        return this.mountElement(el, parent);
+    }
+
+    findCloseElement(def = null) {
+        return this.cache.get('closeEl') || def;
+    }
+
+    createCloseElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getCloseClass();
+        el.onclick = () => this.stop();
+        return el;
+    }
+
+    mountCloseElement(parent) {
+        let el = this.findCloseElement();
+
+        if (!el) {
+            el = this.createCloseElement();
+            this.cache.set('closeEl', el);
         }
 
-        buttons.forEach((v) => {
-            if (v instanceof HTMLElement) {
-                customButtonsLayer.appendChild(v);
-            } else {
-                const { tagName = 'button', title = '', class: className, onClick } = v;
-                const customButton = document.createElement(tagName);
+        return this.mountElement(el, parent);
+    }
 
-                customButton.innerHTML = title;
-                if (className) {
-                    customButton.className = className;
-                }
+    findProgressbarElement(def = null) {
+        return this.cache.get('progressbarEl') || def;
+    }
 
-                if (onClick) {
-                    customButton.onclick = (e) => onClick.call(this, e);
-                }
+    createProgressbarElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getProgressbarClass();
+        el.setAttribute('role', 'progress');
+        el.setAttribute('aria-valuemin', 0);
+        el.setAttribute('aria-valuemax', 100);
+        return el;
+    }
 
-                customButtonsLayer.appendChild(customButton);
-            }
+    mountProgressbarElement(parent) {
+        let el = this.findProgressbarElement();
+
+        if (!el) {
+            el = this.createProgressbarElement();
+            this.cache.set('progressbarEl', el);
+        }
+
+        const { showProgressbar } = this.options;
+
+        el.classList.toggle(this.constructor.getHiddenClass(), !showProgressbar);
+
+        const index = this.steps.indexOf(this.currentStep);
+        const progress = ((index + 1) / this.steps.length) * 100;
+        el.setAttribute('aria-valuenow', progress);
+        el.style.cssText = `width: ${progress}%;`;
+
+        return this.mountElement(el, parent);
+    }
+
+    findTitleElement(def = null) {
+        return this.cache.get('titleEl') || def;
+    }
+
+    createTitleElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getTitleClass();
+        return el;
+    }
+
+    mountTitleElement(parent) {
+        let el = this.findTitleElement();
+
+        if (!el) {
+            el = this.createTitleElement();
+            this.cache.set('titleEl', el);
+        }
+
+        const { title = '' } = this.currentStep;
+        el.innerHTML = title;
+        el.classList.toggle(this.constructor.getHiddenClass(), !title);
+
+        return this.mountElement(el, parent);
+    }
+
+    findDescriptionElement(def = null) {
+        return this.cache.get('descriptionEl') || def;
+    }
+
+    createDescriptionElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getDescriptionClass();
+        return el;
+    }
+
+    mountDescriptionElement(parent) {
+        let el = this.findDescriptionElement();
+
+        if (!el) {
+            el = this.createDescriptionElement();
+            this.cache.set('descriptionEl', el);
+        }
+
+        const { description = '' } = this.currentStep;
+        el.innerHTML = description;
+        el.classList.toggle(this.constructor.getHiddenClass(), !description);
+
+        return this.mountElement(el, parent);
+    }
+
+    findCustomButtonsElement(def = null) {
+        return this.cache.get('customButtonsEl') || def;
+    }
+
+    createCustomButtonsElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getCustomButtonsClass();
+        return el;
+    }
+
+    mountCustomButtonsElement(parent) {
+        let el = this.findCustomButtonsElement();
+
+        if (!el) {
+            el = this.createCustomButtonsElement();
+            this.cache.set('customButtonsEl', el);
+        }
+
+        // clean layer from previous buttons
+        el.innerHTML = '';
+
+        const { buttons = [] } = this.currentStep;
+
+        el.classList.toggle(this.constructor.getHiddenClass(), !buttons.length);
+
+        buttons.forEach((button) => {
+            el.appendChild((button.ownerDocument) ? button : this.createCustomButtonElement(button));
         });
 
-        this.cache.set('customButtonsLayer', customButtonsLayer);
-
-        return customButtonsLayer;
+        return this.mountElement(el, parent);
     }
 
-    showNavigationLayer() {
-        let navigationLayer = this.cache.get('navigationLayer');
+    createCustomButtonElement({ tagName = 'button', title = '', class: className, onClick }) {
+        const el = document.createElement(tagName);
+        el.innerHTML = title;
 
-        if (!navigationLayer || !navigationLayer.parentNode) {
-            navigationLayer = document.createElement('div');
-            this.showTooltipLayer().appendChild(navigationLayer);
+        if (className) {
+            el.className = className;
         }
 
-        navigationLayer.className = this.constructor.getNavigationClass();
+        if (onClick) {
+            el.onclick = (e) => onClick.call(this, e);
+        }
 
-        this.cache.set('navigationLayer', navigationLayer);
-
-        return navigationLayer;
+        return el;
     }
 
-    showPagination() {
-        let paginationLayer = this.cache.get('paginationLayer');
+    mountNavigation(parent) {
+        const navigation = this.mountNavigationElement(parent);
+        const prev = this.mountNavigationPrevElement(navigation);
+        const pagination = this.mountPaginationElement(navigation);
+        const next = this.mountNavigationNextElement(navigation);
 
-        if (!paginationLayer || !paginationLayer.parentNode) {
-            paginationLayer = document.createElement('div');
-            this.showNavigationLayer().appendChild(paginationLayer);
-        }
-
-        paginationLayer.className = this.constructor.getPaginationLayerClass();
-
-        if (!this.options.showPagination || this.steps.length < 2) {
-            paginationLayer.classList.add(this.constructor.getHiddenClass());
-        }
-
-        while (paginationLayer.firstChild) {
-            paginationLayer.removeChild(paginationLayer.firstChild);
-        }
-
-        this.steps.forEach((v, i) => {
-            const paginationItem = document.createElement('div');
-            paginationItem.className = this.constructor.getPaginationItemClass();
-
-            if (this.step === v) {
-                paginationItem.classList.add(this.constructor.getPaginationCurrentItemClass());
-            }
-
-            paginationItem.onclick = () => this.go(i, true);
-
-            paginationLayer.appendChild(paginationItem);
-        });
-
-        this.cache.set('paginationLayer', paginationLayer);
-
-        return paginationLayer;
-    }
-
-    showNavigationPrev() {
-        let navigationPrevEl = this.cache.get('navigationPrevEl');
-
-        if (!navigationPrevEl || !navigationPrevEl.parentNode) {
-            navigationPrevEl = document.createElement('div');
-            navigationPrevEl.className = this.constructor.getNavigationPrevClass();
-            navigationPrevEl.onclick = () => this.previous();
-            this.showNavigationLayer().appendChild(navigationPrevEl);
-        }
-
-        const stepIndex = this.steps.indexOf(this.step);
-
-        navigationPrevEl.classList.toggle(this.constructor.getHiddenClass(), (stepIndex <= 0));
-
-        this.cache.set('navigationPrevEl', navigationPrevEl);
-
-        return navigationPrevEl;
-    }
-
-    showNavigationNext() {
-        let navigationNextEl = this.cache.get('navigationNextEl');
-
-        if (!navigationNextEl || !navigationNextEl.parentNode) {
-            navigationNextEl = document.createElement('div');
-            navigationNextEl.onclick = () => this.next();
-            navigationNextEl.className = this.constructor.getNavigationNextClass();
-            this.showNavigationLayer().appendChild(navigationNextEl);
-        }
-
-        const stepIndex = this.steps.indexOf(this.step);
-
-        navigationNextEl.classList.toggle(
+        navigation.classList.toggle(
             this.constructor.getHiddenClass(),
-            (stepIndex < 0 || (stepIndex === this.steps.length - 1 || this.steps.length === 1)),
+            [prev, pagination, next].every((el) => el.classList.contains(this.constructor.getHiddenClass())),
         );
 
-        this.cache.set('navigationNextEl', navigationNextEl);
-
-        return navigationNextEl;
+        return navigation;
     }
 
-    showCopyright() {
-        let copyrightEl = this.cache.get('copyrightEl');
+    findNavigationElement(def = null) {
+        return this.cache.get('navigationEl') || def;
+    }
 
-        if (!copyrightEl || !copyrightEl.parentNode) {
-            copyrightEl = document.createElement('div');
-            this.showTooltipLayer().appendChild(copyrightEl);
+    createNavigationElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getNavigationClass();
+        return el;
+    }
+
+    mountNavigationElement(parent) {
+        let el = this.findNavigationElement();
+
+        if (!el) {
+            el = this.createNavigationElement();
+            this.cache.set('navigationEl', el);
         }
 
-        copyrightEl.className = this.constructor.getCopyrightClass();
+        return this.mountElement(el, parent);
+    }
 
-        copyrightEl.innerHTML = 'Made with GuideChimp';
+    findPaginationElement(def = null) {
+        return this.cache.get('paginationEl') || def;
+    }
 
-        this.cache.set('copyrightEl', copyrightEl);
+    createPaginationElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getPaginationClass();
+        return el;
+    }
 
-        return copyrightEl;
+    mountPaginationElement(parent) {
+        let el = this.findPaginationElement();
+
+        if (!el) {
+            el = this.createPaginationElement();
+            this.cache.set('paginationEl', el);
+        }
+
+        // cleanup pagination
+        el.innerHTML = '';
+
+        const { showPagination } = this.options;
+
+        el.classList.toggle(this.constructor.getHiddenClass(), (!showPagination || this.steps.length <= 1));
+
+        this.steps.forEach((s, i) => {
+            el.appendChild(this.createPaginationItemElement(s, i));
+        });
+
+        return this.mountElement(el, parent);
+    }
+
+    createPaginationItemElement(step, index) {
+        const el = document.createElement('div');
+        el.className = this.constructor.getPaginationItemClass();
+
+        if (this.currentStep === step) {
+            el.classList.add(this.constructor.getPaginationCurrentItemClass());
+        }
+
+        el.onclick = () => {
+            switch (index) {
+                case this.previousStepIndex: {
+                    return this.previous();
+                }
+
+                case this.nextStepIndex: {
+                    return this.next();
+                }
+
+                default: {
+                    return this.go(index, true);
+                }
+            }
+        };
+
+        return el;
+    }
+
+    findNavigationPrevElement(def = null) {
+        return this.cache.get('navigationPrevEl') || def;
+    }
+
+    createNavigationPrevElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getNavigationPrevClass();
+        el.onclick = () => this.previous();
+        return el;
+    }
+
+    mountNavigationPrevElement(parent) {
+        let el = this.findNavigationPrevElement();
+
+        if (!el) {
+            el = this.createNavigationPrevElement();
+            this.cache.set('navigationPrevEl', el);
+        }
+
+        el.classList.toggle(this.constructor.getHiddenClass(), (this.previousStepIndex < 0));
+
+        return this.mountElement(el, parent);
+    }
+
+    findNavigationNextElement(def = null) {
+        return this.cache.get('navigationNextEl') || def;
+    }
+
+    createNavigationNextElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getNavigationNextClass();
+        el.onclick = () => this.next();
+        return el;
+    }
+
+    mountNavigationNextElement(parent) {
+        let el = this.findNavigationNextElement();
+
+        if (!el) {
+            el = this.createNavigationNextElement();
+            this.cache.set('navigationNextEl', el);
+        }
+
+        el.classList.toggle(this.constructor.getHiddenClass(), (this.nextStepIndex < 0));
+
+        return this.mountElement(el, parent);
+    }
+
+    findCopyrightElement(def = null) {
+        return this.cache.get('copyrightEl') || def;
+    }
+
+    createCopyrightElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getCopyrightClass();
+        return el;
+    }
+
+    mountCopyrightElement(parent) {
+        let el = this.findCopyrightElement();
+
+        if (!el) {
+            el = this.createCopyrightElement();
+            this.cache.set('copyrightEl', el);
+        }
+
+        el.innerHTML = 'Made with GuideChimp';
+
+        return this.mountElement(el, parent);
     }
 
     /**
@@ -1628,14 +1746,26 @@ export default class GuideChimp {
      *
      * @param {string} event The name of the event to listen for.
      * @param {function} listener The event listener, accepts context.
+     * @param {object} options Listener options
+     * @return {this}
      */
-    on(event, listener) {
-        const events = event.split(',').map((e) => e.trim());
+    on(event, listener, options = {}) {
+        // priorities from low to high
+        const priorities = this.constructor.getEventListenersPriorities();
 
-        events.forEach((e) => {
-            this.listeners[e] = this.listeners[e] || [];
-            this.listeners[e].push(listener);
-        });
+        let [priority] = priorities;
+
+        if (options.priority && priorities.includes(options.priority)) {
+            priority = options.priority;
+        }
+
+        const e = event.trim();
+
+        this.listeners[e] = this.listeners[e] || {};
+        this.listeners[e][priority] = this.listeners[e][priority] || [];
+        this.listeners[e][priority].push(listener);
+
+        return this;
     }
 
     /**
@@ -1648,14 +1778,32 @@ export default class GuideChimp {
      * @returns {Promise}
      */
     emit(event, ...args) {
-        const listeners = this.listeners[event];
+        // from high to low
+        const priorities = [...this.constructor.getEventListenersPriorities()].reverse();
 
-        if (!listeners) {
-            return [];
+        const e = event.trim();
+
+        let result = [];
+        let promise = Promise.resolve(result);
+
+        if (this.listeners[e]) {
+            priorities.forEach((priority) => {
+                const { [priority]: listeners } = this.listeners[e];
+
+                if (listeners) {
+                    promise = promise
+                        .then(() => Promise.all(
+                            listeners.map((f) => Promise.resolve().then(() => f.apply(this, args))),
+                        ))
+                        .then((r) => {
+                            result = [...result, ...r];
+                            return result;
+                        });
+                }
+            });
         }
 
-        // run through each listener
-        return Promise.all(listeners.map((f) => Promise.resolve().then(() => f.apply(this, args))));
+        return promise;
     }
 
     /**
@@ -1748,12 +1896,35 @@ export default class GuideChimp {
         return this;
     }
 
+    removeListeners() {
+        this.removeOnKeydownListener();
+        this.removeOnWindowResizeListener();
+    }
+
+    setupResizeObserver() {
+        if (typeof ResizeObserver === 'undefined') {
+            return false;
+        }
+
+        this.observers.resizeObserver = new ResizeObserver(() => this.refresh());
+
+        return true;
+    }
+
+    observeResizeStepElement(options = { box: 'border-box' }) {
+        return this.observeResizeElement(this.getStepElement(this.currentStep), options);
+    }
+
+    unobserveResizeStepElement() {
+        return this.unobserveResizeElement(this.getStepElement(this.currentStep));
+    }
+
     /**
      * Observe resize step element
      * @return {this}
      */
-    observeResizeStepElement(el, options = { box: 'border-box' }) {
-        const { stepElementResizeObserver: observer } = this.observers;
+    observeResizeElement(el, options = { box: 'border-box' }) {
+        const { resizeObserver: observer } = this.observers;
 
         if (observer) {
             observer.observe(el, options);
@@ -1767,8 +1938,8 @@ export default class GuideChimp {
      * @param el
      * @return {this}
      */
-    unobserveResizeStepElement(el) {
-        const { stepElementResizeObserver: observer } = this.observers;
+    unobserveResizeElement(el) {
+        const { resizeObserver: observer } = this.observers;
 
         if (observer) {
             observer.unobserve(el);
@@ -1782,7 +1953,7 @@ export default class GuideChimp {
      * @return {this}
      */
     unobserveResizeAllStepsElements() {
-        const { stepElementResizeObserver: observer } = this.observers;
+        const { resizeObserver: observer } = this.observers;
 
         if (observer) {
             observer.disconnect();
@@ -1791,32 +1962,41 @@ export default class GuideChimp {
         return this;
     }
 
+    unobserveAllObservers() {
+        this.unobserveResizeAllStepsElements();
+    }
+
+    cleanupAfterPreviousStep() {
+        // remove all highlighting
+        this.resetHighlightingAll();
+
+        // remove previous step element resize observers
+        this.unobserveResizeStepElement();
+    }
+
     /**
      * Refresh layers position
      * @returns {this}
      */
     refresh() {
-        if (!this.step) {
+        if (!this.currentStep) {
             return this;
         }
-        this.step.$element = this.getStepElement(this.step);
 
-        const { $element: el, position } = this.step;
-
-        if (this.cache.has('highlightLayer')) {
-            this.setHighlightLayerPosition(this.cache.get('highlightLayer'), el);
+        if (this.findHighlightLayer()) {
+            this.setHighlightLayerPosition(this.findHighlightLayer());
         }
 
-        if (this.cache.has('controlLayer')) {
-            this.setControlLayerPosition(this.cache.get('controlLayer'), el);
+        if (this.findInteractionLayer()) {
+            this.setInteractionLayerPosition(this.findInteractionLayer());
         }
 
-        if (this.cache.has('interactionLayer')) {
-            this.setInteractionLayerPosition(this.cache.get('interactionLayer'), el);
+        if (this.findControlLayer()) {
+            this.setControlLayerPosition(this.findControlLayer());
         }
 
-        if (this.cache.has('tooltipLayer')) {
-            this.setTooltipLayerPosition(this.cache.get('tooltipLayer'), el, { position, boundary: window });
+        if (this.findTooltipElement()) {
+            this.setTooltipElementPosition(this.findTooltipElement(), { boundary: window });
         }
 
         return this;

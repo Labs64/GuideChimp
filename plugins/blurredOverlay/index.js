@@ -27,21 +27,19 @@ module.exports = (cls) => {
             });
         };
 
-        this.on('onAfterChange', ({ element }) => {
+        this.on('onAfterChange', (toStep) => {
             removeNotBlurredClass();
 
-            const el = this.getStepElement(element);
+            let el = this.getStepElement(toStep);
 
-            let parentEl = el.parentElement;
-
-            while (parentEl) {
-                if (parentEl === document.body) {
+            while (el) {
+                if (el === el.ownerDocument.body) {
                     break;
                 }
 
-                parentEl.classList.add(this.constructor.getNotBlurredClass());
+                el.classList.add(this.constructor.getNotBlurredClass());
 
-                parentEl = parentEl.parentElement;
+                el = el.parentElement;
             }
         });
 
