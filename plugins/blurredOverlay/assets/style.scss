@@ -4,6 +4,7 @@ body.gc {
   }
 
   & [class*="gc-"],
+  & .gc-not-blurred,
   & .gc-tooltip *,
   & .gc-highlighted * {
     filter: none;

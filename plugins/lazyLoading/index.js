@@ -23,25 +23,28 @@ module.exports = (cls, factory, options) => {
     cls.prototype.init = function () {
         parentInit.call(this);
 
-        this.on('onBeforeChange', ({ element }) => new Promise((resolve) => {
+        this.on('onBeforeChange', (toStep) => new Promise((resolve) => {
+            const { element } = toStep;
+
             if (!element) {
                 resolve();
                 return;
             }
 
-            let el = document.querySelector(element);
+            const checkElementExists = () => {
+                const el = this.getStepElement(toStep, true);
+                const defaultEl = this.findDefaultElement();
+                return (el && el !== defaultEl);
+            };
 
-            if (el) {
+            if (checkElementExists()) {
                 resolve();
                 return;
             }
 
             const interval = setInterval(() => {
-                el = document.querySelector(element);
-
                 timeout -= frequency;
-
-                if (el || timeout <= 0) {
+                if (checkElementExists() || timeout <= 0) {
                     clearInterval(interval);
                     resolve();
                 }

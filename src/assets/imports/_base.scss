@@ -20,6 +20,28 @@
       z-index: 6402;
     }
   }
+
+  &.gc-loading {
+    .gc-highlighted {
+      z-index: auto;
+    }
+
+    .gc-highlight {
+      display: none;
+    }
+
+    .gc-interaction {
+      display: none;
+    }
+
+    .gc-control {
+      display: none;
+    }
+
+    .gc-tooltip {
+      display: none;
+    }
+  }
 }
 
 .gc-overlay {
@@ -375,6 +397,10 @@
     border: 6px solid #fff;
     border-color: #fff transparent #fff transparent;
     border-radius: 50%;
+  }
+
+  &.gc-hidden {
+    display: none;
   }
 }
 

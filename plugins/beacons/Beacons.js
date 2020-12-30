@@ -70,7 +70,7 @@ export default class Beacons {
      * @param el
      * @return {boolean}
      */
-    static isElementFixed(el) {
+    static isFixed(el) {
         const { parentNode } = el;
 
         if (!parentNode || parentNode.nodeName === 'HTML') {
@@ -83,7 +83,7 @@ export default class Beacons {
             return true;
         }
 
-        return this.isElementFixed(parentNode);
+        return this.isFixed(parentNode);
     }
 
     /**
@@ -115,11 +115,17 @@ export default class Beacons {
                 }
 
                 const el = this.getElement(element);
-                const beaconEl = this.createBeaconEl(beacon);
+
+                if (!el) {
+                    console.log(element);
+                    return;
+                }
+
+                const beaconEl = this.createBeaconElement(beacon);
 
                 beaconEl.classList.add(this.constructor.getHiddenClass());
 
-                if (this.constructor.isElementFixed(el)) {
+                if (this.constructor.isFixed(el)) {
                     beaconEl.classList.add(this.constructor.getFixedClass());
                 }
 
@@ -248,7 +254,7 @@ export default class Beacons {
         return array.map((v, i) => ({ ...v, id: v.id || i }));
     }
 
-    createBeaconEl(beacon) {
+    createBeaconElement(beacon) {
         const beaconEl = document.createElement('div');
 
         const { class: className, onClick } = beacon;

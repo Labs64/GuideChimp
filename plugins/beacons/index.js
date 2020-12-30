@@ -40,11 +40,11 @@ module.exports = (Class, factory) => {
             return data;
         }
 
-        createBeaconEl(beacon) {
-            const beaconEl = super.createBeaconEl(beacon);
+        createBeaconElement(beacon) {
+            const el = super.createBeaconElement(beacon);
 
             if (beacon.tour) {
-                beaconEl.addEventListener('click', () => {
+                el.addEventListener('click', () => {
                     let guide = null;
 
                     if (typeof beacon.tour === 'string' || Array.isArray(beacon.tour)) {
@@ -62,7 +62,7 @@ module.exports = (Class, factory) => {
                 });
             }
 
-            return beaconEl;
+            return el;
         }
     }(beacons, options);
 };
