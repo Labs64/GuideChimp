@@ -28,6 +28,8 @@ export default class GuideChimp {
         this.tour = null;
         this.setTour(tour);
 
+        this.notifications = [];
+
         this.init();
     }
 
@@ -178,6 +180,10 @@ export default class GuideChimp {
 
     static getCopyrightClass() {
         return 'gc-copyright';
+    }
+
+    static getNotificationClass() {
+        return 'gc-notification';
     }
 
     static getHiddenClass() {
@@ -1373,6 +1379,7 @@ export default class GuideChimp {
         this.mountCustomButtonsElement(tooltip);
         this.mountNavigation(tooltip);
         this.mountCopyrightElement(tooltip);
+        this.mountNotificationElement(tooltip);
 
         this.setTooltipElementPosition(tooltip, { boundary: document.documentElement });
 
@@ -1737,6 +1744,48 @@ export default class GuideChimp {
         el.innerHTML = 'Made with GuideChimp';
 
         return this.mountElement(el, parent);
+    }
+
+    findNotificationElement(def = null) {
+        return this.cache.get('notificationEl') || def;
+    }
+
+    createNotificationElement() {
+        const el = document.createElement('div');
+        el.className = this.constructor.getNotificationClass();
+        return el;
+    }
+
+    mountNotificationElement(parent) {
+        let el = this.findNotificationElement();
+
+        if (!el) {
+            el = this.createNotificationElement();
+            this.cache.set('notificationEl', el);
+        }
+
+        const [message = ''] = this.notifications;
+        el.innerHTML = message;
+
+        return this.mountElement(el, parent);
+    }
+
+    removeNotificationElement() {
+        this.removeElement(this.findControlLayer());
+        this.cache.delete('controlLayer');
+        return this;
+    }
+
+    notify(message) {
+        this.notifications.push(message);
+
+        const el = this.findNotificationElement();
+
+        if (el) {
+            el.innerHTML = message;
+        }
+
+        return this;
     }
 
     /**
