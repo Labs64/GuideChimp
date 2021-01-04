@@ -283,7 +283,7 @@ export default class GuideChimp {
      * @return {this}
      */
     setTour(tour) {
-        this.tour = [...tour];
+        this.tour = tour;
         return this;
     }
 
