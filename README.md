@@ -6,7 +6,7 @@
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="GuideChimp @ jsDelivr"></a>
 <a href="https://github.com/Labs64/GuideChimp/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-EUPL--1.2-blue.svg" alt="European Union Public License, version 1.2"></a>
 <br>
-<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/Plugins-10-AB6543.svg" alt="GuideChimp Plugins"></a>
+<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/Plugins-11-AB6543.svg" alt="GuideChimp Plugins"></a>
 <a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/📖%20Documentation-Wiki-AB6543.svg" alt="📖 Documentation"></a>
 <a href="https://www.labs64.com/guidechimp/"><img src="https://img.shields.io/badge/🌐%20GuideChimp-Website-AB6543.svg" alt="🌐 GuideChimp Website"></a>
 <a href="https://www.linkedin.com/showcase/guidechimp"><img src="https://img.shields.io/badge/GuideChimp-0077B5.svg?logo=LinkedIn" alt="GuideChimp @ LinkedIn"></a>
@@ -149,6 +149,7 @@ The Commercial License requires the payment of a fee for each designated commerc
 - If you choose not to pay a fee and use the *European Union Public License, version 1.2*, you are required to release the source code of any program that you distribute that uses GuideChimp.
 - If you choose to pay for a *Commercial License*, you are not required to disclose your source code.
 
+Commercial GuideChimp plugins require a [https://www.labs64.com/guidechimp/#guidechimp-licensing](valid customer account) with the assigned plan and [additional configuration](https://github.com/Labs64/GuideChimp/wiki/Licensing-plugin), which will be used to validate the availability of particular GuideChimp functions or plugins for the given customer account.
 
 # Privacy Policy
 
