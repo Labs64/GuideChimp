@@ -149,7 +149,7 @@ The Commercial License requires the payment of a fee for each designated commerc
 - If you choose not to pay a fee and use the *European Union Public License, version 1.2*, you are required to release the source code of any program that you distribute that uses GuideChimp.
 - If you choose to pay for a *Commercial License*, you are not required to disclose your source code.
 
-Commercial GuideChimp plugins require a [https://www.labs64.com/guidechimp/#guidechimp-licensing](valid customer account) with the assigned plan and [additional configuration](https://github.com/Labs64/GuideChimp/wiki/Licensing-plugin), which will be used to validate the availability of particular GuideChimp functions or plugins for the given customer account.
+Commercial GuideChimp plugins require a [valid customer account](https://www.labs64.com/guidechimp/#guidechimp-licensing) with the assigned plan and [additional configuration](https://github.com/Labs64/GuideChimp/wiki/Licensing-plugin), which will be used to validate the availability of particular GuideChimp functions or plugins for the given customer account.
 
 # Privacy Policy
 
