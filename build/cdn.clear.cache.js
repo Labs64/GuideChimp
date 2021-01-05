@@ -153,27 +153,20 @@ spinner.start();
 
             purgeUrls = [
                 ...purgeUrls,
-                ...filesPaths.map((v) => `/npm/guidechimp@${version}${v.replace(root, '').replace(/\\/g, '/')}`),
+                ...filesPaths.map((v) => `npm/guidechimp@${version}${v.replace(root, '').replace(/\\/g, '/')}`),
             ];
         }
 
-        const chunkedPurgeUrls = [];
-        const chunkSize = 20;
+        let count = 0;
 
-        for (let i = 0; i < purgeUrls.length; i += chunkSize) {
-            chunkedPurgeUrls.push([...purgeUrls].slice(i, i + chunkSize));
-        }
-
-        for (const urls of chunkedPurgeUrls) {
+        for (const url of purgeUrls) {
             await request({
-                url: 'https://purge.jsdelivr.net',
-                method: 'POST',
-                data: { path: urls },
+                url: `https://purge.jsdelivr.net/${url}`,
+                method: 'GET',
             });
 
-            urls.forEach((url) => {
-                console.log(chalk.white(`${url} - cache cleared`));
-            })
+            count++;
+            console.log(chalk.white(`${url} - cache cleared`));
         }
 
         console.log(chalk.cyan(`CDN cache cleared (total URLs: ${purgeUrls.length})\n`));
