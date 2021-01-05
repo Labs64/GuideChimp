@@ -179,7 +179,7 @@ spinner.start();
                 console.log(chalk.white(`${url} - cache cleared`));
             })
 
-            console.log(`Response: ${data}\n`);
+            console.log(chalk.grey(`Response: ${data}\n`));
         }
 
         console.log(chalk.cyan(`CDN cache cleared (total URLs: ${count})\n`));
