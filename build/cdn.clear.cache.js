@@ -161,24 +161,25 @@ spinner.start();
             versionPieces.splice(-1, 1);
         }
 
-        const promises = [];
-
         const chunkedPurgeUrls = [];
-        const chunkSize = 1;
+        const chunkSize = 20;
 
         for (let i = 0; i < purgeUrls.length; i += chunkSize) {
             chunkedPurgeUrls.push([...purgeUrls].slice(i, i + chunkSize));
         }
 
-        chunkedPurgeUrls.forEach((urls) => {
-            promises.push(request({
+        for (const urls of chunkedPurgeUrls) {
+            await request({
                 url: 'https://purge.jsdelivr.net',
                 method: 'POST',
                 data: { path: urls },
-            }));
-        });
+            });
 
-        await Promise.all(promises);
+            urls.forEach((url) => {
+                console.log(chalk.white(`${url} - cache cleared`));
+            })
+        }
+
         console.log(chalk.cyan('CDN cache cleared.\n'));
     } catch (err) {
         console.error(err);
