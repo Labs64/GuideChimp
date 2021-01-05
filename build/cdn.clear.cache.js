@@ -1,0 +1,189 @@
+const https = require('https');
+const http = require('http');
+const { URL } = require('url');
+const querystring = require('querystring');
+const fs = require('fs');
+const path = require('path');
+
+const ora = require('ora');
+const chalk = require('chalk');
+const pkg = require('../package.json');
+
+const request = (options) => {
+    const opt = { ...options };
+    const { data, url } = opt;
+
+    const urlPieces = new URL(url);
+
+    delete opt.data;
+    delete opt.url;
+
+    const config = {
+        method: 'GET',
+        headers: {},
+        hostname: urlPieces.hostname,
+        path: urlPieces.path,
+        port: urlPieces.port,
+
+        ...options,
+    };
+
+    const defaultHeaders = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    config.headers = { ...defaultHeaders, ...config.headers };
+
+    const isGet = (config.method.toLocaleLowerCase() === 'get');
+    const isPost = (config.method.toLocaleLowerCase() === 'post');
+
+    const query = (() => {
+        if (data && !Object.keys(data).length) {
+            return '';
+        }
+
+        if (isGet) {
+            return querystring.stringify(data);
+        }
+
+        return (config.headers['Content-Type'] === 'application/x-www-form-urlencoded')
+            ? querystring.stringify(data)
+            : JSON.stringify(data);
+    })();
+
+    if (isGet) {
+        if (query) {
+            config.path = `${config.path}?${query}`;
+        }
+    }
+
+    if (isPost) {
+        if (query) {
+            config.headers['Content-Length'] = query.length;
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        const httpProv = urlPieces.protocol === 'http:' ? http : https;
+
+        const req = httpProv.request(config, (res) => {
+            const { statusCode } = res;
+
+            if (statusCode < 200 || statusCode >= 300) {
+                reject(res);
+                return;
+            }
+
+            let resData = '';
+
+            res.on('data', (chunk) => {
+                resData += chunk;
+            });
+
+            res.on('end', () => {
+                // remove \n from body
+                try {
+                    resData = JSON.stringify(JSON.parse(resData));
+                } catch (e) {
+                    if (!(e instanceof SyntaxError)) {
+                        throw e;
+                    }
+                }
+
+                if (statusCode < 200 || statusCode >= 300) {
+                    const e = new Error('Bad request!');
+                    e.response = { ...res, data: resData };
+
+                    reject(e);
+                } else {
+                    resolve({ ...res, data: resData });
+                }
+            });
+        });
+
+        req.on('error', (e) => {
+            reject(e);
+        });
+
+        if (isPost && query) {
+            req.write(query);
+        }
+
+        // send the request
+        req.end();
+    });
+};
+
+const spinner = ora('Clearing CDN cache... ');
+spinner.start();
+
+(async () => {
+    try {
+        const root = path.resolve(__dirname, '../');
+        const dist = path.resolve(__dirname, '../dist');
+
+        const getFilesPaths = (dirPath) => {
+            let paths = [];
+
+            fs.readdirSync(dirPath).forEach((name) => {
+                const filePath = path.resolve(dirPath, name);
+
+                if (fs.lstatSync(filePath).isDirectory()) {
+                    paths = [...paths, ...getFilesPaths(filePath)];
+                    return;
+                }
+
+                paths.push(filePath);
+            });
+
+            return paths;
+        };
+
+        const filesPaths = getFilesPaths(dist);
+
+        let purgeUrls = [];
+
+        const versionPieces = pkg.version.split('.');
+
+        if (versionPieces.length > 1) {
+            versionPieces.splice(-1, 1);
+        }
+
+        while (versionPieces.length) {
+            const version = versionPieces.join('.');
+
+            purgeUrls = [
+                ...purgeUrls,
+                ...filesPaths.map((v) => `/npm/guidechimp@${version}${v.replace(root, '').replace(/\\/g, '/')}`),
+            ];
+
+            versionPieces.splice(-1, 1);
+        }
+
+        const promises = [];
+
+        const chunkedPurgeUrls = [];
+        const chunkSize = 1;
+
+        for (let i = 0; i < purgeUrls.length; i += chunkSize) {
+            chunkedPurgeUrls.push([...purgeUrls].slice(i, i + chunkSize));
+        }
+
+        chunkedPurgeUrls.forEach((urls) => {
+            promises.push(request({
+                url: 'https://purge.jsdelivr.net',
+                method: 'POST',
+                data: { path: urls },
+            }));
+        });
+
+        await Promise.all(promises);
+        console.log(chalk.cyan('CDN cache cleared.\n'));
+    } catch (err) {
+        console.error(err);
+        console.log(chalk.red('Clearing CDN cache failed.\n'));
+    }
+
+    spinner.stop();
+})();

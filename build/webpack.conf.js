@@ -17,9 +17,8 @@ function resolve(dir) {
 }
 
 function camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-        return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase()))
+        .replace(/\s+/g, '');
 }
 
 const baseConfig = {
@@ -60,7 +59,7 @@ const baseConfig = {
                         loader: 'css-loader',
                         options: {
                             sourceMap: true,
-                        }
+                        },
                     },
                     'sass-loader',
                 ],
@@ -106,10 +105,9 @@ const libraryConfig = merge(
     },
 );
 
-
 const pluginsConfigs = [];
 
-fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach(folderName => {
+fs.readdirSync(path.resolve(__dirname, '../plugins')).forEach((folderName) => {
     // skip all folders starting with underscore
     if (folderName[0] !== '_') {
         pluginsConfigs.push(merge(

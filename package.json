@@ -56,7 +56,8 @@
         "dev": "webpack --mode=development --progress --colors --watch --config build/webpack.conf.js",
         "test": "karma start test/karma.conf.js --single-run",
         "test-for-travis": "karma start test/karma.conf.js --single-run --browsers Firefox",
-        "lint": "eslint --ext .js,.vue src test"
+        "lint": "eslint --ext .js,.vue src test",
+        "cdn-clear-cache": "node build/cdn.clear.cache.js"
     },
     "dependencies": {
         "copy-webpack-plugin": "^6.3.2"
