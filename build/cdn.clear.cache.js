@@ -115,7 +115,7 @@ const request = (options) => {
     });
 };
 
-const spinner = ora('Clearing CDN cache... ');
+const spinner = ora('Clearing CDN cache...\n');
 spinner.start();
 
 (async () => {
@@ -180,10 +180,10 @@ spinner.start();
             })
         }
 
-        console.log(chalk.cyan('CDN cache cleared.\n'));
+        console.log(chalk.cyan('CDN cache cleared\n'));
     } catch (err) {
         console.error(err);
-        console.log(chalk.red('Clearing CDN cache failed.\n'));
+        console.log(chalk.red('Clearing CDN cache failed\n'));
     }
 
     spinner.stop();

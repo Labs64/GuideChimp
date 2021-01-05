@@ -57,3 +57,8 @@ jobs:
           npm publish guidechimp-core
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+      - name: Clean CDN cache
+        run: |
+          cd guidechimp-core
+          npm run cdn-clear-cache
