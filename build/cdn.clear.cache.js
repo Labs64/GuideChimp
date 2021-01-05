@@ -176,7 +176,7 @@ spinner.start();
             })
         }
 
-        console.log(chalk.cyan(`CDN cache cleared, total urls - ${purgeUrls.length}\n`));
+        console.log(chalk.cyan(`CDN cache cleared (total URLs: ${purgeUrls.length})\n`));
     } catch (err) {
         console.error(err);
         console.log(chalk.red('Clearing CDN cache failed\n'));
