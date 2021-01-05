@@ -164,6 +164,8 @@ spinner.start();
             chunkedPurgeUrls.push([...purgeUrls].slice(i, i + chunkSize));
         }
 
+        let count = 0;
+
         for (const urls of chunkedPurgeUrls) {
             await request({
                 url: 'https://purge.jsdelivr.net',
@@ -171,12 +173,14 @@ spinner.start();
                 data: { path: urls },
             });
 
+            count += urls.length;
+
             urls.forEach((url) => {
                 console.log(chalk.white(`${url} - cache cleared`));
             })
         }
 
-        console.log(chalk.cyan(`CDN cache cleared (total URLs: ${purgeUrls.length})\n`));
+        console.log(chalk.cyan(`CDN cache cleared (total URLs: ${count})\n`));
     } catch (err) {
         console.error(err);
         console.log(chalk.red('Clearing CDN cache failed\n'));
