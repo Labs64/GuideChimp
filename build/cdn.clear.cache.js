@@ -167,7 +167,7 @@ spinner.start();
         let count = 0;
 
         for (const urls of chunkedPurgeUrls) {
-            await request({
+            const { data } = await request({
                 url: 'https://purge.jsdelivr.net',
                 method: 'POST',
                 data: { path: urls },
@@ -178,6 +178,8 @@ spinner.start();
             urls.forEach((url) => {
                 console.log(chalk.white(`${url} - cache cleared`));
             })
+
+            console.log(`Response: ${data}\n`);
         }
 
         console.log(chalk.cyan(`CDN cache cleared (total URLs: ${count})\n`));
