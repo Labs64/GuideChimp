@@ -115,7 +115,7 @@ const request = (options) => {
     });
 };
 
-const spinner = ora('Clearing CDN cache...\n');
+const spinner = ora('Purge CDN cache...\n');
 spinner.start();
 
 (async () => {
@@ -176,16 +176,16 @@ spinner.start();
             count += urls.length;
 
             urls.forEach((url) => {
-                console.log(chalk.white(`${url} - cache cleared`));
+                console.log(chalk.white(`${url} - cache purge requested`));
             })
 
-            console.log(chalk.grey(`Response: ${data}\n`));
+            console.log(chalk.grey(`> response: ${data}\n`));
         }
 
-        console.log(chalk.cyan(`CDN cache cleared (total URLs: ${count})\n`));
+        console.log(chalk.cyan(`CDN cache purged (total URLs: ${count})\n`));
     } catch (err) {
         console.error(err);
-        console.log(chalk.red('Clearing CDN cache failed\n'));
+        console.log(chalk.red('CDN cache purge failed!\n'));
     }
 
     spinner.stop();
