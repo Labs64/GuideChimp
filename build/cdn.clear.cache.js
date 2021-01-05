@@ -146,19 +146,15 @@ spinner.start();
 
         const versionPieces = pkg.version.split('.');
 
-        if (versionPieces.length > 1) {
-            versionPieces.splice(-1, 1);
-        }
-
         while (versionPieces.length) {
-            const version = versionPieces.join('.');
+            versionPieces.splice(-1, 1);
+
+            const version = versionPieces.join('.') || 'latest';
 
             purgeUrls = [
                 ...purgeUrls,
                 ...filesPaths.map((v) => `/npm/guidechimp@${version}${v.replace(root, '').replace(/\\/g, '/')}`),
             ];
-
-            versionPieces.splice(-1, 1);
         }
 
         const chunkedPurgeUrls = [];
@@ -180,7 +176,7 @@ spinner.start();
             })
         }
 
-        console.log(chalk.cyan('CDN cache cleared\n'));
+        console.log(chalk.cyan(`CDN cache cleared, total urls - ${purgeUrls.length}\n`));
     } catch (err) {
         console.error(err);
         console.log(chalk.red('Clearing CDN cache failed\n'));
