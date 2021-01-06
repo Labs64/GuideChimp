@@ -176,7 +176,7 @@ spinner.start();
             count += urls.length;
 
             urls.forEach((url) => {
-                console.log(chalk.white(`${url} - cache purge requested`));
+                console.log(chalk.green(`${url} - cache purge requested`));
             })
 
             console.log(chalk.grey(`> response: ${data}\n`));

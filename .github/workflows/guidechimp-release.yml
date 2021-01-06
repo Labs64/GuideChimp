@@ -50,15 +50,13 @@ jobs:
           npm run build --if-present
           ls -la -R dist/
           rsync -av dist/ ../guidechimp-core/dist/plugins
+        env:
+          GUIDECHIMP_PRIVATE_KEY: ${{secrets.GUIDECHIMP_PRIVATE_KEY}}
+          GUIDECHIMP_PUBLIC_KEY: ${{secrets.GUIDECHIMP_PUBLIC_KEY}}
 
       - name: Publish to npmjs.org
         run: |
           ls -la -R guidechimp-core/dist
           npm publish guidechimp-core
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-      - name: Clean CDN cache
-        run: |
-          cd guidechimp-core
-          npm run cdn-clear-cache
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
