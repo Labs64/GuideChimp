@@ -20,7 +20,6 @@ export default class GuideChimp {
         this.listeners = {};
 
         this.observers = {};
-        this.setupResizeObserver();
 
         this.options = {};
         this.setOptions(options);
@@ -445,7 +444,9 @@ export default class GuideChimp {
         this.mountStepTemplate();
 
         this.highlightStepElement();
-        this.observeResizeStepElement();
+
+        // observers
+        this.observeStep();
 
         if (this.findTooltipElement()) {
             setTimeout(() => {
@@ -532,14 +533,14 @@ export default class GuideChimp {
         // remove the class that increase the specificity of the classes
         document.body.classList.remove(this.constructor.getBodyClass());
 
-        // clean up after previous step
-        this.cleanupAfterPreviousStep();
+        // remove all highlighting
+        this.resetHighlightingAll();
 
         // remove events listeners
         this.removeListeners();
 
-        // remove observers
-        this.unobserveAllObservers();
+        // disconnect observers
+        this.unobserve();
 
         // remove all layers and keys
         this.removeStepTemplate();
@@ -1950,77 +1951,134 @@ export default class GuideChimp {
         this.removeOnWindowResizeListener();
     }
 
-    setupResizeObserver() {
-        if (typeof ResizeObserver === 'undefined') {
-            return false;
+    observeStep() {
+        this.observeResizing();
+        this.observePresence();
+    }
+
+    observeResizing(options = { box: 'border-box' }) {
+        let { resizingObserver: observer } = this.observers;
+
+        if (!observer && typeof ResizeObserver !== 'undefined') {
+            observer = new ResizeObserver(() => {
+                if (!this && !this.currentStep) {
+                    console.warn('ResizeObserver was not turned off!!!');
+                    return;
+                }
+
+                this.refresh();
+            });
+
+            this.observers.resizingObserver = observer;
         }
 
-        this.observers.resizeObserver = new ResizeObserver(() => this.refresh());
+        if (observer) {
+            // observe elements
+            observer.observe(this.getStepElement(this.currentStep), options);
+            return true;
+        }
+
+        return false;
+    }
+
+    unobserveResizing() {
+        const { resizingObserver: observer } = this.observers;
+
+        if (observer) {
+            observer.disconnect();
+            return true;
+        }
+
+        return false;
+    }
+
+    observePresence() {
+        let { presenceObserver: observer } = this.observers;
+
+        let elPresence = true;
+
+        const refresh = (el) => {
+            this.resetHighlighting(el);
+
+            this.highlightStepElement();
+            this.scrollParentsToStepElement();
+            this.refresh();
+        };
+
+        if (!observer) {
+            observer = new MutationObserver((mutations, ob) => {
+                if (!this && !this.currentStep) {
+                    console.warn('MutationObserver was not turned off!!!');
+                    return;
+                }
+
+                const el = this.getStepElement(this.currentStep);
+
+                if (elPresence) {
+                    mutations.forEach((record) => {
+                        if (record.type === 'childList' && record.removedNodes.length) {
+                            record.removedNodes.forEach((node) => {
+                                if (node === el || node.contains(el)) {
+                                    const newEl = this.getStepElement(this.currentStep, true);
+                                    const defaultEl = this.findDefaultElement();
+
+                                    refresh(el);
+
+                                    if (newEl === defaultEl) {
+                                        elPresence = false;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    const newEl = this.getStepElement(this.currentStep, true);
+                    const defaultEl = this.findDefaultElement();
+
+                    mutations.forEach((record) => {
+                        if (record.type === 'childList' && record.addedNodes.length) {
+                            if (newEl !== defaultEl) {
+                                refresh(el);
+                                elPresence = true;
+                            }
+                        }
+                    });
+                }
+            });
+
+            this.observers.presenceObserver = observer;
+        }
+
+        observer.observe(this.getStepElement(this.currentStep).ownerDocument.body, {
+            childList: true,
+            subtree: true,
+        });
 
         return true;
     }
 
-    observeResizeStepElement(options = { box: 'border-box' }) {
-        return this.observeResizeElement(this.getStepElement(this.currentStep), options);
-    }
-
-    unobserveResizeStepElement() {
-        return this.unobserveResizeElement(this.getStepElement(this.currentStep));
-    }
-
-    /**
-     * Observe resize step element
-     * @return {this}
-     */
-    observeResizeElement(el, options = { box: 'border-box' }) {
-        const { resizeObserver: observer } = this.observers;
-
-        if (observer) {
-            observer.observe(el, options);
-        }
-
-        return this;
-    }
-
-    /**
-     * Unobserve resize step element
-     * @param el
-     * @return {this}
-     */
-    unobserveResizeElement(el) {
-        const { resizeObserver: observer } = this.observers;
-
-        if (observer) {
-            observer.unobserve(el);
-        }
-
-        return this;
-    }
-
-    /**
-     * Unobserve all resize steps elements
-     * @return {this}
-     */
-    unobserveResizeAllStepsElements() {
-        const { resizeObserver: observer } = this.observers;
+    unobservePresence() {
+        const { presenceObserver: observer } = this.observers;
 
         if (observer) {
             observer.disconnect();
+            return true;
         }
 
-        return this;
+        return false;
     }
 
-    unobserveAllObservers() {
-        this.unobserveResizeAllStepsElements();
+    unobserve() {
+        this.unobserveResizing();
+        this.unobservePresence();
     }
 
     cleanupAfterPreviousStep() {
         // remove all highlighting
         this.resetHighlightingAll();
 
-        // remove previous step element resize observers
-        this.unobserveResizeStepElement();
+        // remove previous step element observers
+        this.unobserve();
     }
 
     /**

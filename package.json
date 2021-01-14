@@ -59,9 +59,7 @@
         "lint": "eslint --ext .js,.vue src test",
         "cdn-clear-cache": "node build/cdn.clear.cache.js"
     },
-    "dependencies": {
-        "copy-webpack-plugin": "^6.3.2"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@babel/core": "^7.10.4",
         "@babel/plugin-proposal-class-properties": "^7.10.4",
@@ -80,6 +78,7 @@
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.1.0",
         "chalk": "^3.0.0",
+        "copy-webpack-plugin": "^7.0.0",
         "css-loader": "^3.6.0",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.2.0",
