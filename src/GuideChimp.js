@@ -1953,7 +1953,7 @@ export default class GuideChimp {
 
     observeStep() {
         this.observeResizing();
-        this.observePresence();
+        this.observeMutation();
     }
 
     observeResizing(options = { box: 'border-box' }) {
@@ -1962,7 +1962,6 @@ export default class GuideChimp {
         if (!observer && typeof ResizeObserver !== 'undefined') {
             observer = new ResizeObserver(() => {
                 if (!this && !this.currentStep) {
-                    console.warn('ResizeObserver was not turned off!!!');
                     return;
                 }
 
@@ -1992,40 +1991,38 @@ export default class GuideChimp {
         return false;
     }
 
-    observePresence() {
-        let { presenceObserver: observer } = this.observers;
+    observeMutation() {
+        let { mutationObserver: observer } = this.observers;
 
-        let elPresence = true;
-
-        const refresh = (el) => {
-            this.resetHighlighting(el);
-
-            this.highlightStepElement();
-            this.scrollParentsToStepElement();
-            this.refresh();
-        };
+        let elExists = true;
 
         if (!observer) {
-            observer = new MutationObserver((mutations, ob) => {
+            observer = new MutationObserver((mutations) => {
                 if (!this && !this.currentStep) {
-                    console.warn('MutationObserver was not turned off!!!');
                     return;
                 }
 
                 const el = this.getStepElement(this.currentStep);
 
-                if (elPresence) {
+                const refresh = () => {
+                    this.resetHighlighting(el);
+
+                    this.highlightStepElement();
+                    this.scrollParentsToStepElement();
+                    this.refresh();
+                };
+
+                if (elExists) {
                     mutations.forEach((record) => {
                         if (record.type === 'childList' && record.removedNodes.length) {
                             record.removedNodes.forEach((node) => {
                                 if (node === el || node.contains(el)) {
                                     const newEl = this.getStepElement(this.currentStep, true);
                                     const defaultEl = this.findDefaultElement();
-
-                                    refresh(el);
+                                    refresh();
 
                                     if (newEl === defaultEl) {
-                                        elPresence = false;
+                                        elExists = false;
                                     }
                                 }
                             });
@@ -2038,15 +2035,15 @@ export default class GuideChimp {
                     mutations.forEach((record) => {
                         if (record.type === 'childList' && record.addedNodes.length) {
                             if (newEl !== defaultEl) {
-                                refresh(el);
-                                elPresence = true;
+                                refresh();
+                                elExists = true;
                             }
                         }
                     });
                 }
             });
 
-            this.observers.presenceObserver = observer;
+            this.observers.mutationObserver = observer;
         }
 
         observer.observe(this.getStepElement(this.currentStep).ownerDocument.body, {
@@ -2057,8 +2054,8 @@ export default class GuideChimp {
         return true;
     }
 
-    unobservePresence() {
-        const { presenceObserver: observer } = this.observers;
+    unobserveMutation() {
+        const { mutationObserver: observer } = this.observers;
 
         if (observer) {
             observer.disconnect();
@@ -2070,7 +2067,7 @@ export default class GuideChimp {
 
     unobserve() {
         this.unobserveResizing();
-        this.unobservePresence();
+        this.unobserveMutation();
     }
 
     cleanupAfterPreviousStep() {
