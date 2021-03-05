@@ -433,13 +433,14 @@ export default class GuideChimp {
         this.nextStepIndex = (this.nextStep) ? this.currentStepIndex + 1 : -1;
 
         const { scrollBehavior } = this.options;
+        const { scrollPadding = this.options.scrollPadding } = this.currentStep;
 
         // get step element
         const el = this.getStepElement(this.currentStep, true);
 
         // scroll to element
         this.scrollParentsToStepElement();
-        this.scrollTo(el, scrollBehavior);
+        this.scrollTo(el, scrollBehavior, scrollPadding);
 
         this.mountStepTemplate();
 
@@ -450,7 +451,7 @@ export default class GuideChimp {
 
         if (this.findTooltipElement()) {
             setTimeout(() => {
-                this.scrollTo(this.findTooltipElement(), scrollBehavior);
+                this.scrollTo(this.findTooltipElement(), scrollBehavior, scrollPadding);
             }, 300);
         }
 
@@ -706,14 +707,13 @@ export default class GuideChimp {
     }
 
     scrollParentsToStepElement() {
-        return this.scrollParentsToElement(this.getStepElement(this.currentStep));
+        const { scrollPadding = this.options.scrollPadding } = this.currentStep;
+        return this.scrollParentsToElement(this.getStepElement(this.currentStep), scrollPadding);
     }
 
-    scrollParentsToElement(el) {
+    scrollParentsToElement(el, scrollPadding = 0) {
         // get all scrollable parents
         const parents = this.getScrollableParentsElements(el);
-
-        const { scrollPadding } = this.options;
 
         parents.forEach((parent) => {
             if (parent !== document.body) {
@@ -727,11 +727,9 @@ export default class GuideChimp {
         return this;
     }
 
-    scrollTo(el, behavior = 'auto') {
+    scrollTo(el, behavior = 'auto', scrollPadding = 0) {
         const { top, bottom, left, right } = el.getBoundingClientRect();
         const { innerWidth, innerHeight } = window;
-
-        const { scrollPadding } = this.options;
 
         if (!(left >= 0 && right <= innerWidth)) {
             window.scrollBy({ behavior, left: left - scrollPadding });
