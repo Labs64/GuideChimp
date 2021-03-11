@@ -730,13 +730,14 @@ export default class GuideChimp {
     scrollTo(el, behavior = 'auto', scrollPadding = 0) {
         const { top, bottom, left, right } = el.getBoundingClientRect();
         const { innerWidth, innerHeight } = window;
-
-        if (!(left >= 0 && right <= innerWidth)) {
-            window.scrollBy({ behavior, left: left - scrollPadding });
-        }
-
-        if (!(top >= 0 && bottom <= innerHeight)) {
-            window.scrollBy({ behavior, top: top - scrollPadding });
+        if (el) {
+            if (!(left >= 0 && right <= innerWidth)) {
+                window.scrollBy({ behavior, left: left - scrollPadding });
+            }
+    
+            if (!(top >= 0 && bottom <= innerHeight)) {
+                window.scrollBy({ behavior, top: top - scrollPadding });
+            }
         }
 
         return this;
