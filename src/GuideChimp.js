@@ -449,11 +449,11 @@ export default class GuideChimp {
         // observers
         this.observeStep();
 
-        if (this.findTooltipElement()) {
-            setTimeout(() => {
+        setTimeout(() => {
+            if (this.findTooltipElement()) {
                 this.scrollTo(this.findTooltipElement(), scrollBehavior, scrollPadding);
-            }, 300);
-        }
+            }
+        }, 300);
 
         if (onAfterChange) {
             onAfterChange.call(this, this.toStep, this.fromStep);
