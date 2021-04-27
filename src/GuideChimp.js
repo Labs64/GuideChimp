@@ -316,12 +316,12 @@ export default class GuideChimp {
      * @param useIndex whether to use step number or index
      * @return {Promise<boolean>}
      */
-    async start(number = 0, useIndex = true) {
+    async start(number = 0, useIndex = true, ...args) {
         this.mountOverlayLayer();
         this.startPreloader();
 
         // emit start event
-        await this.emit('onStart');
+        await this.emit('onStart', ...args);
 
         this.stopPreloader();
         this.removeOverlayLayer();
@@ -339,7 +339,7 @@ export default class GuideChimp {
         // add a class that increase the specificity of the classes
         document.body.classList.add(this.constructor.getBodyClass());
 
-        const isStarted = await this.go(number, useIndex);
+        const isStarted = await this.go(number, useIndex, ...args);
 
         document.body.classList.toggle(this.constructor.getBodyClass(), isStarted);
 
@@ -360,9 +360,10 @@ export default class GuideChimp {
      * Go to step
      * @param number step number or it index
      * @param useIndex whether to use step number or index
+     * @param args
      * @return {Promise<boolean>}
      */
-    async go(number, useIndex = true) {
+    async go(number, useIndex = true, ...args) {
         if (!this.steps.length) {
             return false;
         }
@@ -402,13 +403,13 @@ export default class GuideChimp {
         this.startPreloader();
 
         if (onBeforeChange) {
-            if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep)) === false) {
+            if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep, ...args)) === false) {
                 this.stopPreloader();
                 return false;
             }
         }
 
-        if ((await this.emit('onBeforeChange', toStep, fromStep)).some((r) => r === false)) {
+        if ((await this.emit('onBeforeChange', toStep, fromStep, ...args)).some((r) => r === false)) {
             this.stopPreloader();
             return false;
         }
@@ -456,10 +457,10 @@ export default class GuideChimp {
         }, 300);
 
         if (onAfterChange) {
-            onAfterChange.call(this, this.toStep, this.fromStep);
+            onAfterChange.call(this, this.toStep, this.fromStep, ...args);
         }
 
-        this.emit('onAfterChange', this.toStep, this.fromStep);
+        this.emit('onAfterChange', this.toStep, this.fromStep, ...args);
 
         return true;
     }
@@ -488,10 +489,10 @@ export default class GuideChimp {
 
         this.stopPreloader();
 
-        return this.go(this.previousStepIndex, true);
+        return this.go(this.previousStepIndex, true, ...args);
     }
 
-    async next() {
+    async next(...args) {
         if (!this.currentStep || !this.nextStep) {
             return false;
         }
@@ -501,26 +502,27 @@ export default class GuideChimp {
         this.startPreloader();
 
         if (onNext) {
-            if (await Promise.resolve().then(() => onNext.call(this, this.nextStep, this.currentStep)) === false) {
+            if (await Promise.resolve()
+                .then(() => onNext.call(this, this.nextStep, this.currentStep, ...args)) === false) {
                 this.stopPreloader();
                 return false;
             }
         }
 
-        if ((await this.emit('onNext', this.nextStep, this.currentStep)).some((r) => r === false)) {
+        if ((await this.emit('onNext', this.nextStep, this.currentStep, ...args)).some((r) => r === false)) {
             this.stopPreloader();
             return false;
         }
 
         this.stopPreloader();
 
-        return this.go(this.nextStepIndex, true);
+        return this.go(this.nextStepIndex, true, ...args);
     }
 
     async stop(...args) {
         if (this.currentStepIndex === this.steps.length - 1) {
             this.startPreloader();
-            await this.emit('onComplete');
+            await this.emit('onComplete', ...args);
             this.stopPreloader();
         }
 
