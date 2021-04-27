@@ -464,7 +464,7 @@ export default class GuideChimp {
         return true;
     }
 
-    async previous() {
+    async previous(...args) {
         if (!this.currentStep || !this.previousStep) {
             return false;
         }
@@ -475,13 +475,13 @@ export default class GuideChimp {
 
         if (onPrevious) {
             if (await Promise.resolve()
-                .then(() => onPrevious.call(this, this.previousStep, this.currentStep)) === false) {
+                .then(() => onPrevious.call(this, this.previousStep, this.currentStep, ...args)) === false) {
                 this.stopPreloader();
                 return false;
             }
         }
 
-        if ((await this.emit('onPrevious', this.previousStep, this.currentStep)).some((r) => r === false)) {
+        if ((await this.emit('onPrevious', this.previousStep, this.currentStep, ...args)).some((r) => r === false)) {
             this.stopPreloader();
             return false;
         }
@@ -517,7 +517,7 @@ export default class GuideChimp {
         return this.go(this.nextStepIndex, true);
     }
 
-    async stop() {
+    async stop(...args) {
         if (this.currentStepIndex === this.steps.length - 1) {
             this.startPreloader();
             await this.emit('onComplete');
@@ -527,7 +527,7 @@ export default class GuideChimp {
         this.startPreloader();
 
         // emit stop event
-        await this.emit('onStop');
+        await this.emit('onStop', ...args);
 
         this.stopPreloader();
 
@@ -1231,11 +1231,11 @@ export default class GuideChimp {
     createOverlayLayer() {
         const el = document.createElement('div');
         el.className = this.constructor.getOverlayClass();
-        el.onclick = () => {
+        el.onclick = (event) => {
             const { exitOverlay } = this.options;
 
             if (exitOverlay) {
-                this.stop();
+                this.stop({ event });
             }
         };
 
@@ -1435,7 +1435,7 @@ export default class GuideChimp {
     createCloseElement() {
         const el = document.createElement('div');
         el.className = this.constructor.getCloseClass();
-        el.onclick = () => this.stop();
+        el.onclick = (event) => this.stop({ event });
         return el;
     }
 
@@ -1655,14 +1655,14 @@ export default class GuideChimp {
             el.classList.add(this.constructor.getPaginationCurrentItemClass());
         }
 
-        el.onclick = () => {
+        el.onclick = (event) => {
             switch (index) {
                 case this.previousStepIndex: {
-                    return this.previous();
+                    return this.previous({ event });
                 }
 
                 case this.nextStepIndex: {
-                    return this.next();
+                    return this.next({ event });
                 }
 
                 default: {
@@ -1681,7 +1681,7 @@ export default class GuideChimp {
     createNavigationPrevElement() {
         const el = document.createElement('div');
         el.className = this.constructor.getNavigationPrevClass();
-        el.onclick = () => this.previous();
+        el.onclick = (event) => this.previous({ event });
         return el;
     }
 
@@ -1705,7 +1705,7 @@ export default class GuideChimp {
     createNavigationNextElement() {
         const el = document.createElement('div');
         el.className = this.constructor.getNavigationNextClass();
-        el.onclick = () => this.next();
+        el.onclick = (event) => this.next({ event });
         return el;
     }
 
@@ -1881,19 +1881,19 @@ export default class GuideChimp {
 
             //  stop tour
             if (stopCodes && stopCodes.includes(keyCode)) {
-                this.stop();
+                this.stop({ event });
                 return;
             }
 
             // go to the previous step
             if (previousCodes && previousCodes.includes(keyCode)) {
-                this.previous();
+                this.previous({ event });
                 return;
             }
 
             // go to the next step
             if (nextCodes && nextCodes.includes(keyCode)) {
-                this.next();
+                this.next({ event });
             }
         };
     }
