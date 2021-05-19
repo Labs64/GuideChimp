@@ -79,95 +79,17 @@ module.exports =  (cls, factory, ...args) => {
     cls.getBodyClass = () => `${parentGetBodyClass()} custom-class`;
 
     /**
+     * The getLoadingClass method returns classes that will be added to the body, when GuideChimp
+     * waiting for onBeforeChange or(and) onNext, onPrevious  promises resolving
+     */
+    const parentLoadingClass = cls.getLoadingClass;
+    cls.getLoadingClass = () => `${parentLoadingClass()} custom-class`;
+
+    /**
      * The getHighlightElementClass method returns classes to be added to the element to be highlighted.
      */
-    const parentGetHighlightElementClass = cls.getHighlightElementClass;
-    cls.getHighlightElementClass = () => `${parentGetHighlightElementClass()} custom-class`;
-
-    /**
-     * The getPreloaderClass method returns classes to be added to the preloader element.
-     */
-    const parentGetPreloaderClass = cls.getPreloaderClass;
-    cls.getPreloaderClass = () => `${parentGetPreloaderClass()} custom-class`;
-
-    /**
-     * The getOverlayLayerClass method returns classes to be added to the overlay layer.
-     */
-    const parentGetOverlayLayerClass = cls.getOverlayLayerClass;
-    cls.getOverlayLayerClass = () => `${parentGetOverlayLayerClass()} custom-class`;
-
-    /**
-     * The getHighlightLayerClass method returns classes to be added to the highlight layer.
-     */
-    const parentGetHighlightLayerClass = cls.getHighlightLayerClass;
-    cls.getHighlightLayerClass = () => `${parentGetHighlightLayerClass()} custom-class`;
-
-    /**
-     * The getControlLayerClass method returns classes to be added to the control layer.
-     */
-    const parentGetControlLayerClass = cls.getControlLayerClass;
-    cls.getControlLayerClass = () => `${parentGetControlLayerClass()} custom-class`;
-
-    /**
-     * The getInteractionLayerClass method returns classes to be added to the interaction layer.
-     */
-    const parentGetInteractionLayerClass = cls.getInteractionLayerClass;
-    cls.getInteractionLayerClass = () => `${parentGetInteractionLayerClass()} custom-class`;
-
-    /**
-     * The getTooltipLayerClass method returns classes to be added to the tooltip layer.
-     */
-    const parentGetTooltipLayerClass = cls.getTooltipLayerClass;
-    cls.getTooltipLayerClass = () => `${parentGetTooltipLayerClass()} custom-class`;
-
-    /**
-     * The getTitleClass method returns classes to be added to the title element.
-     */
-    const parentGetTitleClass = cls.getTitleClass;
-    cls.getTitleClass = () => `${parentGetTitleClass()} custom-class`;
-
-    /**
-     * The getDescriptionClass method returns classes to be added to the description element.
-     */
-    const parentGetDescriptionClass = cls.getDescriptionClass;
-    cls.getDescriptionClass = () => `${parentGetDescriptionClass()} custom-class`;
-
-    /**
-     * The getCustomButtonsLayerClass method returns classes to be added to the custom buttons layer.
-     */
-    const parentGetCustomButtonsLayerClass = cls.getCustomButtonsLayerClass;
-    cls.getCustomButtonsLayerClass = () => `${parentGetCustomButtonsLayerClass()} custom-class`;
-
-    /**
-     * The getNavigationClass method returns classes to be added to the navigation layer.
-     */
-    const parentGetNavigationClass = cls.getNavigationClass;
-    cls.getNavigationClass = () => `${parentGetNavigationClass()} custom-class`;
-
-    /**
-     * The getNavigationClass method returns classes to be added to the navigation prev element.
-     */
-    const parentGetNavigationPrevClass = cls.getNavigationPrevClass;
-    cls.getNavigationPrevClass = () => `${parentGetNavigationPrevClass()} custom-class`;
-
-    /**
-     * The getNavigationNextClass method returns classes to be added to the navigation next element.
-     */
-    const parentGetNavigationNextClass = cls.getNavigationNextClass;
-    cls.getNavigationNextClass = () => `${parentGetNavigationNextClass()} custom-class`;
-
-    /**
-     * The getPaginationLayerClass method returns classes to be added to the pagination layer.
-     */
-    const parentGetPaginationLayerClass = cls.getPaginationLayerClass;
-    cls.getPaginationLayerClass = () => `${parentGetPaginationLayerClass()} custom-class`;
-
-    /**
-     * The getProgressbarClass method returns classes to be added to the progressbar element.
-     */
-    const parentGetProgressbarClass = cls.getProgressbarClass;
-    cls.getProgressbarClass = () => `${parentGetProgressbarClass()} custom-class`;
-
+    const parentGetHighlightClass = cls.getHighlightClass;
+    cls.getHighlightClass = () => `${parentGetHighlightClass()} custom-class`;
 
     /**
      * NAVIGATION

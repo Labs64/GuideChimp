@@ -6,6 +6,34 @@
  * located in the LICENSE file
  */
 
+/**
+ * Lodash functions
+ * @see https://lodash.com/docs
+ */
+import _uniqueId from 'lodash/uniqueId';
+
+// utils
+import domTemplate from './utils/domTemplate';
+import isHtmlElement from './utils/isHtmlElement';
+
+// templates
+import overlayTmpl from './templates/overlay.html';
+import preloaderTmpl from './templates/preloader.html';
+import interactionTmpl from './templates/interaction.html';
+import controlTmpl from './templates/control.html';
+import tooltipTmpl from './templates/tooltip.html';
+import progressbarTmpl from './templates/progressbar.html';
+import titleTmpl from './templates/title.html';
+import descriptionTmpl from './templates/description.html';
+import customButtonsTmpl from './templates/custom-buttons.html';
+import previousTmpl from './templates/previous.html';
+import paginationTmpl from './templates/pagination.html';
+import nextTmpl from './templates/next.html';
+import closeTmpl from './templates/close.html';
+import copyrightTmpl from './templates/copyright.html';
+import notificationTmpl from './templates/notification.html';
+import fakeStepTmpl from './templates/fake-step.html';
+
 export default class GuideChimp {
     /**
      * GuideChimp constructor
@@ -13,6 +41,13 @@ export default class GuideChimp {
      * @param options
      */
     constructor(tour, options = {}) {
+        Object.defineProperty(this, 'uid', {
+            value: _uniqueId(),
+            enumerable: false,
+            configurable: false,
+            writable: false,
+        });
+
         this.setDefaults();
 
         this.cache = new Map();
@@ -28,6 +63,8 @@ export default class GuideChimp {
         this.setTour(tour);
 
         this.notifications = [];
+
+        this.elements = new Map();
 
         this.init();
     }
@@ -51,9 +88,10 @@ export default class GuideChimp {
             exitEscape: true,
             exitOverlay: true,
             showPagination: true,
+            showNavigation: true,
             showProgressbar: true,
             interaction: true,
-            padding: 10,
+            padding: 8,
             scrollPadding: 10,
             scrollBehavior: 'auto',
         };
@@ -81,112 +119,16 @@ export default class GuideChimp {
         return 'gc';
     }
 
-    static getDefaultElementClass() {
-        return 'gc-default';
-    }
-
-    static getFixStackingContextClass() {
-        return 'gc-fix-stacking-context';
-    }
-
-    static getHighlightedClass() {
-        return 'gc-highlighted';
-    }
-
     static getLoadingClass() {
         return 'gc-loading';
-    }
-
-    static getPreloaderClass() {
-        return 'gc-preloader';
-    }
-
-    static getOverlayClass() {
-        return 'gc-overlay';
-    }
-
-    static getFixedClass() {
-        return 'gc-fixed';
     }
 
     static getHighlightClass() {
         return 'gc-highlight';
     }
 
-    static getControlClass() {
-        return 'gc-control';
-    }
-
-    static getInteractionClass() {
-        return 'gc-interaction';
-    }
-
-    static getTooltipClass() {
-        return 'gc-tooltip';
-    }
-
-    static getTooltipTailClass() {
-        return 'gc-tooltip-tail';
-    }
-
-    static getTitleClass() {
-        return 'gc-title';
-    }
-
-    static getDescriptionClass() {
-        return 'gc-description';
-    }
-
-    static getCustomButtonsClass() {
-        return 'gc-custom-buttons';
-    }
-
-    static getNavigationClass() {
-        return 'gc-navigation';
-    }
-
-    static getNavigationPrevClass() {
-        return 'gc-navigation-prev';
-    }
-
-    static getNavigationNextClass() {
-        return 'gc-navigation-next';
-    }
-
-    static getCloseClass() {
-        return 'gc-close';
-    }
-
-    static getPaginationClass() {
-        return 'gc-pagination';
-    }
-
-    static getPaginationItemClass() {
-        return 'gc-pagination-item';
-    }
-
-    static getPaginationCurrentItemClass() {
-        return 'gc-pagination-active';
-    }
-
-    static getProgressbarClass() {
-        return 'gc-progressbar';
-    }
-
-    static getDisableInteractionClass() {
-        return 'gc-disable';
-    }
-
-    static getCopyrightClass() {
-        return 'gc-copyright';
-    }
-
-    static getNotificationClass() {
-        return 'gc-notification';
-    }
-
-    static getHiddenClass() {
-        return 'gc-hidden';
+    static getFixedClass() {
+        return 'gc-fixed';
     }
 
     static getRelativePositionClass() {
@@ -225,37 +167,6 @@ export default class GuideChimp {
         }
 
         return this.isFixed(parentNode);
-    }
-
-    /**
-     * Add class to el
-     * @param el
-     * @param className
-     */
-    static addClass(el, className) {
-        if (el instanceof SVGElement) {
-            el.setAttribute('class', `${el.getAttribute('class') || ''} ${className}`);
-            return;
-        }
-
-        el.classList.add(className);
-    }
-
-    /**
-     * Remove class from el
-     * @param el
-     * @param className
-     */
-    static removeClass(el, className) {
-        if (el instanceof SVGElement) {
-            const classes = el.getAttribute('class') || '';
-            classes.replace(className, '');
-
-            el.setAttribute('class', classes);
-            return;
-        }
-
-        el.classList.remove(className);
     }
 
     setDefaults() {
@@ -317,22 +228,24 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async start(number = 0, useIndex = true, ...args) {
-        this.mountOverlayLayer();
+        this.mountOverlayEl();
+
         this.startPreloader();
 
         // emit start event
         await this.emit('onStart', ...args);
 
         this.stopPreloader();
-        this.removeOverlayLayer();
 
         if (!this.tour || !this.tour.length) {
+            this.removeOverlayEl();
             return false;
         }
 
         this.steps = this.sortSteps(this.getSteps(this.tour));
 
         if (!this.steps.length) {
+            this.removeOverlayEl();
             return false;
         }
 
@@ -351,6 +264,9 @@ export default class GuideChimp {
 
             // on window resize
             this.addOnWindowResizeListener();
+
+            // on window scroll
+            this.addOnWindowScrollListener();
         }
 
         return isStarted;
@@ -399,24 +315,27 @@ export default class GuideChimp {
 
         const { onBeforeChange, onAfterChange } = toStep;
 
-        this.mountOverlayLayer();
         this.startPreloader();
+
+        let abort = false;
 
         if (onBeforeChange) {
             if (await Promise.resolve().then(() => onBeforeChange.call(this, toStep, fromStep, ...args)) === false) {
-                this.stopPreloader();
-                return false;
+                abort = true;
             }
         }
 
         if ((await this.emit('onBeforeChange', toStep, fromStep, ...args)).some((r) => r === false)) {
-            this.stopPreloader();
-            return false;
+            abort = true;
         }
 
         this.stopPreloader();
 
-        this.cleanupAfterPreviousStep();
+        if (abort) {
+            return false;
+        }
+
+        this.beforeChangeStep({ toStep, toStepIndex, currentStep, currentStepIndex, fromStep, fromStepIndex });
 
         this.toStep = toStep;
         this.toStepIndex = toStepIndex;
@@ -436,23 +355,15 @@ export default class GuideChimp {
         const { scrollBehavior } = this.options;
         const { scrollPadding = this.options.scrollPadding } = this.currentStep;
 
-        // get step element
-        const el = this.getStepElement(this.currentStep, true);
-
         // scroll to element
-        this.scrollParentsToStepElement();
-        this.scrollTo(el, scrollBehavior, scrollPadding);
+        this.scrollParentsToStepEl();
+        this.scrollTo(this.getStepEl(this.currentStep, true), scrollBehavior, scrollPadding);
 
-        this.mountStepTemplate();
-
-        this.highlightStepElement();
-
-        // observers
-        this.observeStep();
+        this.mountStep();
 
         setTimeout(() => {
-            if (this.findTooltipElement()) {
-                this.scrollTo(this.findTooltipElement(), scrollBehavior, scrollPadding);
+            if (this.getEl('tooltip')) {
+                this.scrollTo(this.getEl('tooltip'), scrollBehavior, scrollPadding);
             }
         }, 300);
 
@@ -536,20 +447,20 @@ export default class GuideChimp {
         // remove the class that increase the specificity of the classes
         document.body.classList.remove(this.constructor.getBodyClass());
 
-        // remove all highlighting
-        this.resetHighlightingAll();
-
         // remove events listeners
         this.removeListeners();
 
         // disconnect observers
-        this.unobserve();
+        this.unobserveStep();
 
         // remove all layers and keys
-        this.removeStepTemplate();
+        this.unmountStep();
 
-        // clean cache
+        // remove overlay
+        this.removeOverlayEl();
+
         this.cache.clear();
+        this.elements.clear();
 
         // set step variables to defaults
         this.setDefaults();
@@ -632,51 +543,47 @@ export default class GuideChimp {
         });
     }
 
-    getStepElement(step, force = false) {
+    getStepEl(step) {
         const { element } = step || {};
 
         if (!element) {
-            return this.mountDefaultElement();
+            return this.mountFakeStepEl();
         }
 
-        // check cache
-        const elsCache = this.cache.get('els') || new Map();
+        const getEl = (selector, def = null) => {
+            const el = (typeof selector === 'string')
+                ? document.querySelector(selector)
+                : selector;
+            return el || def;
+        };
 
-        let el = (elsCache.has(element) && !force)
-            ? elsCache.get(element)
-            : this.getElement(element, null);
+        let el = getEl(element);
 
         if (!el || el.style.display === 'none' || el.style.visibility === 'hidden') {
-            el = this.mountDefaultElement();
+            el = this.getEl('fakeStep') ? this.getEl('fakeStep') : this.mountFakeStepEl();
         }
-
-        elsCache.set(element, el);
-        this.cache.set('els', elsCache);
 
         return el;
     }
 
-    getElement(selector, def = null) {
-        const el = (typeof selector === 'string')
-            ? document.querySelector(selector)
-            : selector;
-
-        return el || def;
+    scrollParentsToStepEl() {
+        const { scrollPadding = this.options.scrollPadding } = this.currentStep;
+        return this.scrollParentsToEl(this.getStepEl(this.currentStep), scrollPadding);
     }
 
-    getScrollableParentsElements(el) {
+    getScrollableParentsEls(el) {
         const parents = [];
         let htmlEl = el;
 
         while (htmlEl && htmlEl !== htmlEl.ownerDocument.body) {
-            htmlEl = this.getScrollableParentElement(htmlEl);
+            htmlEl = this.getScrollableParentEl(htmlEl);
             parents.push(htmlEl);
         }
 
         return parents;
     }
 
-    getScrollableParentElement(el) {
+    getScrollableParentEl(el) {
         const regex = /(auto|scroll)/;
         const elStyle = getComputedStyle(el);
         const elDocument = el.ownerDocument;
@@ -708,14 +615,9 @@ export default class GuideChimp {
             : getClosestScrollableParent(el.parentElement);
     }
 
-    scrollParentsToStepElement() {
-        const { scrollPadding = this.options.scrollPadding } = this.currentStep;
-        return this.scrollParentsToElement(this.getStepElement(this.currentStep), scrollPadding);
-    }
-
-    scrollParentsToElement(el, scrollPadding = 0) {
+    scrollParentsToEl(el, scrollPadding = 0) {
         // get all scrollable parents
-        const parents = this.getScrollableParentsElements(el);
+        const parents = this.getScrollableParentsEls(el);
 
         parents.forEach((parent) => {
             if (parent !== document.body) {
@@ -744,98 +646,84 @@ export default class GuideChimp {
         return this;
     }
 
-    highlightStepElement() {
-        return this.highlightElement(this.getStepElement(this.currentStep));
-    }
+    highlightStepEl(animation = false) {
+        const el = this.getStepEl(this.currentStep);
 
-    highlightElement(el) {
-        let parentEl = el.parentElement;
-
-        while (parentEl) {
-            if (parentEl === el.ownerDocument.body) {
-                break;
-            }
-
-            if (el instanceof SVGElement && parentEl.tagName.toLowerCase() === 'svg') {
-                this.constructor.addClass(parentEl, `${this.constructor.getHighlightedClass()}`);
-                this.constructor.addClass(parentEl, this.constructor.getRelativePositionClass());
-            }
-
-            const parentElStyle = getComputedStyle(parentEl);
-
-            const zIndex = parentElStyle.getPropertyValue('z-index');
-            const opacity = parentElStyle.getPropertyValue('opacity');
-            const transform = parentElStyle.getPropertyValue('transform');
-
-            if (/[0-9]+/.test(zIndex) || opacity < 1 || (transform && transform !== 'none')) {
-                this.constructor.addClass(parentEl, this.constructor.getFixStackingContextClass());
-            }
-
-            parentEl = parentEl.parentElement;
+        if (this.isEl(el, 'fakeStep')) {
+            return this;
         }
 
-        this.constructor.addClass(el, this.constructor.getHighlightedClass());
+        const to = this.getOverlayStepPath(this.currentStep);
+
+        const overlay = this.getEl('overlay');
+        const path = overlay.querySelector('path');
+        path.setAttribute('d', to);
+
+        const animate = path.querySelector('animate');
+
+        if (animate) {
+            let from = '';
+
+            if (this.fromStep) {
+                if (!this.isEl(this.getStepEl(this.fromStep), 'fakeStep')) {
+                    from = this.getOverlayStepPath(this.fromStep);
+                }
+            }
+
+            if (!from) {
+                animate.removeAttribute('from');
+                animate.removeAttribute('to');
+            } else {
+                animate.setAttribute('from', from);
+                animate.setAttribute('to', to);
+            }
+
+            if (animation) {
+                animate.beginElement();
+            }
+        }
 
         const elStyle = getComputedStyle(el);
 
         if (!['absolute', 'relative', 'fixed'].includes(elStyle.getPropertyValue('position'))) {
-            this.constructor.addClass(el, this.constructor.getRelativePositionClass());
+            el.classList.add(this.constructor.getRelativePositionClass());
         }
 
-        const highlightElements = this.cache.get('highlightElements') || new Set();
+        el.classList.add(this.constructor.getHighlightClass());
 
-        highlightElements.add(el);
-
-        this.cache.set('highlightElements', highlightElements);
+        el.setAttribute(`data-guidechimp-${this.uid}`, 'highlight');
+        this.elements.set('highlight', el);
 
         return this;
     }
 
-    resetHighlighting(el) {
-        if (el) {
-            const els = this.cache.get('highlightElements');
+    resetHighlightStepEl() {
+        const overlay = this.getEl('overlay');
+        const path = overlay.querySelector('path');
+        const animate = overlay.querySelector('animate');
 
-            if (els) {
-                els.delete(el);
-            }
+        path.setAttribute('d', this.getOverlayDocumentPath());
 
-            el.classList.remove(this.constructor.getHighlightedClass());
-            el.classList.remove(this.constructor.getRelativePositionClass());
-
-            let parentEl = el.parentElement;
-
-            while (parentEl) {
-                if (parentEl === document.body) {
-                    break;
-                }
-
-                parentEl.classList.remove(this.constructor.getFixStackingContextClass());
-                parentEl = parentEl.parentElement;
-            }
+        if (animate) {
+            animate.removeAttribute('from');
+            animate.removeAttribute('to');
         }
+
+        const el = this.getStepEl(this.currentStep);
+
+        el.classList.remove(this.constructor.getRelativePositionClass());
+        el.classList.remove(this.constructor.getHighlightClass());
+
+        el.removeAttribute(`data-guidechimp-${this.uid}`);
+        this.elements.delete('highlight');
 
         return this;
     }
 
-    resetHighlightingAll() {
-        let els = this.cache.get('highlightElements');
+    setInteractionPosition(interactionEl) {
+        const el = this.getStepEl(this.currentStep);
 
-        if (els) {
-            els = Array.from(els);
-            if (els.length) {
-                els.forEach((el) => {
-                    this.resetHighlighting(el);
-                });
-            }
-        }
-
-        return this;
-    }
-
-    setLayerPosition(layer) {
-        const el = this.getStepElement(this.currentStep);
-
-        if (!layer || !el) {
+        if (!interactionEl || !el) {
             return this;
         }
 
@@ -849,16 +737,12 @@ export default class GuideChimp {
 
         const { width, height, top, left } = this.constructor.getOffset(el);
 
-        if (this.constructor.isFixed(el)) {
-            this.constructor.addClass(layer, this.constructor.getFixedClass());
-        } else {
-            this.constructor.removeClass(layer, this.constructor.getFixedClass());
-        }
+        interactionEl.classList.toggle(this.constructor.getFixedClass(), this.constructor.isFixed(el));
 
-        const { style: layerStyle } = layer;
+        const { style } = interactionEl;
 
         // set new position
-        layerStyle.cssText = `width: ${width + padding}px;
+        style.cssText = `width: ${width + padding}px;
         height: ${height + padding}px;
         top: ${top - (padding / 2)}px;
         left: ${left - (padding / 2)}px;`;
@@ -866,18 +750,10 @@ export default class GuideChimp {
         return this;
     }
 
-    setHighlightLayerPosition(...args) {
-        return this.setLayerPosition(...args);
-    }
+    setControlPosition(controlEl) {
+        const el = this.getStepEl(this.currentStep);
 
-    setInteractionLayerPosition(...args) {
-        return this.setLayerPosition(...args);
-    }
-
-    setControlLayerPosition(layer) {
-        const el = this.getStepElement(this.currentStep);
-
-        if (!layer || !el) {
+        if (!controlEl || !el) {
             return this;
         }
 
@@ -900,16 +776,12 @@ export default class GuideChimp {
             ? docElWidth
             : (elRight + (padding / 2));
 
-        if (this.constructor.isFixed(el)) {
-            this.constructor.addClass(layer, this.constructor.getFixedClass());
-        } else {
-            this.constructor.removeClass(layer, this.constructor.getFixedClass());
-        }
+        controlEl.classList.toggle(this.constructor.getFixedClass(), this.constructor.isFixed(el));
 
-        const { style: layerStyle } = layer;
+        const { style } = controlEl;
 
         // set new position
-        layerStyle.cssText = `width: ${width}px;
+        style.cssText = `width: ${width}px;
         height: ${height}px;
         top: ${top}px;
         left: ${left}px;`;
@@ -917,26 +789,26 @@ export default class GuideChimp {
         return this;
     }
 
-    setTooltipElementPosition(layer, options = {}) {
+    setTooltipPosition(tooltipEl, options = {}) {
         if (!this.currentStep) {
             return this;
         }
 
-        const el = this.getStepElement(this.currentStep);
+        const el = this.getStepEl(this.currentStep);
 
-        if (!layer || !el) {
+        if (!tooltipEl || !el) {
             return this;
         }
 
-        let { boundary, position } = options;
+        let { boundary, position: pos } = options;
         let { padding } = this.options;
 
         boundary = boundary || window;
 
-        position = position || this.currentStep.position;
-        position = position || this.options.position;
+        pos = pos || this.currentStep.position;
+        pos = pos || this.options.position;
 
-        let alignment = null;
+        let [position, alignment] = pos.split('-');
 
         const elStyle = getComputedStyle(el);
 
@@ -944,7 +816,7 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { style: tooltipStyle } = layer;
+        const { style: tooltipStyle } = tooltipEl;
 
         // reset tooltip styles
         tooltipStyle.top = null;
@@ -962,14 +834,14 @@ export default class GuideChimp {
             height: elHeight,
         } = el.getBoundingClientRect();
 
-        const { height: tooltipHeight, width: tooltipWith } = layer.getBoundingClientRect();
+        const { height: tooltipHeight, width: tooltipWith } = tooltipEl.getBoundingClientRect();
 
         // find out min tooltip width
-        const cloneTooltip = layer.cloneNode();
+        const cloneTooltip = tooltipEl.cloneNode(true);
         cloneTooltip.style.visibility = 'hidden';
         cloneTooltip.innerHTML = '';
 
-        layer.parentElement.appendChild(cloneTooltip);
+        tooltipEl.parentElement.appendChild(cloneTooltip);
 
         const { width: minTooltipWidth } = cloneTooltip.getBoundingClientRect();
 
@@ -990,7 +862,7 @@ export default class GuideChimp {
         } = boundaryRect;
 
         // if the element is default element, skip position and alignment calculation
-        if (el.classList.contains(this.constructor.getDefaultElementClass())) {
+        if (this.isEl(el, 'fakeStep')) {
             position = 'floating';
         } else {
             // calculate position
@@ -1001,7 +873,7 @@ export default class GuideChimp {
                 marginLeft: tooltipMarginLeft,
                 marginRight: tooltipMarginRight,
                 marginBottom: tooltipMarginBottom,
-            } = getComputedStyle(layer);
+            } = getComputedStyle(tooltipEl);
 
             tooltipMarginTop = parseInt(tooltipMarginTop, 10);
             tooltipMarginLeft = parseInt(tooltipMarginLeft, 10);
@@ -1053,13 +925,17 @@ export default class GuideChimp {
                     alignments.splice(alignments.indexOf('middle'), 1);
                 }
 
-                alignment = (alignments.length) ? alignments[0] : 'middle';
+                if (alignments.length) {
+                    alignment = alignments.includes(alignment) ? alignment : alignments[0];
+                } else {
+                    alignment = 'middle';
+                }
             }
         }
 
-        const root = document.documentElement;
+        tooltipEl.setAttribute('data-guidechimp-position', position);
 
-        layer.setAttribute('data-guidechimp-position', position);
+        const root = document.documentElement;
 
         switch (position) {
             case 'top':
@@ -1081,10 +957,10 @@ export default class GuideChimp {
             }
         }
 
-        layer.removeAttribute('data-guidechimp-alignment');
+        tooltipEl.removeAttribute('data-guidechimp-alignment');
 
         if (alignment) {
-            layer.setAttribute('data-guidechimp-alignment', alignment);
+            tooltipEl.setAttribute('data-guidechimp-alignment', alignment);
 
             switch (alignment) {
                 case 'left': {
@@ -1111,12 +987,31 @@ export default class GuideChimp {
 
     startPreloader() {
         document.body.classList.add(this.constructor.getLoadingClass());
-        const preloader = this.mountPreloaderElement(document.body);
 
-        preloader.classList.add(this.constructor.getHiddenClass());
+        const overlay = this.getEl('overlay');
+        const path = overlay.querySelector('path');
+        const animate = overlay.querySelector('animate');
+
+        const preloaderCache = new Map();
+        preloaderCache.set('d', path.getAttribute('d'));
+
+        path.setAttribute('d', this.getOverlayDocumentPath());
+
+        if (animate) {
+            preloaderCache.set('from', animate.getAttribute('from'));
+            preloaderCache.set('to', animate.getAttribute('to'));
+
+            animate.removeAttribute('from');
+            animate.removeAttribute('to');
+        }
+
+        this.cache.set('preloaderCache', preloaderCache);
+
+        const preloader = this.mountPreloaderEl();
+        preloader.hidden = true;
 
         setTimeout(() => {
-            preloader.classList.remove(this.constructor.getHiddenClass());
+            preloader.hidden = false;
         }, 100);
 
         return this;
@@ -1124,39 +1019,113 @@ export default class GuideChimp {
 
     stopPreloader() {
         document.body.classList.remove(this.constructor.getLoadingClass());
-        this.removePreloaderElement();
-        return this;
-    }
 
-    /**
-     * @param parent {HTMLElement}
-     * @returns {this}
-     */
-    mountStepTemplate() {
-        // mount main layers
-        this.mountHighlight(document.body);
-        this.mountInteraction(document.body);
-        this.mountControl(document.body);
+        const overlay = this.getEl('overlay');
+        const path = overlay.querySelector('path');
+        const animate = overlay.querySelector('animate');
 
-        return this;
-    }
+        const preloaderCache = this.cache.get('preloaderCache') || new Map();
 
-    removeStepTemplate() {
-        this.removeOverlayLayer();
-        this.removeControlLayer();
-        this.removeHighlightLayer();
-        this.removeInteractionLayer();
+        if (preloaderCache.has('d')) {
+            path.setAttribute('d', preloaderCache.get('d'));
+        }
 
-        this.removeDefaultElement();
-
-        return this;
-    }
-
-    mountElement(el, parent) {
-        if (el.parentElement !== parent) {
-            if (el.parentElement) {
-                this.removeElement(el);
+        if (animate) {
+            if (preloaderCache.has('from')) {
+                animate.setAttribute('from', preloaderCache.get('from'));
             }
+
+            if (preloaderCache.has('to')) {
+                animate.setAttribute('to', preloaderCache.get('to'));
+            }
+        }
+
+        this.cache.delete('preloaderCache');
+
+        this.removePreloaderEl();
+        return this;
+    }
+
+    getDefaultTmplData() {
+        return {
+            previousStep: this.previousStep,
+            currentStep: this.currentStep,
+            nextStep: this.nextStep,
+            fromStep: this.fromStep,
+            toStep: this.toStep,
+
+            previousStepIndex: this.previousStepIndex,
+            currentStepIndex: this.currentStepIndex,
+            nextStepIndex: this.nextStepIndex,
+            fromStepIndex: this.fromStepIndex,
+            toStepIndex: this.toStepIndex,
+
+            steps: this.steps,
+
+            go: (...args) => this.go(...args),
+            previous: (...args) => this.previous(...args),
+            next: (...args) => this.next(...args),
+            stop: (...args) => this.stop(...args),
+        };
+    }
+
+    mountStep() {
+        const interactionEl = this.mountInteractionEl();
+        const controlEl = this.mountControlEl();
+
+        this.setInteractionPosition(interactionEl);
+        this.setControlPosition(controlEl);
+        this.setTooltipPosition(this.getEl('tooltip'));
+
+        this.observeStep();
+
+        this.highlightStepEl(true);
+
+        return this;
+    }
+
+    unmountStep() {
+        this.resetHighlightStepEl();
+
+        this.removeInteractionEl();
+        this.removeControlEl();
+        this.removePreloaderEl();
+        this.removeFakeStepEl();
+
+        return this;
+    }
+
+    createEl(name, tmpl, data = {}) {
+        const el = domTemplate(tmpl, data);
+
+        if (el) {
+            el.setAttribute(`data-quidechimp-${this.uid}`, name);
+        }
+
+        return el;
+    }
+
+    getEl(key, def = null) {
+        let el = this.elements.get(key);
+
+        if (!el) {
+            el = document.querySelector(`[data-quidechimp-${this.uid}="${key}"]`);
+        }
+
+        return el || def;
+    }
+
+    mountEl(el, parent) {
+        if (el) {
+            const els = el.querySelectorAll(`[data-quidechimp-${this.uid}]`);
+
+            [el, ...els].forEach((v) => {
+                const key = v.getAttribute(`data-quidechimp-${this.uid}`);
+                if (key) {
+                    this.removeEl(key);
+                    this.elements.set(key, v);
+                }
+            });
 
             parent.appendChild(el);
         }
@@ -1164,626 +1133,356 @@ export default class GuideChimp {
         return el;
     }
 
-    removeElement(el) {
-        if (el && el.parentElement) {
+    removeEl(key) {
+        const el = this.getEl(key);
+
+        if (el) {
             el.parentElement.removeChild(el);
         }
 
+        this.elements.delete(key);
+
         return this;
     }
 
-    findDefaultElement(def = null) {
-        return this.cache.get('defaultEl') || def;
+    isEl(el, key) {
+        return (this.getEl(key))
+            ? el === this.getEl(key)
+            : el.getAttribute(`data-quidechimp-${this.uid}`) === key;
     }
 
-    createDefaultElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getDefaultElementClass();
-        return el;
+    getFakeStepTmpl() {
+        return fakeStepTmpl;
     }
 
-    mountDefaultElement(parent = document.body) {
-        let el = this.findDefaultElement();
-
-        if (!el) {
-            el = this.createDefaultElement();
-            this.cache.set('defaultEl', el);
-        }
-
-        return this.mountElement(el, parent);
+    createFakeStepEl(data = {}) {
+        return this.createEl('fakeStep', this.getFakeStepTmpl(), { ...this.getDefaultTmplData(), ...data });
     }
 
-    removeDefaultElement() {
-        this.removeElement(this.findDefaultElement());
-        this.cache.delete('defaultEl');
-        return this;
+    mountFakeStepEl(data = {}) {
+        return this.mountEl(this.createFakeStepEl(data), document.body);
     }
 
-    findPreloaderElement(def = null) {
-        return this.cache.get('preloaderEl') || def;
+    removeFakeStepEl() {
+        return this.removeEl('fakeStep');
     }
 
-    createPreloaderElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getPreloaderClass();
-        return el;
+    getPreloaderTmpl() {
+        return preloaderTmpl;
     }
 
-    mountPreloaderElement(parent = document.body) {
-        let el = this.findPreloaderElement();
-
-        if (!el) {
-            el = this.createPreloaderElement();
-            this.cache.set('preloaderEl', el);
-        }
-
-        return this.mountElement(el, parent);
+    createPreloaderEl(data = {}) {
+        return this.createEl('preloader', this.getPreloaderTmpl(), data);
     }
 
-    removePreloaderElement() {
-        this.removeElement(this.findPreloaderElement());
-        this.cache.delete('preloaderEl');
-        return this;
+    mountPreloaderEl(data = {}) {
+        return this.mountEl(this.createPreloaderEl(data), document.body);
     }
 
-    findOverlayLayer(def = null) {
-        return this.cache.get('overlayLayer') || def;
+    removePreloaderEl() {
+        return this.removeEl('preloader');
     }
 
-    createOverlayLayer() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getOverlayClass();
-        el.onclick = (event) => {
-            const { exitOverlay } = this.options;
+    getOverlayDocumentPath() {
+        return `M 0 0 H ${document.body.scrollWidth} V ${document.body.scrollHeight} H 0 V 0 Z`;
+    }
 
-            if (exitOverlay) {
-                this.stop({ event });
-            }
+    getOverlayStepPath(step) {
+        return this.getOverlayElPath(this.getStepEl(step));
+    }
+
+    getOverlayElPath(el) {
+        let { padding } = this.options;
+        padding = (padding) ? padding / 2 : 0;
+
+        const { left, top, width, height } = el.getBoundingClientRect();
+        const r = 4;
+
+        let path = this.getOverlayDocumentPath();
+
+        path += `M ${left - padding + r} ${top - padding}
+                 a ${r},${r} 0 0 0 -${r},${r}
+                 V ${height + top + padding - r}
+                 a ${r},${r} 0 0 0 ${r},${r}
+                 H ${width + left + padding - r}
+                 a ${r},${r} 0 0 0 ${r},-${r}
+                 V ${top - padding + r}
+                 a ${r},${r} 0 0 0 -${r},-${r}Z`;
+
+        return path;
+    }
+
+    getOverlayTmpl() {
+        return overlayTmpl;
+    }
+
+    createOverlayEl(data = {}) {
+        const defaults = {
+            stop: async (...args) => {
+                if (this.options.exitOverlay) {
+                    await this.stop(...args);
+                }
+            },
+            path: this.getOverlayDocumentPath(),
         };
 
-        return el;
+        return this.createEl('overlay', this.getOverlayTmpl(), { ...defaults, ...data });
     }
 
-    mountOverlayLayer(parent = document.body) {
-        let el = this.findOverlayLayer();
-
-        if (!el) {
-            el = this.createOverlayLayer();
-            this.cache.set('overlayLayer', el);
-        }
-
-        return this.mountElement(el, parent);
+    mountOverlayEl(data = {}) {
+        return this.mountEl(this.createOverlayEl(data), document.body);
     }
 
-    removeOverlayLayer() {
-        this.removeElement(this.findOverlayLayer());
-        this.cache.delete('overlayLayer');
-        return this;
+    removeOverlayEl() {
+        return this.removeEl('overlay');
     }
 
-    mountHighlight(parent = document.body) {
-        const el = this.mountHighlightLayer(parent);
-        this.setHighlightLayerPosition(el);
-        return el;
+    getInteractionTmpl() {
+        return interactionTmpl;
     }
 
-    findHighlightLayer(def = null) {
-        return this.cache.get('highlightLayer') || def;
-    }
-
-    createHighlightLayer() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getHighlightClass();
-        return el;
-    }
-
-    mountHighlightLayer(parent = document.body) {
-        let el = this.findHighlightLayer();
-
-        if (!el) {
-            el = this.createHighlightLayer();
-            this.cache.set('highlightLayer', el);
-        }
-
-        return this.mountElement(el, parent);
-    }
-
-    removeHighlightLayer() {
-        this.removeElement(this.findHighlightLayer());
-        this.cache.delete('highlightLayer');
-        return this;
-    }
-
-    mountInteraction(parent = document.body) {
-        const el = this.mountInteractionLayer(parent);
-        this.setInteractionLayerPosition(el);
-        return el;
-    }
-
-    findInteractionLayer(def = null) {
-        return this.cache.get('interactionLayer') || def;
-    }
-
-    createInteractionLayer() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getInteractionClass();
-        return el;
-    }
-
-    mountInteractionLayer(parent = document.body) {
-        let el = this.findInteractionLayer();
-
-        if (!el) {
-            el = this.createInteractionLayer();
-            this.cache.set('interactionLayer', el);
-        }
-
+    createInteractionEl(data = {}) {
         let { interaction } = this.options;
 
-        if (this.currentStep && typeof this.currentStep.interaction === 'boolean') {
+        if (typeof this.currentStep.interaction === 'boolean') {
             interaction = this.currentStep.interaction;
         }
 
-        // disable/enable interaction
-        el.classList.toggle(this.constructor.getDisableInteractionClass(), !interaction);
-
-        return this.mountElement(el, parent);
-    }
-
-    removeInteractionLayer() {
-        this.removeElement(this.findInteractionLayer());
-        this.cache.delete('interactionLayer');
-        return this;
-    }
-
-    mountControl(parent = document.body) {
-        const el = this.mountControlLayer(parent);
-        this.mountTooltip(el);
-        this.setControlLayerPosition(el);
-        return el;
-    }
-
-    findControlLayer(def = null) {
-        return this.cache.get('controlLayer') || def;
-    }
-
-    createControlLayer() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getControlClass();
-        return el;
-    }
-
-    mountControlLayer(parent = document.body) {
-        let el = this.findControlLayer();
-
-        if (!el) {
-            el = this.createControlLayer();
-            this.cache.set('controlLayer', el);
-        }
-
-        return this.mountElement(el, parent);
-    }
-
-    removeControlLayer() {
-        this.removeElement(this.findControlLayer());
-        this.cache.delete('controlLayer');
-        return this;
-    }
-
-    mountTooltip(parent) {
-        const tooltip = this.mountTooltipElement(parent);
-        this.mountTooltipTailElement(tooltip);
-        this.mountProgressbarElement(tooltip);
-        this.mountTitleElement(tooltip);
-        this.mountDescriptionElement(tooltip);
-        this.mountCloseElement(tooltip);
-        this.mountCustomButtonsElement(tooltip);
-        this.mountNavigation(tooltip);
-        this.mountCopyrightElement(tooltip);
-        this.mountNotificationElement(tooltip);
-
-        this.setTooltipElementPosition(tooltip, { boundary: document.documentElement });
-
-        return tooltip;
-    }
-
-    findTooltipElement(def = null) {
-        return this.cache.get('tooltipLayer') || def;
-    }
-
-    createTooltipElement() {
-        const el = document.createElement('div');
-        el.setAttribute('role', 'dialog');
-        el.className = this.constructor.getTooltipClass();
-        return el;
-    }
-
-    mountTooltipElement(parent) {
-        let el = this.findTooltipElement();
-
-        if (!el) {
-            el = this.createTooltipElement();
-            this.cache.set('tooltipLayer', el);
-        }
-
-        return this.mountElement(el, parent);
-    }
-
-    findTooltipTailElement(def = null) {
-        return this.cache.get('tooltipTailEl') || def;
-    }
-
-    createTooltipTailElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getTooltipTailClass();
-        return el;
-    }
-
-    mountTooltipTailElement(parent) {
-        let el = this.findTooltipTailElement();
-
-        if (!el) {
-            el = this.createTooltipTailElement();
-            this.cache.set('tooltipTailEl', el);
-        }
-
-        return this.mountElement(el, parent);
-    }
-
-    findCloseElement(def = null) {
-        return this.cache.get('closeEl') || def;
-    }
-
-    createCloseElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getCloseClass();
-        el.onclick = (event) => this.stop({ event });
-        return el;
-    }
-
-    mountCloseElement(parent) {
-        let el = this.findCloseElement();
-
-        if (!el) {
-            el = this.createCloseElement();
-            this.cache.set('closeEl', el);
-        }
-
-        return this.mountElement(el, parent);
-    }
-
-    findProgressbarElement(def = null) {
-        return this.cache.get('progressbarEl') || def;
-    }
-
-    createProgressbarElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getProgressbarClass();
-        el.setAttribute('role', 'progress');
-        el.setAttribute('aria-valuemin', 0);
-        el.setAttribute('aria-valuemax', 100);
-        return el;
-    }
-
-    mountProgressbarElement(parent) {
-        let el = this.findProgressbarElement();
-
-        if (!el) {
-            el = this.createProgressbarElement();
-            this.cache.set('progressbarEl', el);
-        }
-
-        const { showProgressbar } = this.options;
-
-        el.classList.toggle(this.constructor.getHiddenClass(), !showProgressbar);
-
-        const index = this.steps.indexOf(this.currentStep);
-        const progress = ((index + 1) / this.steps.length) * 100;
-        el.setAttribute('aria-valuenow', progress);
-        el.style.cssText = `width: ${progress}%;`;
-
-        return this.mountElement(el, parent);
-    }
-
-    findTitleElement(def = null) {
-        return this.cache.get('titleEl') || def;
-    }
-
-    createTitleElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getTitleClass();
-        return el;
-    }
-
-    mountTitleElement(parent) {
-        let el = this.findTitleElement();
-
-        if (!el) {
-            el = this.createTitleElement();
-            this.cache.set('titleEl', el);
-        }
-
-        const { title = '' } = this.currentStep;
-        el.innerHTML = title;
-        el.classList.toggle(this.constructor.getHiddenClass(), !title);
-
-        return this.mountElement(el, parent);
-    }
-
-    findDescriptionElement(def = null) {
-        return this.cache.get('descriptionEl') || def;
-    }
-
-    createDescriptionElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getDescriptionClass();
-        return el;
-    }
-
-    mountDescriptionElement(parent) {
-        let el = this.findDescriptionElement();
-
-        if (!el) {
-            el = this.createDescriptionElement();
-            this.cache.set('descriptionEl', el);
-        }
-
-        const { description = '' } = this.currentStep;
-        el.innerHTML = description;
-        el.classList.toggle(this.constructor.getHiddenClass(), !description);
-
-        return this.mountElement(el, parent);
-    }
-
-    findCustomButtonsElement(def = null) {
-        return this.cache.get('customButtonsEl') || def;
-    }
-
-    createCustomButtonsElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getCustomButtonsClass();
-        return el;
-    }
-
-    mountCustomButtonsElement(parent) {
-        let el = this.findCustomButtonsElement();
-
-        if (!el) {
-            el = this.createCustomButtonsElement();
-            this.cache.set('customButtonsEl', el);
-        }
-
-        // clean layer from previous buttons
-        el.innerHTML = '';
-
-        const { buttons = [] } = this.currentStep;
-
-        el.classList.toggle(this.constructor.getHiddenClass(), !buttons.length);
-
-        buttons.forEach((button) => {
-            el.appendChild((button.ownerDocument) ? button : this.createCustomButtonElement(button));
-        });
-
-        return this.mountElement(el, parent);
-    }
-
-    createCustomButtonElement({ tagName = 'button', title = '', class: className, onClick }) {
-        const el = document.createElement(tagName);
-        el.innerHTML = title;
-
-        if (className) {
-            el.className = className;
-        }
-
-        if (onClick) {
-            el.onclick = (e) => onClick.call(this, e);
-        }
-
-        return el;
-    }
-
-    mountNavigation(parent) {
-        const navigation = this.mountNavigationElement(parent);
-        const prev = this.mountNavigationPrevElement(navigation);
-        const pagination = this.mountPaginationElement(navigation);
-        const next = this.mountNavigationNextElement(navigation);
-
-        navigation.classList.toggle(
-            this.constructor.getHiddenClass(),
-            [prev, pagination, next].every((el) => el.classList.contains(this.constructor.getHiddenClass())),
-        );
-
-        return navigation;
-    }
-
-    findNavigationElement(def = null) {
-        return this.cache.get('navigationEl') || def;
-    }
-
-    createNavigationElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getNavigationClass();
-        return el;
-    }
-
-    mountNavigationElement(parent) {
-        let el = this.findNavigationElement();
-
-        if (!el) {
-            el = this.createNavigationElement();
-            this.cache.set('navigationEl', el);
-        }
-
-        return this.mountElement(el, parent);
-    }
-
-    findPaginationElement(def = null) {
-        return this.cache.get('paginationEl') || def;
-    }
-
-    createPaginationElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getPaginationClass();
-        return el;
-    }
-
-    mountPaginationElement(parent) {
-        let el = this.findPaginationElement();
-
-        if (!el) {
-            el = this.createPaginationElement();
-            this.cache.set('paginationEl', el);
-        }
-
-        // cleanup pagination
-        el.innerHTML = '';
-
-        const { showPagination } = this.options;
-
-        el.classList.toggle(this.constructor.getHiddenClass(), (!showPagination || this.steps.length <= 1));
-
-        this.steps.forEach((s, i) => {
-            el.appendChild(this.createPaginationItemElement(s, i));
-        });
-
-        return this.mountElement(el, parent);
-    }
-
-    createPaginationItemElement(step, index) {
-        const el = document.createElement('div');
-        el.className = this.constructor.getPaginationItemClass();
-
-        if (this.currentStep === step) {
-            el.classList.add(this.constructor.getPaginationCurrentItemClass());
-        }
-
-        el.onclick = (event) => {
-            switch (index) {
-                case this.previousStepIndex: {
-                    return this.previous({ event });
-                }
-
-                case this.nextStepIndex: {
-                    return this.next({ event });
-                }
-
-                default: {
-                    return this.go(index, true);
-                }
-            }
+        const defaults = {
+            ...this.getDefaultTmplData(),
+            interaction,
         };
 
-        return el;
+        return this.createEl('interaction', this.getInteractionTmpl(), { ...defaults, ...data });
     }
 
-    findNavigationPrevElement(def = null) {
-        return this.cache.get('navigationPrevEl') || def;
+    mountInteractionEl(data = {}) {
+        return this.mountEl(this.createInteractionEl(data), document.body);
     }
 
-    createNavigationPrevElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getNavigationPrevClass();
-        el.onclick = (event) => this.previous({ event });
-        return el;
+    removeInteractionEl() {
+        return this.removeEl('interaction');
     }
 
-    mountNavigationPrevElement(parent) {
-        let el = this.findNavigationPrevElement();
+    getControlTmpl() {
+        return controlTmpl;
+    }
 
-        if (!el) {
-            el = this.createNavigationPrevElement();
-            this.cache.set('navigationPrevEl', el);
+    createControlEl(data = {}) {
+        return this.createEl(
+            'control',
+            this.getControlTmpl(),
+            { ...this.getDefaultTmplData(), tooltipEl: this.createTooltipEl(data), ...data },
+        );
+    }
+
+    mountControlEl(data = {}) {
+        return this.mountEl(this.createControlEl(data), document.body);
+    }
+
+    removeControlEl() {
+        return this.removeEl('control');
+    }
+
+    getTooltipTmpl() {
+        return tooltipTmpl;
+    }
+
+    createTooltipEl(data = {}) {
+        const defaults = {
+            ...this.getDefaultTmplData(),
+            progressbar: this.createProgressbarEl(data),
+            title: this.createTitleEl(data),
+            description: this.createDescriptionEl(data),
+            close: this.createCloseEl(data),
+            customButtons: this.createCustomButtonsEl(data),
+            previous: this.createPreviousEl(data),
+            pagination: this.createPaginationEl(data),
+            next: this.createNextEl(data),
+            copyright: this.createCopyrightEl(data),
+            notification: this.createNotificationEl(data),
+        };
+
+        return this.createEl('tooltip', this.getTooltipTmpl(), { ...defaults, ...data });
+    }
+
+    getCloseTmpl() {
+        return closeTmpl;
+    }
+
+    createCloseEl(data = {}) {
+        return this.createEl('close', this.getCloseTmpl(), { ...this.getDefaultTmplData(), ...data });
+    }
+
+    getProgressbarTmpl() {
+        return progressbarTmpl;
+    }
+
+    createProgressbarEl(data = {}) {
+        let { showProgressbar } = this.options;
+
+        if (typeof this.currentStep.showProgressbar === 'boolean') {
+            showProgressbar = this.currentStep.showProgressbar;
         }
 
-        el.classList.toggle(this.constructor.getHiddenClass(), (this.previousStepIndex < 0));
+        const progressMax = 100;
+        const progressMin = 0;
+        const progress = ((this.currentStepIndex + 1) / this.steps.length) * 100;
 
-        return this.mountElement(el, parent);
+        const defaults = {
+            ...this.getDefaultTmplData(),
+            showProgressbar,
+            progressMax,
+            progressMin,
+            progress,
+        };
+
+        return this.createEl('progressbar', this.getProgressbarTmpl(), { ...defaults, ...data });
     }
 
-    findNavigationNextElement(def = null) {
-        return this.cache.get('navigationNextEl') || def;
+    getTitleTmpl() {
+        return titleTmpl;
     }
 
-    createNavigationNextElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getNavigationNextClass();
-        el.onclick = (event) => this.next({ event });
-        return el;
+    createTitleEl(data = {}) {
+        const { title = '' } = this.currentStep;
+        return this.createEl('title', this.getTitleTmpl(), { ...this.getDefaultTmplData(), title, ...data });
     }
 
-    mountNavigationNextElement(parent) {
-        let el = this.findNavigationNextElement();
+    getDescriptionTmpl() {
+        return descriptionTmpl;
+    }
 
-        if (!el) {
-            el = this.createNavigationNextElement();
-            this.cache.set('navigationNextEl', el);
+    createDescriptionEl(data = {}) {
+        const { description = '' } = this.currentStep;
+
+        return this.createEl(
+            'description',
+            this.getDescriptionTmpl(),
+            { ...this.getDefaultTmplData(), description, ...data },
+        );
+    }
+
+    getCustomButtonsTmpl() {
+        return customButtonsTmpl;
+    }
+
+    createCustomButtonsEl(data = {}) {
+        const buttons = [];
+
+        if (this.currentStep.buttons) {
+            this.currentStep.buttons.forEach((button) => {
+                let buttonEl = button;
+
+                if (!isHtmlElement(buttonEl)) {
+                    const { onClick, tagName = 'button', title = '', class: className } = button;
+
+                    buttonEl = document.createElement(tagName);
+                    buttonEl.innerHTML = title;
+
+                    if (className) {
+                        buttonEl.className = className;
+                    }
+
+                    if (onClick) {
+                        buttonEl.addEventListener('click', (e) => {
+                            onClick.call(this, e);
+                        });
+                    }
+                }
+
+                buttons.push(buttonEl);
+            });
         }
 
-        el.classList.toggle(this.constructor.getHiddenClass(), (this.nextStepIndex < 0));
-
-        return this.mountElement(el, parent);
+        return this.createEl(
+            'customButtons',
+            this.getCustomButtonsTmpl(),
+            { ...this.getDefaultTmplData(), buttons, ...data },
+        );
     }
 
-    findCopyrightElement(def = null) {
-        return this.cache.get('copyrightEl') || def;
+    getPaginationTmpl() {
+        return paginationTmpl;
     }
 
-    createCopyrightElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getCopyrightClass();
-        return el;
-    }
+    createPaginationEl(data = {}) {
+        let { showPagination } = this.options;
 
-    mountCopyrightElement(parent) {
-        let el = this.findCopyrightElement();
-
-        if (!el) {
-            el = this.createCopyrightElement();
-            this.cache.set('copyrightEl', el);
+        if (typeof this.currentStep.showPagination === 'boolean') {
+            showPagination = this.currentStep.showPagination;
         }
 
-        el.innerHTML = 'Made with GuideChimp';
-
-        return this.mountElement(el, parent);
+        return this.createEl(
+            'pagination',
+            this.getPaginationTmpl(),
+            { ...this.getDefaultTmplData(), showPagination, ...data },
+        );
     }
 
-    findNotificationElement(def = null) {
-        return this.cache.get('notificationEl') || def;
+    getPreviousTmpl() {
+        return previousTmpl;
     }
 
-    createNotificationElement() {
-        const el = document.createElement('div');
-        el.className = this.constructor.getNotificationClass();
-        return el;
-    }
+    createPreviousEl(data = {}) {
+        let { showNavigation } = this.options;
 
-    mountNotificationElement(parent) {
-        let el = this.findNotificationElement();
-
-        if (!el) {
-            el = this.createNotificationElement();
-            this.cache.set('notificationEl', el);
+        if (typeof this.currentStep.showNavigation === 'boolean') {
+            showNavigation = this.currentStep.showNavigation;
         }
 
-        const [message = ''] = this.notifications;
-        el.innerHTML = message;
-
-        return this.mountElement(el, parent);
+        return this.createEl(
+            'previous',
+            this.getPreviousTmpl(),
+            { ...this.getDefaultTmplData(), showNavigation, ...data },
+        );
     }
 
-    removeNotificationElement() {
-        this.removeElement(this.findControlLayer());
-        this.cache.delete('controlLayer');
-        return this;
+    getNextTmpl() {
+        return nextTmpl;
+    }
+
+    createNextEl(data = {}) {
+        let { showNavigation } = this.options;
+
+        if (typeof this.currentStep.showNavigation === 'boolean') {
+            showNavigation = this.currentStep.showNavigation;
+        }
+
+        return this.createEl(
+            'next',
+            this.getNextTmpl(),
+            { ...this.getDefaultTmplData(), showNavigation, ...data },
+        );
+    }
+
+    getCopyrightTmpl() {
+        return copyrightTmpl;
+    }
+
+    createCopyrightEl(data = {}) {
+        return this.createEl('copyright', this.getCopyrightTmpl(), { ...this.getDefaultTmplData(), ...data });
+    }
+
+    getNotificationTmpl() {
+        return notificationTmpl;
+    }
+
+    createNotificationEl(data = {}) {
+        return this.createEl(
+            'notification',
+            this.getNotificationTmpl(),
+            { ...this.getDefaultTmplData(), messages: this.notifications, ...data },
+        );
     }
 
     notify(message) {
         this.notifications.push(message);
 
-        const el = this.findNotificationElement();
+        const notificationEl = this.getEl('notification');
 
-        if (el) {
-            el.innerHTML = message;
+        if (notificationEl) {
+            this.mountEl(this.createNotificationEl(), notificationEl.parentElement);
         }
 
         return this;
@@ -1946,9 +1645,42 @@ export default class GuideChimp {
         return this;
     }
 
+    /**
+     * Add window scroll event listener
+     * @returns {GuideChimp}
+     */
+    addOnWindowScrollListener() {
+        this.cache.set('onWindowScrollListener', this.getOnWindowScrollListener());
+        window.addEventListener('scroll', this.cache.get('onWindowScrollListener'), true);
+
+        return this;
+    }
+
+    /**
+     * Return on window scroll event listener function
+     * @returns {function}
+     */
+    getOnWindowScrollListener() {
+        return () => this.refresh();
+    }
+
+    /**
+     * Remove window resize event listener
+     * @return {this}
+     */
+    removeOnWindowScrollListener() {
+        if (this.cache.has('onWindowScrollListener')) {
+            window.removeEventListener('scroll', this.cache.get('onWindowScrollListener'), true);
+            this.cache.delete('onWindowScrollListener');
+        }
+
+        return this;
+    }
+
     removeListeners() {
         this.removeOnKeydownListener();
         this.removeOnWindowResizeListener();
+        this.removeOnWindowScrollListener();
     }
 
     observeStep() {
@@ -1964,7 +1696,6 @@ export default class GuideChimp {
                 if (!this && !this.currentStep) {
                     return;
                 }
-
                 this.refresh();
             });
 
@@ -1973,7 +1704,7 @@ export default class GuideChimp {
 
         if (observer) {
             // observe elements
-            observer.observe(this.getStepElement(this.currentStep), options);
+            observer.observe(this.getStepEl(this.currentStep), options);
             return true;
         }
 
@@ -1994,59 +1725,48 @@ export default class GuideChimp {
     observeMutation() {
         let { mutationObserver: observer } = this.observers;
 
-        let elExists = true;
-
         if (!observer) {
             observer = new MutationObserver((mutations) => {
                 if (!this && !this.currentStep) {
                     return;
                 }
 
-                const el = this.getStepElement(this.currentStep);
+                const { element } = this.currentStep;
 
-                const refresh = () => {
-                    this.resetHighlighting(el);
+                if (!element) {
+                    return;
+                }
 
-                    this.highlightStepElement();
-                    this.scrollParentsToStepElement();
-                    this.refresh();
-                };
+                let el = this.getStepEl(this.currentStep);
 
-                if (elExists) {
-                    mutations.forEach((record) => {
+                const isElExists = () => el && !this.isEl(el, 'fakeStep');
+
+                mutations.forEach((record) => {
+                    if (isElExists()) {
                         if (record.type === 'childList' && record.removedNodes.length) {
                             record.removedNodes.forEach((node) => {
                                 if (node === el || node.contains(el)) {
-                                    const newEl = this.getStepElement(this.currentStep, true);
-                                    const defaultEl = this.findDefaultElement();
-                                    refresh();
-
-                                    if (newEl === defaultEl) {
-                                        elExists = false;
-                                    }
+                                    el = this.getStepEl(this.currentStep);
+                                    this.scrollParentsToStepEl();
+                                    this.refresh();
                                 }
                             });
                         }
-                    });
-                } else {
-                    const newEl = this.getStepElement(this.currentStep, true);
-                    const defaultEl = this.findDefaultElement();
+                    } else if (record.type === 'childList' && record.addedNodes.length) {
+                        el = this.getStepEl(this.currentStep);
 
-                    mutations.forEach((record) => {
-                        if (record.type === 'childList' && record.addedNodes.length) {
-                            if (newEl !== defaultEl) {
-                                refresh();
-                                elExists = true;
-                            }
+                        if (isElExists()) {
+                            this.scrollParentsToStepEl();
+                            this.refresh();
                         }
-                    });
-                }
+                    }
+                });
             });
 
             this.observers.mutationObserver = observer;
         }
 
-        observer.observe(this.getStepElement(this.currentStep).ownerDocument.body, {
+        observer.observe(this.getStepEl(this.currentStep).ownerDocument.body, {
             childList: true,
             subtree: true,
         });
@@ -2065,17 +1785,14 @@ export default class GuideChimp {
         return false;
     }
 
-    unobserve() {
+    unobserveStep() {
         this.unobserveResizing();
         this.unobserveMutation();
     }
 
-    cleanupAfterPreviousStep() {
-        // remove all highlighting
-        this.resetHighlightingAll();
-
-        // remove previous step element observers
-        this.unobserve();
+    beforeChangeStep() {
+        this.unmountStep();
+        this.unobserveStep();
     }
 
     /**
@@ -2087,21 +1804,12 @@ export default class GuideChimp {
             return this;
         }
 
-        if (this.findHighlightLayer()) {
-            this.setHighlightLayerPosition(this.findHighlightLayer());
-        }
+        this.resetHighlightStepEl();
+        this.highlightStepEl();
 
-        if (this.findInteractionLayer()) {
-            this.setInteractionLayerPosition(this.findInteractionLayer());
-        }
-
-        if (this.findControlLayer()) {
-            this.setControlLayerPosition(this.findControlLayer());
-        }
-
-        if (this.findTooltipElement()) {
-            this.setTooltipElementPosition(this.findTooltipElement(), { boundary: window });
-        }
+        this.setControlPosition(this.getEl('control'));
+        this.setInteractionPosition(this.getEl('interaction'));
+        this.setTooltipPosition(this.getEl('tooltip'));
 
         return this;
     }

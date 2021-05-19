@@ -1,0 +1,10 @@
+<div class="gc-overlay"
+     @click="stop({ event: $event })">
+    <svg class="svg-overlay">
+        <path d="{{path}}">
+            <animate attributeName="d"
+                     fill="freeze"
+                     dur="200ms" />
+        </path>
+    </svg>
+</div>

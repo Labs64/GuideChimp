@@ -31,20 +31,19 @@ module.exports = (cls, factory, options) => {
                 return;
             }
 
-            const checkElementExists = () => {
-                const el = this.getStepElement(toStep, true);
-                const defaultEl = this.findDefaultElement();
-                return (el && el !== defaultEl);
+            const isElExists = () => {
+                const el = this.getStepEl(toStep);
+                return (el && !this.isEl(el, 'fakeStep'));
             };
 
-            if (checkElementExists()) {
+            if (isElExists()) {
                 resolve();
                 return;
             }
 
             const interval = setInterval(() => {
                 timeout -= frequency;
-                if (checkElementExists() || timeout <= 0) {
+                if (isElExists() || timeout <= 0) {
                     clearInterval(interval);
                     resolve();
                 }

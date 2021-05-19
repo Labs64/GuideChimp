@@ -1,9 +1,4 @@
 .gc {
-  & .gc-fix-stacking-context {
-    z-index: 6402;
-    position: relative;
-  }
-
   .gc-relative {
     position: relative;
   }
@@ -12,7 +7,7 @@
     position: fixed;
   }
 
-  .gc-highlighted {
+  .gc-highlight {
     z-index: 6402;
 
     & > td, & > th {
@@ -22,12 +17,8 @@
   }
 
   &.gc-loading {
-    .gc-highlighted {
-      z-index: auto;
-    }
-
     .gc-highlight {
-      display: none;
+      z-index: auto;
     }
 
     .gc-interaction {
@@ -52,27 +43,13 @@
   bottom: 0;
   left: 0;
   box-sizing: content-box;
-  transition: all 0.3s ease-out;
+  //transition: all 0.3s ease-out;
   opacity: 0.4;
-  background-color: #222222;
-}
 
-.gc-highlight {
-  position: absolute;
-  z-index: 6401;
-  box-sizing: content-box;
-  -moz-transition: all 0.3s ease-out;
-  -o-transition: all 0.3s ease-out;
-  -webkit-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, .9);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, .4);
-
-  &:before, &:after {
-    -moz-box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
+  & svg {
+    fill: #222222;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -143,7 +120,7 @@
 .gc-tooltip-tail {
   position: absolute;
   content: '';
-  border: 5px solid transparent;
+  border: 6px solid transparent;
 
   .gc-tooltip[data-guidechimp-position='top'] & {
     bottom: -10px;
@@ -243,7 +220,7 @@
   height: 5px;
   text-align: center;
   border-radius: 2px 0 0 0;
-  background-color: $progressbar;
+  background-color: $primary;
 
   &[aria-valuenow='100'] {
     border-radius: 2px 2px 0 0;
@@ -264,7 +241,7 @@
   }
 }
 
-.gc-default {
+.gc-fake-step {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -320,8 +297,8 @@
   width: 15px;
   height: 15px;
   cursor: pointer;
-  border-right: 5px solid #bebebe;
-  border-bottom: 5px solid #bebebe;
+  border-right: 5px solid $secondary;
+  border-bottom: 5px solid $secondary;
 
   &:hover {
     opacity: 1;
@@ -348,15 +325,15 @@
 }
 
 .gc-pagination-item {
-  display: inline-block;
-  box-sizing: content-box;
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  cursor: pointer;
-  border: 8px solid #ffffff;
+  background-color: $secondary;
   border-radius: 50%;
-  background-color: #bebebe;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  height: 8px;
+  margin: 0 5px;
+  padding: 0;
+  width: 8px;
 
   &:hover {
     background-color: $primary;
