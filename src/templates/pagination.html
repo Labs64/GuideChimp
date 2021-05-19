@@ -1,0 +1,19 @@
+<div if="showPagination && steps.length > 1"
+     class="gc-pagination">
+    <template for="(step, index) in steps">
+        <div if="index === currentStepIndex"
+             class="gc-pagination-item gc-pagination-item-current gc-pagination-active"></div>
+
+        <div elseif="index === previousStepIndex"
+             class="gc-pagination-item gc-pagination-item-previous"
+             @click="previous({ event: $event })"></div>
+
+        <div elseif="index === nextStepIndex"
+             class="gc-pagination-item gc-pagination-item-next"
+             @click="next({ event: $event })"></div>
+
+        <div else
+             class="gc-pagination-item"
+             @click="go(index, true, { event: $event })"></div>
+    </template>
+</div>

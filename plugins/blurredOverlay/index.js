@@ -17,34 +17,33 @@ module.exports = (cls) => {
     cls.prototype.init = function () {
         parentInit.call(this);
 
-        const removeNotBlurredClass = () => {
-            const notBlurredClass = this.constructor.getNotBlurredClass();
-
-            const els = document.querySelectorAll(`.${notBlurredClass}`);
-
-            els.forEach((el) => {
-                el.classList.remove(notBlurredClass);
-            });
-        };
-
-        this.on('onAfterChange', (toStep) => {
-            removeNotBlurredClass();
-
-            let el = this.getStepElement(toStep);
+        const addBlur = (step) => {
+            let el = this.getStepEl(step);
 
             while (el) {
                 if (el === el.ownerDocument.body) {
                     break;
                 }
-
                 el.classList.add(this.constructor.getNotBlurredClass());
-
                 el = el.parentElement;
             }
+        };
+
+        const removeBlur = () => {
+            const els = document.querySelectorAll(`.${this.constructor.getNotBlurredClass()}`);
+
+            els.forEach((el) => {
+                el.classList.remove(this.constructor.getNotBlurredClass());
+            });
+        };
+
+        this.on('onAfterChange', (toStep) => {
+            removeBlur();
+            addBlur(toStep);
         });
 
         this.on('onStop', () => {
-            removeNotBlurredClass();
+            removeBlur();
         });
     };
 };

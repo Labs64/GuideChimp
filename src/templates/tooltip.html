@@ -1,0 +1,21 @@
+<div class="gc-tooltip">
+    <div class="gc-tooltip-tail"></div>
+    {{ progressbar }}
+
+    {{ title }}
+    {{ description }}
+    {{ close }}
+
+    {{ customButtons }}
+
+    <div if="previous || pagination || next"
+         class="gc-navigation">
+        {{ previous }}
+        {{ pagination }}
+        {{ next }}
+    </div>
+
+    {{ copyright }}
+
+    {{ notification }}
+</div>

@@ -5,9 +5,11 @@
  * This source code is licensed under the European Union Public License, version 1.2
  * located in the LICENSE file
  */
+// utils
+import domTemplate from '../../src/utils/domTemplate';
 
-// global cache
-const cache = new Map();
+// templates
+import beaconTpl from './templates/beacon.html';
 
 export default class Beacons {
     constructor(beacons, options = {}) {
@@ -22,7 +24,8 @@ export default class Beacons {
             this.observers.elementResizeObserver = new ResizeObserver(() => this.refresh());
         }
 
-        this.cache = cache;
+        this.cache = new Map();
+        this.elements = new Map();
 
         this.setOptions(options);
         this.setBeacons(beacons);
@@ -49,16 +52,8 @@ export default class Beacons {
         };
     }
 
-    static getBeaconClass() {
-        return 'gc-beacon';
-    }
-
     static getFixedClass() {
         return 'gc-beacon-fixed';
-    }
-
-    static getHiddenClass() {
-        return 'gc-beacon-hidden';
     }
 
     static getBeaconDataPrefix() {
@@ -114,16 +109,14 @@ export default class Beacons {
                     return;
                 }
 
-                const el = this.getElement(element);
+                const el = this.getEl(element);
 
                 if (!el) {
-                    console.log(element);
                     return;
                 }
 
-                const beaconEl = this.createBeaconElement(beacon);
-
-                beaconEl.classList.add(this.constructor.getHiddenClass());
+                const beaconEl = this.createBeaconEl(beacon);
+                beaconEl.hidden = true;
 
                 if (this.constructor.isFixed(el)) {
                     beaconEl.classList.add(this.constructor.getFixedClass());
@@ -134,12 +127,11 @@ export default class Beacons {
                     : el.parentElement;
 
                 parentEl.append(beaconEl);
-                this.cache.set(beacon, beaconEl);
-
+                this.elements.set(beacon, beaconEl);
                 this.setBeaconPosition(el, beaconEl, beacon);
 
                 // fire observers
-                this.observeResizeElement(el);
+                this.observeResizing(el);
             });
 
             this.addOnWindowResizeListener();
@@ -254,28 +246,24 @@ export default class Beacons {
         return array.map((v, i) => ({ ...v, id: v.id || i }));
     }
 
-    createBeaconElement(beacon) {
-        const beaconEl = document.createElement('div');
-
-        const { class: className, onClick } = beacon;
-
-        if (className) {
-            beaconEl.className = className;
-        }
-
-        if (onClick) {
-            beaconEl.onclick = (e) => {
-                e.stopPropagation();
-                onClick.call(this, e, beacon);
-            };
-        }
-
-        beaconEl.classList.add(this.constructor.getBeaconClass());
-
-        return beaconEl;
+    getBeaconTpl() {
+        return beaconTpl;
     }
 
-    getElement(selector) {
+    createBeaconEl(beacon) {
+        const data = { ...beacon };
+
+        data.onClick = (e) => {
+            e.stopPropagation();
+            if (beacon.onClick) {
+                beacon.onClick.call(this, e, beacon);
+            }
+        };
+
+        return domTemplate(this.getBeaconTpl(), { beacon: data });
+    }
+
+    getEl(selector) {
         return (selector instanceof HTMLElement)
             ? selector
             : document.querySelector(selector);
@@ -417,11 +405,11 @@ export default class Beacons {
         const beacon = this.getBeacon(id);
 
         if (beacon) {
-            const beaconEl = this.cache.get(beacon);
+            const beaconEl = this.elements.get(beacon);
 
             if (beaconEl) {
                 if (force || this.isCanShowBeacon(beacon)) {
-                    beaconEl.classList.remove(this.constructor.getHiddenClass());
+                    beaconEl.hidden = false;
                 }
             }
         }
@@ -441,10 +429,10 @@ export default class Beacons {
         const beacon = this.getBeacon(id);
 
         if (beacon) {
-            const beaconEl = this.cache.get(beacon);
+            const el = this.elements.get(beacon);
 
-            if (beaconEl) {
-                beaconEl.classList.add(this.constructor.getHiddenClass());
+            if (el) {
+                el.hidden = true;
             }
         }
 
@@ -466,7 +454,7 @@ export default class Beacons {
     remove(id) {
         const beacon = this.getBeacon(id);
 
-        const beaconEl = this.cache.get(beacon);
+        const beaconEl = this.elements.get(beacon);
 
         if (beaconEl) {
             beaconEl.parentNode.removeChild(beaconEl);
@@ -476,12 +464,12 @@ export default class Beacons {
                 this.beacons.splice(this.beacons.indexOf(beacon), 1);
             }
 
-            this.cache.delete(beacon);
+            this.elements.delete(beacon);
 
-            const el = this.getElement(beacon.element);
+            const el = this.getEl(beacon.element);
 
             if (el) {
-                this.unobserveResizeElement(el);
+                this.unobserveResizing(el);
             }
         }
 
@@ -500,8 +488,8 @@ export default class Beacons {
                 return;
             }
 
-            const el = this.getElement(element);
-            const beaconEl = this.cache.get(beacon);
+            const el = this.getEl(element);
+            const beaconEl = this.elements.get(beacon);
 
             if (el && beaconEl) {
                 this.setBeaconPosition(el, beaconEl, beacon);
@@ -547,7 +535,7 @@ export default class Beacons {
      * Observe resize step element
      * @return {this}
      */
-    observeResizeElement(el, options = { box: 'border-box' }) {
+    observeResizing(el, options = { box: 'border-box' }) {
         const { elementResizeObserver: observer } = this.observers;
 
         if (observer) {
@@ -562,7 +550,7 @@ export default class Beacons {
      * @param el
      * @return {this}
      */
-    unobserveResizeElement(el) {
+    unobserveResizing(el) {
         const { elementResizeObserver: observer } = this.observers;
 
         if (observer) {

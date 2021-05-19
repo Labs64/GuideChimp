@@ -40,8 +40,8 @@ module.exports = (Class, factory) => {
             return data;
         }
 
-        createBeaconElement(beacon) {
-            const el = super.createBeaconElement(beacon);
+        createBeaconEl(beacon) {
+            const el = super.createBeaconEl(beacon);
 
             if (beacon.tour) {
                 el.addEventListener('click', () => {
