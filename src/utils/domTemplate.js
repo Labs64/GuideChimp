@@ -21,7 +21,7 @@ export default (tpl, data = {}) => {
     const pattern = /{{([^}}]+)?}}/gm;
     const eventPattern = /^@(.+)$/;
 
-    let ifEnded = false;
+    const ifEnded = new Map();
 
     const render = (node, replacements = {}, parent = renderedDoc.body) => {
         let handler = parent;
@@ -35,32 +35,29 @@ export default (tpl, data = {}) => {
         if (node) {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 if (node.hasAttribute('if')) {
-                    ifEnded = false;
+                    ifEnded.set(node.parentNode, false);
 
                     if (!getValue(node.getAttribute('if'))) {
                         return;
                     }
 
-                    ifEnded = true;
-                    node.removeAttribute('if');
+                    ifEnded.set(node.parentNode, true);
                 }
 
                 if (node.hasAttribute('elseif')) {
-                    if (ifEnded || !getValue(node.getAttribute('elseif'))) {
+                    if (ifEnded.get(node.parentNode) || !getValue(node.getAttribute('elseif'))) {
                         return;
                     }
 
-                    ifEnded = true;
-                    node.removeAttribute('elseif');
+                    ifEnded.set(node.parentNode, true);
                 }
 
                 if (node.hasAttribute('else')) {
-                    if (ifEnded) {
+                    if (ifEnded.get(node.parentNode)) {
                         return;
                     }
 
-                    ifEnded = true;
-                    node.removeAttribute('else');
+                    ifEnded.set(node.parentNode, true);
                 }
 
                 if (node.hasAttribute('for')) {
@@ -74,6 +71,7 @@ export default (tpl, data = {}) => {
                     index = (index) ? index.trim() : '';
 
                     const source = getValue(secondPiece.trim());
+
                     const isSourceArray = Array.isArray(source);
 
                     Object.keys(source).forEach((k) => {
@@ -145,6 +143,8 @@ export default (tpl, data = {}) => {
                     if (name === 'html') {
                         handler.innerHTML = rValue;
                         handler.removeAttribute(name);
+                    } else if (['if', 'else', 'elseif'].includes(name)) {
+                        handler.removeAttribute(name);
                     } else {
                         handler.setAttribute(name, rValue);
                     }
@@ -184,6 +184,8 @@ export default (tpl, data = {}) => {
                         index = match.index + match[0].length;
                         match = pattern.exec(node.nodeValue);
                     }
+
+                    handler.append(document.createTextNode(node.nodeValue.slice(index, node.nodeValue.length)));
                 } else {
                     handler.append(node.cloneNode());
                 }
@@ -193,7 +195,7 @@ export default (tpl, data = {}) => {
 
             if (childNodes.length) {
                 childNodes.forEach((v) => {
-                    render(v.cloneNode(true), replacements, handler);
+                    render(v, replacements, handler);
                 });
             }
         }

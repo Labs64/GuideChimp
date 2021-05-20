@@ -90,6 +90,8 @@ export default class GuideChimp {
             showPagination: true,
             showNavigation: true,
             showProgressbar: true,
+            paginationTheme: 'circles',
+            paginationCirclesMaxItems: 10,
             interaction: true,
             padding: 8,
             scrollPadding: 10,
@@ -1407,6 +1409,11 @@ export default class GuideChimp {
     }
 
     createPaginationEl(data = {}) {
+        const {
+            paginationTheme = this.options.paginationTheme,
+            paginationCirclesMaxItems = this.options.paginationCirclesMaxItems,
+        } = this.currentStep;
+
         let { showPagination } = this.options;
 
         if (typeof this.currentStep.showPagination === 'boolean') {
@@ -1416,7 +1423,13 @@ export default class GuideChimp {
         return this.createEl(
             'pagination',
             this.getPaginationTmpl(),
-            { ...this.getDefaultTmplData(), showPagination, ...data },
+            {
+                ...this.getDefaultTmplData(),
+                showPagination,
+                paginationTheme,
+                paginationCirclesMaxItems,
+                ...data,
+            },
         );
     }
 
