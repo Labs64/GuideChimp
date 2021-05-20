@@ -114,7 +114,7 @@
         "webpack-merge": "^4.2.2"
     },
     "plugins": {
-        "guidechimp-plugins": "1.2.4"
+        "guidechimp-plugins": "1.3.0"
     },
     "engines": {
         "node": ">=12.18.0",
