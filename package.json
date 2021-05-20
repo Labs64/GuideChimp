@@ -46,7 +46,6 @@
         }
     ],
     "main": "dist/guidechimp.js",
-    "module": "src/index.js",
     "files": [
         "dist"
     ],
