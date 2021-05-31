@@ -18,9 +18,15 @@ module.exports = (cls, factory, router) => {
             // wait for page change
             if (route) {
                 await new Promise((s) => {
-                    router.push(route, () => {
-                        s();
-                    });
+                    router.push(
+                        route,
+                        () => s(),
+                        (e) => {
+                            // eslint-disable-next-line no-console
+                            console.error(e);
+                            s(e);
+                        },
+                    );
                 });
             }
         });
