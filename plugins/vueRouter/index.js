@@ -5,7 +5,7 @@
  * located in the LICENSE file
  */
 
-module.exports = (cls, factory, router) => {
+module.exports = (cls, factory, router, debug = false) => {
     const parentInit = cls.prototype.init;
 
     // eslint-disable-next-line func-names,no-param-reassign
@@ -22,8 +22,10 @@ module.exports = (cls, factory, router) => {
                         route,
                         () => s(),
                         (e) => {
-                            // eslint-disable-next-line no-console
-                            console.error(e);
+                            if (debug) {
+                                // eslint-disable-next-line no-console
+                                console.error(e);
+                            }
                             s(e);
                         },
                     );
