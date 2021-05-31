@@ -17,7 +17,10 @@ module.exports = (cls, factory, router) => {
 
             // wait for page change
             if (route) {
-                await router.push(route).catch(() => {
+                await new Promise((s) => {
+                    router.push(route, () => {
+                        s();
+                    });
                 });
             }
         });
