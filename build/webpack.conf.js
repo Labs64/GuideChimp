@@ -37,6 +37,20 @@ const baseConfig = {
             {
                 test: /\.html$/i,
                 loader: 'html-loader',
+                options: {
+                    minimize: {
+                        caseSensitive: true,
+                        collapseWhitespace: true,
+                        conservativeCollapse: true,
+                        keepClosingSlash: true,
+                        minifyCSS: false,
+                        minifyJS: true,
+                        removeComments: true,
+                        removeRedundantAttributes: true,
+                        removeScriptTypeAttributes: true,
+                        removeStyleLinkTypeAttributes: true,
+                    },
+                }
             },
             {
                 test: /\.js$/,
