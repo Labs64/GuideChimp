@@ -186,6 +186,8 @@ export default class GuideChimp {
 
         this.steps = [];
 
+        this.isDisplayed = false;
+
         return this;
     }
 
@@ -230,6 +232,8 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async start(number = 0, useIndex = true, ...args) {
+        this.isDisplayed = true;
+
         this.mountOverlayEl();
 
         this.startPreloader();
@@ -241,6 +245,7 @@ export default class GuideChimp {
 
         if (!this.tour || !this.tour.length) {
             this.removeOverlayEl();
+            this.isDisplayed = false;
             return false;
         }
 
@@ -248,6 +253,7 @@ export default class GuideChimp {
 
         if (!this.steps.length) {
             this.removeOverlayEl();
+            this.isDisplayed = false;
             return false;
         }
 
@@ -255,6 +261,8 @@ export default class GuideChimp {
         document.body.classList.add(this.constructor.getBodyClass());
 
         const isStarted = await this.go(number, useIndex, ...args);
+
+        this.isDisplayed = isStarted;
 
         document.body.classList.toggle(this.constructor.getBodyClass(), isStarted);
 
@@ -282,7 +290,7 @@ export default class GuideChimp {
      * @return {Promise<boolean>}
      */
     async go(number, useIndex = true, ...args) {
-        if (!this.steps.length) {
+        if (!this.isDisplayed || !this.steps.length) {
             return false;
         }
 
@@ -379,7 +387,7 @@ export default class GuideChimp {
     }
 
     async previous(...args) {
-        if (!this.currentStep || !this.previousStep) {
+        if (!this.isDisplayed || !this.currentStep || !this.previousStep) {
             return false;
         }
 
@@ -406,7 +414,7 @@ export default class GuideChimp {
     }
 
     async next(...args) {
-        if (!this.currentStep || !this.nextStep) {
+        if (!this.isDisplayed || !this.currentStep || !this.nextStep) {
             return false;
         }
 
@@ -433,6 +441,10 @@ export default class GuideChimp {
     }
 
     async stop(...args) {
+        if (!this.isDisplayed) {
+            return this;
+        }
+
         if (this.currentStepIndex === this.steps.length - 1) {
             this.startPreloader();
             await this.emit('onComplete', ...args);
@@ -651,37 +663,34 @@ export default class GuideChimp {
     highlightStepEl(animation = false) {
         const el = this.getStepEl(this.currentStep);
 
-        if (this.isEl(el, 'fakeStep')) {
-            return this;
-        }
-
-        const to = this.getOverlayStepPath(this.currentStep);
-
         const overlay = this.getEl('overlay');
-        const path = overlay.querySelector('path');
-        path.setAttribute('d', to);
 
-        const animate = path.querySelector('animate');
+        if (overlay) {
+            const path = overlay.querySelector('path');
+            const animate = path.querySelector('animate');
 
-        if (animate) {
-            let from = '';
+            const to = (this.isEl(el, 'fakeStep'))
+                ? this.getOverlayDocumentPath()
+                : this.getOverlayStepPath(this.currentStep);
 
-            if (this.fromStep) {
-                if (!this.isEl(this.getStepEl(this.fromStep), 'fakeStep')) {
-                    from = this.getOverlayStepPath(this.fromStep);
+            path.setAttribute('d', to);
+
+            if (animate) {
+                const from = (this.fromStep && !this.isEl(this.getStepEl(this.fromStep), 'fakeStep'))
+                    ? this.getOverlayStepPath(this.fromStep)
+                    : null;
+
+                if (!from) {
+                    animate.removeAttribute('from');
+                    animate.removeAttribute('to');
+                } else {
+                    animate.setAttribute('from', from);
+                    animate.setAttribute('to', to);
                 }
-            }
 
-            if (!from) {
-                animate.removeAttribute('from');
-                animate.removeAttribute('to');
-            } else {
-                animate.setAttribute('from', from);
-                animate.setAttribute('to', to);
-            }
-
-            if (animation) {
-                animate.beginElement();
+                if (animation) {
+                    animate.beginElement();
+                }
             }
         }
 
@@ -701,14 +710,17 @@ export default class GuideChimp {
 
     resetHighlightStepEl() {
         const overlay = this.getEl('overlay');
-        const path = overlay.querySelector('path');
-        const animate = overlay.querySelector('animate');
 
-        path.setAttribute('d', this.getOverlayDocumentPath());
+        if (overlay) {
+            const path = overlay.querySelector('path');
+            const animate = overlay.querySelector('animate');
 
-        if (animate) {
-            animate.removeAttribute('from');
-            animate.removeAttribute('to');
+            path.setAttribute('d', this.getOverlayDocumentPath());
+
+            if (animate) {
+                animate.removeAttribute('from');
+                animate.removeAttribute('to');
+            }
         }
 
         const el = this.getStepEl(this.currentStep);
@@ -991,23 +1003,26 @@ export default class GuideChimp {
         document.body.classList.add(this.constructor.getLoadingClass());
 
         const overlay = this.getEl('overlay');
-        const path = overlay.querySelector('path');
-        const animate = overlay.querySelector('animate');
 
-        const preloaderCache = new Map();
-        preloaderCache.set('d', path.getAttribute('d'));
+        if (overlay) {
+            const path = overlay.querySelector('path');
+            const animate = overlay.querySelector('animate');
 
-        path.setAttribute('d', this.getOverlayDocumentPath());
+            const preloaderCache = new Map();
+            preloaderCache.set('d', path.getAttribute('d'));
 
-        if (animate) {
-            preloaderCache.set('from', animate.getAttribute('from'));
-            preloaderCache.set('to', animate.getAttribute('to'));
+            path.setAttribute('d', this.getOverlayDocumentPath());
 
-            animate.removeAttribute('from');
-            animate.removeAttribute('to');
+            if (animate) {
+                preloaderCache.set('from', animate.getAttribute('from'));
+                preloaderCache.set('to', animate.getAttribute('to'));
+
+                animate.removeAttribute('from');
+                animate.removeAttribute('to');
+            }
+
+            this.cache.set('preloaderCache', preloaderCache);
         }
-
-        this.cache.set('preloaderCache', preloaderCache);
 
         const preloader = this.mountPreloaderEl();
         preloader.hidden = true;
@@ -1023,26 +1038,29 @@ export default class GuideChimp {
         document.body.classList.remove(this.constructor.getLoadingClass());
 
         const overlay = this.getEl('overlay');
-        const path = overlay.querySelector('path');
-        const animate = overlay.querySelector('animate');
 
-        const preloaderCache = this.cache.get('preloaderCache') || new Map();
+        if (overlay) {
+            const path = overlay.querySelector('path');
+            const animate = overlay.querySelector('animate');
 
-        if (preloaderCache.has('d')) {
-            path.setAttribute('d', preloaderCache.get('d'));
-        }
+            const preloaderCache = this.cache.get('preloaderCache') || new Map();
 
-        if (animate) {
-            if (preloaderCache.has('from')) {
-                animate.setAttribute('from', preloaderCache.get('from'));
+            if (preloaderCache.has('d')) {
+                path.setAttribute('d', preloaderCache.get('d'));
             }
 
-            if (preloaderCache.has('to')) {
-                animate.setAttribute('to', preloaderCache.get('to'));
-            }
-        }
+            if (animate) {
+                if (preloaderCache.has('from')) {
+                    animate.setAttribute('from', preloaderCache.get('from'));
+                }
 
-        this.cache.delete('preloaderCache');
+                if (preloaderCache.has('to')) {
+                    animate.setAttribute('to', preloaderCache.get('to'));
+                }
+            }
+
+            this.cache.delete('preloaderCache');
+        }
 
         this.removePreloaderEl();
         return this;
