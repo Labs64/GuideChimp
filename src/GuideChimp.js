@@ -669,14 +669,18 @@ export default class GuideChimp {
             const path = overlay.querySelector('path');
             const animate = path.querySelector('animate');
 
-            const to = (this.isEl(el, 'fakeStep'))
+            const isCurrentElFake = this.isEl(el, 'fakeStep');
+
+            const to = (isCurrentElFake)
                 ? this.getOverlayDocumentPath()
                 : this.getOverlayStepPath(this.currentStep);
 
             path.setAttribute('d', to);
 
             if (animate) {
-                const from = (this.fromStep && !this.isEl(this.getStepEl(this.fromStep), 'fakeStep'))
+                const isFromElFake = this.isEl(this.getStepEl(this.fromStep), 'fakeStep');
+
+                const from = (this.fromStep && !isFromElFake && !isCurrentElFake)
                     ? this.getOverlayStepPath(this.fromStep)
                     : null;
 
