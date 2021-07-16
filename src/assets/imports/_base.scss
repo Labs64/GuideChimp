@@ -61,7 +61,7 @@
 
   &.gc-disable {
     position: absolute;
-    cursor: auto;
+    cursor: inherit;
     z-index: 6403;
     opacity: 0;
     background-color: white;
