@@ -7,20 +7,7 @@
     position: fixed;
   }
 
-  .gc-highlight {
-    z-index: 6402;
-
-    & > td, & > th {
-      position: relative;
-      z-index: 6402;
-    }
-  }
-
   &.gc-loading {
-    .gc-highlight {
-      z-index: auto;
-    }
-
     .gc-interaction {
       display: none;
     }
@@ -44,11 +31,16 @@
   left: 0;
   box-sizing: content-box;
   opacity: 0.4;
+  pointer-events: none;
 
   & svg {
     fill: #222222;
     width: 100%;
     height: 100%;
+
+    & path {
+      pointer-events: fill;
+    }
   }
 }
 
@@ -69,6 +61,7 @@
 
   &.gc-disable {
     position: absolute;
+    cursor: auto;
     z-index: 6403;
     opacity: 0;
     background-color: white;
