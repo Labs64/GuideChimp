@@ -328,15 +328,6 @@ export default class Beacons {
                 break;
             }
 
-            default:
-            case 'center': {
-                beaconEl.setAttribute('data-beacon-position', 'center');
-                beaconStyle.left = `${elLeft + ((elWidth - beaconWidth) / 2)}px`;
-                beaconStyle.top = `${elTop + ((elHeight - beaconHeight) / 2)}px`;
-
-                break;
-            }
-
             case 'right': {
                 beaconStyle.left = (boundary === 'inner')
                     ? `${elLeft + elWidth - beaconWidth}px`
@@ -375,6 +366,15 @@ export default class Beacons {
                     beaconStyle.left = `${elWidth + elLeft}px`;
                     beaconStyle.top = `${elTop + elHeight}px`;
                 }
+
+                break;
+            }
+
+            case 'center':
+            default: {
+                beaconEl.setAttribute('data-beacon-position', 'center');
+                beaconStyle.left = `${elLeft + ((elWidth - beaconWidth) / 2)}px`;
+                beaconStyle.top = `${elTop + ((elHeight - beaconHeight) / 2)}px`;
 
                 break;
             }

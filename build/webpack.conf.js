@@ -1,5 +1,5 @@
 const path = require('path');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const pkg = require('../package.json');
 const fs = require('fs');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');

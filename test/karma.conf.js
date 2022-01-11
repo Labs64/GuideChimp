@@ -2,9 +2,10 @@
 //   http://karma-runner.github.io/0.13/config/configuration-file.html
 // we are also using it with karma-webpack
 //   https://github.com/webpack/karma-webpack
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const isDocker = require('is-docker')();
 
+// eslint-disable-next-line import/extensions
 const webpackConfig = require('../build/webpack.conf.js')
     .map((v) => merge(v, { mode: 'development', devtool: 'inline-source-map' }));
 
@@ -25,26 +26,15 @@ module.exports = function karmaConfig(config) {
                 flags: isDocker ? ['--no-sandbox'] : [],
             },
         },
-        frameworks: ['jasmine'],
+        frameworks: ['browserify', 'jasmine'],
         reporters: ['spec'],
         files: [
-            './index.js',
+            './specs/*.spec.js',
             '../plugins/**/tests/*.spec.js',
         ],
         preprocessors: {
-            './index.js': ['babel', 'webpack', 'sourcemap'],
-        },
-        babelPreprocessor: {
-            options: {
-                presets: ['@babel/preset-env'],
-                sourceMap: 'inline',
-            },
-            filename(file) {
-                return file.originalPath.replace(/\.js$/, '.es5.js');
-            },
-            sourceFileName(file) {
-                return file.originalPath;
-            },
+            './specs/*.spec.js': ['browserify'],
+            '../plugins/**/tests/*.spec.js': ['browserify'],
         },
         webpack: webpackConfig,
         webpackMiddleware: {
