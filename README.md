@@ -8,6 +8,7 @@
 <br>
 <a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/Plugins-12-AB6543.svg" alt="GuideChimp Plugins"></a>
 <a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/📖%20Documentation-Wiki-AB6543.svg" alt="📖 Documentation"></a>
+<a href="https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng"><img src="https://img.shields.io/badge/🌐%20Chrome%20Extension-FFCD46.svg" alt="GuideChimp @ Chrome Extension"></a>
 <a href="https://www.labs64.com/guidechimp/"><img src="https://img.shields.io/badge/🌐%20GuideChimp-Website-AB6543.svg" alt="🌐 GuideChimp Website"></a>
 <a href="https://www.linkedin.com/showcase/guidechimp"><img src="https://img.shields.io/badge/GuideChimp-0077B5.svg?logo=LinkedIn" alt="GuideChimp @ LinkedIn"></a>
 </p>
