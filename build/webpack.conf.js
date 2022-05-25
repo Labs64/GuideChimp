@@ -3,7 +3,7 @@ const { merge } = require('webpack-merge');
 const pkg = require('../package.json');
 const fs = require('fs');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BannerPlugin } = require('webpack');
@@ -95,10 +95,10 @@ const baseConfig = {
     performance: { hints: false },
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 include: /\.min\.js$/,
-                sourceMap: true,
                 parallel: true,
+                minify: TerserPlugin.uglifyJsMinify,
             }),
             new OptimizeCSSAssetsPlugin({
                 assetNameRegExp: /\.min\.css$/g,
