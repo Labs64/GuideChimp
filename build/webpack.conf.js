@@ -98,7 +98,6 @@ const baseConfig = {
             new TerserPlugin({
                 include: /\.min\.js$/,
                 parallel: true,
-                minify: TerserPlugin.uglifyJsMinify,
             }),
             new OptimizeCSSAssetsPlugin({
                 assetNameRegExp: /\.min\.css$/g,
