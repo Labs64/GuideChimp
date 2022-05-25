@@ -678,23 +678,33 @@ export default class GuideChimp {
             path.setAttribute('d', to);
 
             if (animate) {
-                const isFromElFake = this.isEl(this.getStepEl(this.fromStep), 'fakeStep');
+                const lock = animate.getAttribute('lock');
 
-                const from = (this.fromStep && !isFromElFake && !isCurrentElFake)
-                    ? this.getOverlayStepPath(this.fromStep)
-                    : null;
-
-                if (!from) {
-                    animate.removeAttribute('from');
-                    animate.removeAttribute('to');
-                } else {
-                    animate.setAttribute('from', from);
+                if (!lock) {
+                    animate.setAttribute('from', to);
                     animate.setAttribute('to', to);
                 }
 
                 if (animation) {
-                    animate.beginElement();
+                    const isFromElFake = this.isEl(this.getStepEl(this.fromStep), 'fakeStep');
+
+                    const from = (this.fromStep && !isFromElFake && !isCurrentElFake)
+                        ? this.getOverlayStepPath(this.fromStep)
+                        : null;
+
+                    if (from) {
+                        animate.setAttribute('from', from);
+                        animate.setAttribute('to', to);
+                    }
+
+                    animate.setAttribute('lock', 'true');
                 }
+
+                animate.onend = () => {
+                    animate.removeAttribute('lock');
+                };
+
+                animate.beginElement();
             }
         }
 
@@ -1208,7 +1218,13 @@ export default class GuideChimp {
     }
 
     getOverlayDocumentPath() {
-        return `M 0 0 H ${document.body.scrollWidth} V ${document.body.scrollHeight} H 0 V 0 Z`;
+        const { innerWidth, innerHeight } = window;
+        const { body: { scrollWidth, scrollHeight } } = document;
+
+        const width = (innerWidth > scrollWidth) ? innerWidth : scrollWidth;
+        const height = (innerHeight > scrollHeight) ? innerHeight : scrollHeight;
+
+        return `M 0 0 H ${width} V ${height} H 0 V 0 Z`;
     }
 
     getOverlayStepPath(step) {
@@ -1839,7 +1855,6 @@ export default class GuideChimp {
             return this;
         }
 
-        this.resetHighlightStepEl();
         this.highlightStepEl();
 
         this.setControlPosition(this.getEl('control'));
