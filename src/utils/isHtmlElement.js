@@ -1,1 +1,1 @@
-export default (el) => /^\[object HTML(.+)Element\]$/.test(`${el}`);
+export default (el) => (el instanceof HTMLElement || /^\[object HTML(.+)Element\]$/.test(`${el}`));
