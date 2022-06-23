@@ -7,6 +7,7 @@ import _isNull from 'lodash/isNull';
 
 // utils
 import isHtmlElement from './isHtmlElement';
+import isSvgElement from './isSvgElement';
 import isNodeList from './isNodeList';
 
 export default (tpl, data = {}) => {
@@ -171,7 +172,7 @@ export default (tpl, data = {}) => {
                             console.error(e);
                         }
 
-                        if (isHtmlElement(replacement)) {
+                        if (isHtmlElement(replacement) || isSvgElement(replacement)) {
                             handler.append(replacement);
                         } else if (isNodeList(replacement)) {
                             replacement.forEach((v) => {
