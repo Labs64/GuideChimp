@@ -5,8 +5,8 @@ const fs = require('fs');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BannerPlugin } = require('webpack');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 const { name, version } = pkg;
 const slug = 'GuideChimp';
@@ -99,8 +99,8 @@ const baseConfig = {
                 include: /\.min\.js$/,
                 parallel: true,
             }),
-            new OptimizeCSSAssetsPlugin({
-                assetNameRegExp: /\.min\.css$/g,
+            new CssMinimizerPlugin({
+                test: /\.min\.css$/i,
             }),
         ],
     },
