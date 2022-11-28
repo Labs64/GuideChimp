@@ -13,13 +13,13 @@ jobs:
     steps:
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 14
           registry-url: https://registry.npmjs.org/
 
       - name: Checkout GuideChimp
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: guidechimp-core
 
@@ -31,7 +31,7 @@ jobs:
           prop_path: 'plugins.guidechimp-plugins'
 
       - name: Checkout GuideChimp Plugins (v${{steps.guidechimp_plugins_version.outputs.prop}})
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: guidechimp-plugins
           repository: Labs64/GuideChimp-plugins
