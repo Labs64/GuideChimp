@@ -119,7 +119,7 @@
         "guidechimp-plugins": "1.8.0"
     },
     "engines": {
-        "node": ">=12.18.0",
+        "node": ">=14.0.0",
         "npm": ">=6.14.4"
     },
     "browserslist": [
