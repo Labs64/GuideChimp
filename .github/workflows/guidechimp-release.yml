@@ -21,13 +21,13 @@ jobs:
       - name: Checkout GuideChimp
         uses: actions/checkout@v3
         with:
-          path: guidechimp-core
+          path: guidechimp
 
       - name: Read GuideChimp Plugins version
         id: guidechimp_plugins_version
         uses: notiz-dev/github-action-json-property@release
         with:
-          path: './guidechimp-core/package.json'
+          path: './guidechimp/package.json'
           prop_path: 'plugins.guidechimp-plugins'
 
       - name: Checkout GuideChimp Plugins (v${{steps.guidechimp_plugins_version.outputs.prop}})
@@ -40,7 +40,7 @@ jobs:
 
       - name: Build and test package
         run: |
-          cd guidechimp-core
+          cd guidechimp
           npm ci
           npm run build --if-present
           npm test
@@ -49,14 +49,14 @@ jobs:
           npm ci
           npm run build --if-present
           ls -la -R dist/
-          rsync -av dist/ ../guidechimp-core/dist/plugins
+          rsync -av dist/ ../guidechimp/dist/plugins
         env:
           GUIDECHIMP_PRIVATE_KEY: ${{secrets.GUIDECHIMP_PRIVATE_KEY}}
           GUIDECHIMP_PUBLIC_KEY: ${{secrets.GUIDECHIMP_PUBLIC_KEY}}
 
       - name: Publish to npmjs.org
         run: |
-          ls -la -R guidechimp-core/dist
+          ls -la -R guidechimp/dist
           npm publish guidechimp
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
