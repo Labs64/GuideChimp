@@ -56,7 +56,8 @@ jobs:
 
       - name: Publish to npmjs.org
         run: |
-          ls -la -R guidechimp/dist
-          npm publish guidechimp
+          cd guidechimp
+          ls -la -R dist
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
