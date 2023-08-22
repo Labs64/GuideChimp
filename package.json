@@ -119,8 +119,8 @@
         "guidechimp-plugins": "1.13.0"
     },
     "engines": {
-        "node": ">=14.0.0",
-        "npm": ">=6.14.4"
+        "node": ">=16.0",
+        "npm": ">=8.0"
     },
     "browserslist": [
         "> 1%",
