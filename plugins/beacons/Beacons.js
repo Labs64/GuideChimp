@@ -214,18 +214,18 @@ export default class Beacons {
                     element: el,
                 };
 
-                // change onclick event
-                const onClick = beacon.onclick || beacon.onClick;
-
-                if (onClick) {
-                    delete beacon.onclick;
-
+                if (beacon.onclick || beacon.onClick) {
                     beacon.onClick = (e) => {
-                        // eslint-disable-next-line no-eval
-                        const onClickCode = eval(onClick);
+                        if (beacon.onclick) {
+                            const shadow = document.createElement('div');
+                            shadow.style.visibility = 'hidden';
+                            shadow.setAttribute('onclick', beacon.onclick);
+                            document.body.append(shadow);
 
-                        if (typeof onClickCode === 'function') {
-                            onClickCode.call(e, beacon);
+                            shadow.click();
+                            document.body.removeChild(shadow);
+                        } else if (typeof beacon.onClick === 'function') {
+                            beacon.onClick.call(e, beacon);
                         }
                     };
                 }
