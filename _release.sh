@@ -21,6 +21,7 @@ if [ "$version" = "" ]; then
 fi
 
 # start release
+git tag $version
 git commit -a -m "Prepare for release $version"
 npm config set tag-version-prefix ''
 npm version $version -m "Release $version"
