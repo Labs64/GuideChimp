@@ -11,28 +11,29 @@
  * @see https://lodash.com/docs
  */
 import _uniqueId from 'lodash/uniqueId';
+import _isFunction from 'lodash/isFunction';
+import _merge from 'lodash/merge';
 
 // utils
-import domTemplate from './utils/domTemplate';
 import isHtmlElement from './utils/isHtmlElement';
 
 // templates
-import overlayTmpl from './templates/overlay.html';
-import preloaderTmpl from './templates/preloader.html';
-import interactionTmpl from './templates/interaction.html';
-import controlTmpl from './templates/control.html';
-import tooltipTmpl from './templates/tooltip.html';
-import progressbarTmpl from './templates/progressbar.html';
-import titleTmpl from './templates/title.html';
-import descriptionTmpl from './templates/description.html';
-import customButtonsTmpl from './templates/custom-buttons.html';
-import previousTmpl from './templates/previous.html';
-import paginationTmpl from './templates/pagination.html';
-import nextTmpl from './templates/next.html';
-import closeTmpl from './templates/close.html';
-import copyrightTmpl from './templates/copyright.html';
-import notificationTmpl from './templates/notification.html';
-import fakeStepTmpl from './templates/fake-step.html';
+import overlayTmpl from './templates/overlay';
+import preloaderTmpl from './templates/preloader';
+import interactionTmpl from './templates/interaction';
+import controlTmpl from './templates/control';
+import tooltipTmpl from './templates/tooltip';
+import progressbarTmpl from './templates/progressbar';
+import titleTmpl from './templates/title';
+import descriptionTmpl from './templates/description';
+import customButtonsTmpl from './templates/customButtons';
+import previousTmpl from './templates/previous';
+import paginationTmpl from './templates/pagination';
+import nextTmpl from './templates/next';
+import closeTmpl from './templates/close';
+import copyrightTmpl from './templates/copyright';
+import notificationTmpl from './templates/notification';
+import fakeStepTmpl from './templates/fakeStep';
 
 export default class GuideChimp {
     /**
@@ -90,12 +91,38 @@ export default class GuideChimp {
             showPagination: true,
             showNavigation: true,
             showProgressbar: true,
-            paginationTheme: 'circles',
-            paginationCirclesMaxItems: 10,
+            pagination: {
+                theme: 'circles',
+                circles: {
+                    maxItems: 10,
+                },
+                numbers: {
+                    delimiter: '...',
+                    visibleSteps: 5,
+                },
+            },
             interaction: true,
             padding: 8,
             scrollPadding: 10,
             scrollBehavior: 'auto',
+            templates: {
+                close: closeTmpl,
+                copyright: copyrightTmpl,
+                next: nextTmpl,
+                previous: previousTmpl,
+                progressbar: progressbarTmpl,
+                title: titleTmpl,
+                description: descriptionTmpl,
+                customButtons: customButtonsTmpl,
+                pagination: paginationTmpl,
+                notification: notificationTmpl,
+                tooltip: tooltipTmpl,
+                fakeStep: fakeStepTmpl,
+                control: controlTmpl,
+                interaction: interactionTmpl,
+                preloader: preloaderTmpl,
+                overlay: overlayTmpl,
+            },
         };
     }
 
@@ -144,8 +171,8 @@ export default class GuideChimp {
      */
     static getOffset(el) {
         const { body, documentElement, defaultView: view } = el.ownerDocument;
-        const scrollTop = view.pageYOffset || documentElement.scrollTop || body.scrollTop;
-        const scrollLeft = view.pageXOffset || documentElement.scrollLeft || body.scrollLeft;
+        const scrollTop = view.scrollY || documentElement.scrollTop || body.scrollTop;
+        const scrollLeft = view.scrollX || documentElement.scrollLeft || body.scrollLeft;
         const { top, right, bottom, left, width, height, x, y } = el.getBoundingClientRect();
         return { right, bottom, width, height, x, y, top: top + scrollTop, left: left + scrollLeft };
     }
@@ -214,7 +241,7 @@ export default class GuideChimp {
      * @return {this}
      */
     setOptions(options) {
-        this.options = { ...this.constructor.getDefaultOptions(), ...options };
+        this.options = _merge(this.constructor.getDefaultOptions(), options);
         return this;
     }
 
@@ -227,7 +254,7 @@ export default class GuideChimp {
 
     /**
      * Start tour
-     * @param number step number or it index
+     * @param number step number, or it indexes
      * @param useIndex whether to use step number or index
      * @return {Promise<boolean>}
      */
@@ -284,7 +311,7 @@ export default class GuideChimp {
 
     /**
      * Go to step
-     * @param number step number or it index
+     * @param number step number, or it indexes
      * @param useIndex whether to use step number or index
      * @param args
      * @return {Promise<boolean>}
@@ -793,14 +820,14 @@ export default class GuideChimp {
             padding = 0;
         }
 
-        const { pageXOffset } = el.ownerDocument.defaultView;
+        const { scrollX } = el.ownerDocument.defaultView;
         const { width: docElWidth } = el.ownerDocument.documentElement.getBoundingClientRect();
         const { height: elHeight, top: elTop, left: elLeft, right: elRight } = this.constructor.getOffset(el);
 
         const height = elHeight + padding;
         const top = elTop - (padding / 2);
-        const left = (pageXOffset < pageXOffset + (elLeft - (padding / 2))) ? pageXOffset : (elLeft - (padding / 2));
-        const width = (pageXOffset + docElWidth > pageXOffset + (elRight + (padding / 2)))
+        const left = (scrollX < scrollX + (elLeft - (padding / 2))) ? scrollX : (elLeft - (padding / 2));
+        const width = (scrollX + docElWidth > scrollX + (elRight + (padding / 2)))
             ? docElWidth
             : (elRight + (padding / 2));
 
@@ -1130,7 +1157,12 @@ export default class GuideChimp {
     }
 
     createEl(name, tmpl, data = {}) {
-        const el = domTemplate(tmpl, data);
+        if (!tmpl || !_isFunction(tmpl)) {
+            throw Error(`"${name}" template is missing or is not a function, 
+            please check your templates.${name} option`);
+        }
+
+        const el = tmpl.call(this, data);
 
         if (el) {
             el.setAttribute(`data-quidechimp-${this.uid}`, name);
@@ -1185,12 +1217,12 @@ export default class GuideChimp {
             : el.getAttribute(`data-quidechimp-${this.uid}`) === key;
     }
 
-    getFakeStepTmpl() {
-        return fakeStepTmpl;
-    }
-
     createFakeStepEl(data = {}) {
-        return this.createEl('fakeStep', this.getFakeStepTmpl(), { ...this.getDefaultTmplData(), ...data });
+        return this.createEl(
+            'fakeStep',
+            this.options.templates.fakeStep,
+            { ...this.getDefaultTmplData(), ...data },
+        );
     }
 
     mountFakeStepEl(data = {}) {
@@ -1201,12 +1233,8 @@ export default class GuideChimp {
         return this.removeEl('fakeStep');
     }
 
-    getPreloaderTmpl() {
-        return preloaderTmpl;
-    }
-
     createPreloaderEl(data = {}) {
-        return this.createEl('preloader', this.getPreloaderTmpl(), data);
+        return this.createEl('preloader', this.options.templates.preloader, data);
     }
 
     mountPreloaderEl(data = {}) {
@@ -1252,10 +1280,6 @@ export default class GuideChimp {
         return path;
     }
 
-    getOverlayTmpl() {
-        return overlayTmpl;
-    }
-
     createOverlayEl(data = {}) {
         const defaults = {
             stop: async (...args) => {
@@ -1266,7 +1290,7 @@ export default class GuideChimp {
             path: this.getOverlayDocumentPath(),
         };
 
-        return this.createEl('overlay', this.getOverlayTmpl(), { ...defaults, ...data });
+        return this.createEl('overlay', this.options.templates.overlay, { ...defaults, ...data });
     }
 
     mountOverlayEl(data = {}) {
@@ -1275,10 +1299,6 @@ export default class GuideChimp {
 
     removeOverlayEl() {
         return this.removeEl('overlay');
-    }
-
-    getInteractionTmpl() {
-        return interactionTmpl;
     }
 
     createInteractionEl(data = {}) {
@@ -1293,7 +1313,7 @@ export default class GuideChimp {
             interaction,
         };
 
-        return this.createEl('interaction', this.getInteractionTmpl(), { ...defaults, ...data });
+        return this.createEl('interaction', this.options.templates.interaction, { ...defaults, ...data });
     }
 
     mountInteractionEl(data = {}) {
@@ -1304,15 +1324,11 @@ export default class GuideChimp {
         return this.removeEl('interaction');
     }
 
-    getControlTmpl() {
-        return controlTmpl;
-    }
-
     createControlEl(data = {}) {
         return this.createEl(
             'control',
-            this.getControlTmpl(),
-            { ...this.getDefaultTmplData(), tooltipEl: this.createTooltipEl(data), ...data },
+            this.options.templates.control,
+            { ...this.getDefaultTmplData(), tooltip: this.createTooltipEl(data), ...data },
         );
     }
 
@@ -1322,10 +1338,6 @@ export default class GuideChimp {
 
     removeControlEl() {
         return this.removeEl('control');
-    }
-
-    getTooltipTmpl() {
-        return tooltipTmpl;
     }
 
     createTooltipEl(data = {}) {
@@ -1343,19 +1355,11 @@ export default class GuideChimp {
             notification: this.createNotificationEl(data),
         };
 
-        return this.createEl('tooltip', this.getTooltipTmpl(), { ...defaults, ...data });
-    }
-
-    getCloseTmpl() {
-        return closeTmpl;
+        return this.createEl('tooltip', this.options.templates.tooltip, { ...defaults, ...data });
     }
 
     createCloseEl(data = {}) {
-        return this.createEl('close', this.getCloseTmpl(), { ...this.getDefaultTmplData(), ...data });
-    }
-
-    getProgressbarTmpl() {
-        return progressbarTmpl;
+        return this.createEl('close', this.options.templates.close, { ...this.getDefaultTmplData(), ...data });
     }
 
     createProgressbarEl(data = {}) {
@@ -1377,34 +1381,21 @@ export default class GuideChimp {
             progress,
         };
 
-        return this.createEl('progressbar', this.getProgressbarTmpl(), { ...defaults, ...data });
-    }
-
-    getTitleTmpl() {
-        return titleTmpl;
+        return this.createEl('progressbar', this.options.templates.progressbar, { ...defaults, ...data });
     }
 
     createTitleEl(data = {}) {
         const { title = '' } = this.currentStep;
-        return this.createEl('title', this.getTitleTmpl(), { ...this.getDefaultTmplData(), title, ...data });
-    }
-
-    getDescriptionTmpl() {
-        return descriptionTmpl;
+        return this.createEl('title', this.options.templates.title, { ...this.getDefaultTmplData(), title, ...data });
     }
 
     createDescriptionEl(data = {}) {
         const { description = '' } = this.currentStep;
-
         return this.createEl(
             'description',
-            this.getDescriptionTmpl(),
+            this.options.templates.description,
             { ...this.getDefaultTmplData(), description, ...data },
         );
-    }
-
-    getCustomButtonsTmpl() {
-        return customButtonsTmpl;
     }
 
     createCustomButtonsEl(data = {}) {
@@ -1437,20 +1428,13 @@ export default class GuideChimp {
 
         return this.createEl(
             'customButtons',
-            this.getCustomButtonsTmpl(),
+            this.options.templates.customButtons,
             { ...this.getDefaultTmplData(), buttons, ...data },
         );
     }
 
-    getPaginationTmpl() {
-        return paginationTmpl;
-    }
-
     createPaginationEl(data = {}) {
-        const {
-            paginationTheme = this.options.paginationTheme,
-            paginationCirclesMaxItems = this.options.paginationCirclesMaxItems,
-        } = this.currentStep;
+        const { pagination = this.options.pagination } = this.currentStep;
 
         let { showPagination } = this.options;
 
@@ -1460,19 +1444,14 @@ export default class GuideChimp {
 
         return this.createEl(
             'pagination',
-            this.getPaginationTmpl(),
+            this.options.templates.pagination,
             {
                 ...this.getDefaultTmplData(),
                 showPagination,
-                paginationTheme,
-                paginationCirclesMaxItems,
+                pagination,
                 ...data,
             },
         );
-    }
-
-    getPreviousTmpl() {
-        return previousTmpl;
     }
 
     createPreviousEl(data = {}) {
@@ -1484,13 +1463,9 @@ export default class GuideChimp {
 
         return this.createEl(
             'previous',
-            this.getPreviousTmpl(),
+            this.options.templates.previous,
             { ...this.getDefaultTmplData(), showNavigation, ...data },
         );
-    }
-
-    getNextTmpl() {
-        return nextTmpl;
     }
 
     createNextEl(data = {}) {
@@ -1502,31 +1477,32 @@ export default class GuideChimp {
 
         return this.createEl(
             'next',
-            this.getNextTmpl(),
+            this.options.templates.next,
             { ...this.getDefaultTmplData(), showNavigation, ...data },
         );
     }
 
-    getCopyrightTmpl() {
-        return copyrightTmpl;
-    }
-
     createCopyrightEl(data = {}) {
-        return this.createEl('copyright', this.getCopyrightTmpl(), { ...this.getDefaultTmplData(), ...data });
-    }
-
-    getNotificationTmpl() {
-        return notificationTmpl;
+        return this.createEl(
+            'copyright',
+            this.constructor.getDefaultOptions().templates.copyright,
+            { ...this.getDefaultTmplData(), ...data },
+        );
     }
 
     createNotificationEl(data = {}) {
         return this.createEl(
             'notification',
-            this.getNotificationTmpl(),
+            this.options.templates.notification,
             { ...this.getDefaultTmplData(), messages: this.notifications, ...data },
         );
     }
 
+    /**
+     * Show notification message
+     * @param message
+     * @returns {GuideChimp}
+     */
     notify(message) {
         this.notifications.push(message);
 

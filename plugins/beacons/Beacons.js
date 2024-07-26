@@ -5,11 +5,8 @@
  * This source code is licensed under the European Union Public License, version 1.2
  * located in the LICENSE file
  */
-// utils
-import domTemplate from '../../src/utils/domTemplate';
-
 // templates
-import beaconTpl from './templates/beacon.html';
+import beaconTpl from './templates/beacon';
 
 export default class Beacons {
     constructor(beacons, options = {}) {
@@ -246,10 +243,6 @@ export default class Beacons {
         return array.map((v, i) => ({ ...v, id: v.id || i }));
     }
 
-    getBeaconTpl() {
-        return beaconTpl;
-    }
-
     createBeaconEl(beacon) {
         const data = { ...beacon };
 
@@ -260,7 +253,7 @@ export default class Beacons {
             }
         };
 
-        return domTemplate(this.getBeaconTpl(), { beacon: data });
+        return beaconTpl.call(this, { beacon: data });
     }
 
     getEl(selector) {
