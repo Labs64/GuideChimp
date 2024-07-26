@@ -4,6 +4,7 @@
 
 | Version | Supported          | End of support |
 | ------- | ------------------ | -------------- |
+| 5.x     | :white_check_mark: | Q4/2026        |
 | 4.x     | :white_check_mark: | Q4/2024        |
 | 3.x     | :x:                | Q4/2022        |
 | 2.x     | :x:                | Q2/2021        |
