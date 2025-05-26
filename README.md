@@ -155,3 +155,7 @@ Commercial GuideChimp plugins require a [valid customer account](https://www.lab
 # Privacy Policy
 
 The applicable data protection provisions may be retrieved under [Privacy Policy](privacy-policy.md).
+
+# Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Labs64/GuideChimp&type=Date)](https://www.star-history.com/#Labs64/GuideChimp&Date)
