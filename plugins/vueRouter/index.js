@@ -17,19 +17,14 @@ module.exports = (cls, factory, router, debug = false) => {
 
             // wait for page change
             if (route) {
-                await new Promise((s) => {
-                    router.push(
-                        route,
-                        () => s(),
-                        (e) => {
-                            if (debug) {
-                                // eslint-disable-next-line no-console
-                                console.error(e);
-                            }
-                            s(e);
-                        },
-                    );
-                });
+                try {
+                    await router.push(route);
+                } catch (e) {
+                    if (debug) {
+                        // eslint-disable-next-line no-console
+                        console.error(e);
+                    }
+                }
             }
         });
     };
