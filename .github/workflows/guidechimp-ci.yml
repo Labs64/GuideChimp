@@ -1,34 +1,50 @@
 name: GuideChimp - CI
 
-on: [push]
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [20.x, 24.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v4
 
-    - name: npm install, build, and test
-      run: |
-        npm ci
-        npm run build --if-present
-        npm test
-        ls -la -R dist/
-      env:
-        CI: true
-    - name: Archive npm failure logs
-      uses: actions/upload-artifact@v3
-      if: failure()
-      with:
-        name: npm-logs
-        path: ~/.npm/_logs
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Test
+        run: npm test
+        env:
+          CI: true
+
+      - name: Show dist
+        run: |
+          ls -la
+          ls -laR dist/
+
+      - name: Archive npm failure logs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: npm-logs
+          path: ~/.npm/_logs
+          if-no-files-found: ignore
