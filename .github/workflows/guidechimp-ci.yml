@@ -27,7 +27,7 @@ jobs:
       env:
         CI: true
     - name: Archive npm failure logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: npm-logs
