@@ -1,63 +1,141 @@
 name: GuideChimp - Release
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 3.2.1) or bump type (patch, minor, major)'
+        required: true
+        default: 'patch'
+      release_notes:
+        description: 'Release notes — leave blank to auto-generate from commits/PRs'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write # Required for Trusted Publishing
 
 jobs:
-
-  publish-npm:
-
+  release:
     runs-on: ubuntu-latest
-
+    environment: npm-publish
     steps:
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-
+      # ── Checkout Repositories ───────────────────────────────────────────────
       - name: Checkout GuideChimp
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
-          path: guidechimp
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      - name: Read GuideChimp Plugins version
-        id: guidechimp_plugins_version
-        uses: notiz-dev/github-action-json-property@release
-        with:
-          path: './guidechimp/package.json'
-          prop_path: 'plugins.guidechimp-plugins'
+      - name: Read Plugins version from package.json
+        id: plugins_version
+        run: |
+          # Replaces the outdated notiz-dev 3rd-party action with a fast native script
+          PLUGINS_VER=$(node -p "require('./package.json').plugins['guidechimp-plugins']")
+          echo "version=$PLUGINS_VER" >> $GITHUB_OUTPUT
+          echo "✅ Found plugin version: $PLUGINS_VER"
 
-      - name: Checkout GuideChimp Plugins (v${{steps.guidechimp_plugins_version.outputs.prop}})
-        uses: actions/checkout@v3
+      - name: Checkout GuideChimp Plugins (v${{ steps.plugins_version.outputs.version }})
+        uses: actions/checkout@v5
         with:
-          path: guidechimp-plugins
           repository: Labs64/GuideChimp-plugins
-          ref: ${{steps.guidechimp_plugins_version.outputs.prop}}
+          path: guidechimp-plugins
+          ref: ${{ steps.plugins_version.outputs.version }}
           token: ${{ secrets.GUIDECHIMP_PAT }}
 
-      - name: Build and test package
-        run: |
-          cd guidechimp
-          npm ci
-          npm run build --if-present
-          npm test
-          ls -la -R dist/
-          cd ../guidechimp-plugins
-          npm ci
-          npm run build --if-present
-          ls -la -R dist/
-          rsync -av dist/ ../guidechimp/dist/plugins
-        env:
-          GUIDECHIMP_PRIVATE_KEY: ${{secrets.GUIDECHIMP_PRIVATE_KEY}}
-          GUIDECHIMP_PUBLIC_KEY: ${{secrets.GUIDECHIMP_PUBLIC_KEY}}
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
 
-      - name: Publish to npmjs.org
+      # ── Guards ──────────────────────────────────────────────────────────────
+      - name: Validate version input
         run: |
-          cd guidechimp
-          ls -la -R dist
-          npm publish
+          INPUT="${{ inputs.version }}"
+          if echo "$INPUT" | grep -Pq '^(patch|minor|major)$'; then
+            echo "✅ Bump type: $INPUT"
+          elif echo "$INPUT" | grep -Pq '^\d+\.\d+\.\d+(-\w.+)?(\+\w.+)?$'; then
+            echo "✅ Explicit version: $INPUT"
+          else
+            echo "❌ '$INPUT' is neither a bump type (patch/minor/major) nor valid semver"
+            exit 1
+          fi
+
+      - name: Check version not already tagged
+        run: |
+          INPUT="${{ inputs.version }}"
+          if echo "$INPUT" | grep -Pq '^\d+'; then
+            if git ls-remote --tags origin | grep -q "refs/tags/${INPUT}$"; then
+              echo "❌ Tag ${INPUT} already exists — bump the version or delete the tag first"
+              exit 1
+            fi
+          fi
+
+      # ── Install & Test GuideChimp ───────────────────────────────────────────
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check outdated dependencies
+        run: npm outdated || true
+
+      - name: Run tests
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          GUIDECHIMP_PRIVATE_KEY: ${{ secrets.GUIDECHIMP_PRIVATE_KEY }}
+          GUIDECHIMP_PUBLIC_KEY: ${{ secrets.GUIDECHIMP_PUBLIC_KEY }}
+        run: npm run test
+
+      # ── Build Core & Plugins ────────────────────────────────────────────────
+      - name: Build GuideChimp Core
+        run: npm run build --if-present
+
+      - name: Build GuideChimp Plugins
+        working-directory: ./guidechimp-plugins
+        run: |
+          npm ci
+          npm run build --if-present
+
+      - name: Sync Plugins to GuideChimp dist
+        run: |
+          mkdir -p dist/plugins
+          rsync -av guidechimp-plugins/dist/ dist/plugins/
+          ls -la -R dist/
+
+      # ── Git: commit dist before versioning ──────────────────────────────────
+      - name: Configure Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Commit build artifacts
+        run: |
+          git add dist/ -f
+          git diff --quiet && git diff --staged --quiet \
+            || git commit -m "Update build artifacts and plugins for ${{ inputs.version }}"
+
+      # ── Version bump, tag & push ────────────────────────────────────────────
+      - name: Bump version and tag
+        id: bump
+        run: |
+          npm version ${{ inputs.version }} --tag-version-prefix="" -m "Release %s"
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          git push --follow-tags
+
+      # ── Publish ─────────────────────────────────────────────────────────────
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.new_version }}
+          name: ${{ steps.bump.outputs.new_version }}
+          body: ${{ inputs.release_notes }}
+          generate_release_notes: ${{ inputs.release_notes == '' }}
+          files: dist/**
