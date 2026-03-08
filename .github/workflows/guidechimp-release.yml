@@ -15,7 +15,7 @@ on:
 permissions:
   contents: write
   packages: write
-  id-token: write # Required for Trusted Publishing
+  id-token: write
 
 jobs:
   release:
@@ -49,7 +49,8 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org/'
+          cache: npm
+          registry-url: https://registry.npmjs.org/
 
       # ── Guards ──────────────────────────────────────────────────────────────
       - name: Validate version input
@@ -57,7 +58,7 @@ jobs:
           INPUT="${{ inputs.version }}"
           if echo "$INPUT" | grep -Pq '^(patch|minor|major)$'; then
             echo "✅ Bump type: $INPUT"
-          elif echo "$INPUT" | grep -Pq '^\d+\.\d+\.\d+(-\w.+)?(\+\w.+)?$'; then
+          elif echo "$INPUT" | grep -Pq '^\d+\.\d+\.\d+(-[\w.]+)?(\+[\w.]+)?$'; then
             echo "✅ Explicit version: $INPUT"
           else
             echo "❌ '$INPUT' is neither a bump type (patch/minor/major) nor valid semver"
@@ -103,17 +104,11 @@ jobs:
           rsync -av guidechimp-plugins/dist/ dist/plugins/
           ls -la -R dist/
 
-      # ── Git: commit dist before versioning ──────────────────────────────────
+      # ── Git: configure for version bump ─────────────────────────────────────
       - name: Configure Git
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Commit build artifacts
-        run: |
-          git add dist/ -f
-          git diff --quiet && git diff --staged --quiet \
-            || git commit -m "Update build artifacts and plugins for ${{ inputs.version }}"
 
       # ── Version bump, tag & push ────────────────────────────────────────────
       - name: Bump version and tag

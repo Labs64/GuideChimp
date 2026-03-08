@@ -1,7 +1,7 @@
 <a href="https://www.labs64.com/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-logo-transparent.png" alt="GuideChimp - Logo"></p></a>
 
 <p align="center">
-<a href="https://github.com/Labs64/GuideChimp/actions?query=workflow%3A%22GuideChimp+CI%22"><img src="https://github.com/Labs64/GuideChimp/workflows/GuideChimp%20CI/badge.svg" alt="Build Status"></a>
+<a href="https://github.com/Labs64/GuideChimp/actions/workflows/guidechimp-ci.yml"><img src="https://github.com/Labs64/GuideChimp/actions/workflows/guidechimp-ci.yml/badge.svg" alt="Build Status"></a>
 <a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="GuideChimp @ npmjs"></a>
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="GuideChimp @ jsDelivr"></a>
 <a href="https://github.com/Labs64/GuideChimp/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-EUPL--1.2-blue.svg" alt="European Union Public License, version 1.2"></a>
@@ -134,9 +134,6 @@ GuideChimp is maintained by Labs64.
 [Contact](https://www.labs64.com/contact/) us for web app consulting, development, and training for your project or book a demo.
 
 ---
-
-<a href="https://www.producthunt.com/posts/guidechimp?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-guidechimp" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=182973&theme=light" alt="GuideChimp - Simplify user onboarding with interactive walkthroughs | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
-
 
 # Bugs and Feedback
 

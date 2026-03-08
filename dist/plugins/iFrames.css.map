@@ -1,1 +1,0 @@
-{"version":3,"file":"iFrames.css","mappings":";AAAA,WACE,kBACA,aACA,sB","sources":["webpack://guideChimpPluginIFrames/./src/plugins/iFrames/assets/style.scss"],"sourcesContent":[".gc-iframe {\n  position: relative;\n  z-index: 6401;\n  background-color: #ffffff;\n}"],"names":[],"sourceRoot":""}
