@@ -4,6 +4,9 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: read
+
 jobs:
 
   publish-npm:
@@ -12,26 +15,27 @@ jobs:
 
     steps:
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-
       - name: Checkout GuideChimp
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: guidechimp
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+          cache: npm
+          cache-dependency-path: guidechimp/package-lock.json
+
       - name: Read GuideChimp Plugins version
         id: guidechimp_plugins_version
-        uses: notiz-dev/github-action-json-property@release
-        with:
-          path: './guidechimp/package.json'
-          prop_path: 'plugins.guidechimp-plugins'
+        run: |
+          PLUGINS_VERSION=$(node -e "const p = require('./guidechimp/package.json'); const v = p.plugins && p.plugins['guidechimp-plugins']; if (!v) { process.stderr.write('plugins.guidechimp-plugins not found in package.json\n'); process.exit(1); } console.log(v);")
+          echo "prop=$PLUGINS_VERSION" >> $GITHUB_OUTPUT
 
       - name: Checkout GuideChimp Plugins (v${{steps.guidechimp_plugins_version.outputs.prop}})
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: guidechimp-plugins
           repository: Labs64/GuideChimp-plugins
