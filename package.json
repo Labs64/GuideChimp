@@ -116,7 +116,7 @@
         "webpack-merge": "^5.8.0"
     },
     "plugins": {
-        "guidechimp-plugins": "1.14.0"
+        "guidechimp-plugins": "1.15.1"
     },
     "engines": {
         "node": ">=16.0",
@@ -128,3 +128,4 @@
         "not ie <= 11"
     ]
 }
+
