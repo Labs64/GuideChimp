@@ -121,8 +121,7 @@ jobs:
       - name: Sync Plugins to GuideChimp dist
         run: |
           mkdir -p dist/plugins
-          # --delete makes sure removed/renamed files in plugins/dist are cleared
-          rsync -av --delete guidechimp-plugins/dist/ dist/plugins/
+          rsync -av guidechimp-plugins/dist/ dist/plugins/
           ls -la -R dist/
 
       # ── Publish ─────────────────────────────────────────────────────────────
