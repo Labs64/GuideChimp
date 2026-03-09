@@ -88,6 +88,20 @@ jobs:
           GUIDECHIMP_PUBLIC_KEY: ${{ secrets.GUIDECHIMP_PUBLIC_KEY }}
         run: npm run test
 
+      # ── Git: configure and bump version before build ──────────────────────
+      - name: Configure Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Bump version and tag
+        id: bump
+        run: |
+          npm version ${{ inputs.version }} --tag-version-prefix="" -m "Release %s"
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          git push --follow-tags
+
       # ── Build Core & Plugins ────────────────────────────────────────────────
       # ensure the dist directory is completely fresh before building anything
       - name: Clean existing dist
@@ -110,21 +124,6 @@ jobs:
           # --delete makes sure removed/renamed files in plugins/dist are cleared
           rsync -av --delete guidechimp-plugins/dist/ dist/plugins/
           ls -la -R dist/
-
-      # ── Git: configure for version bump ─────────────────────────────────────
-      - name: Configure Git
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-
-      # ── Version bump, tag & push ────────────────────────────────────────────
-      - name: Bump version and tag
-        id: bump
-        run: |
-          npm version ${{ inputs.version }} --tag-version-prefix="" -m "Release %s"
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          git push --follow-tags
 
       # ── Publish ─────────────────────────────────────────────────────────────
       - name: Update npm
