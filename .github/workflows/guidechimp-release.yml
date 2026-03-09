@@ -89,6 +89,12 @@ jobs:
         run: npm run test
 
       # ── Build Core & Plugins ────────────────────────────────────────────────
+      # ensure the dist directory is completely fresh before building anything
+      - name: Clean existing dist
+        run: |
+          echo "Removing any leftover files from previous releases"
+          rm -rf dist/* || true
+
       - name: Build GuideChimp Core
         run: npm run build --if-present
 
@@ -101,7 +107,8 @@ jobs:
       - name: Sync Plugins to GuideChimp dist
         run: |
           mkdir -p dist/plugins
-          rsync -av guidechimp-plugins/dist/ dist/plugins/
+          # --delete makes sure removed/renamed files in plugins/dist are cleared
+          rsync -av --delete guidechimp-plugins/dist/ dist/plugins/
           ls -la -R dist/
 
       # ── Git: configure for version bump ─────────────────────────────────────
