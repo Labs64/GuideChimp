@@ -9,20 +9,8 @@ module.exports = {
         browser: true,
     },
     extends: ['airbnb-base'],
-    // check if imports actually resolve
-    settings: {
-        'import/resolver': {
-            webpack: {
-                config: 'build/webpack.conf.js',
-            },
-        },
-    },
     // add your custom rules here
     rules: {
-        // allow optionalDependencies
-        'import/no-extraneous-dependencies': ['error', {
-            optionalDependencies: ['test/index.js'],
-        }],
         'import/no-import-module-exports': 'off',
         // allow debugger during development
         'no-debugger': 'error',

@@ -115,6 +115,12 @@ Include the compiled files in your HTML page:
 
 See GuideChimp in action in the product walkthrough, showcases and real-world examples below:
 
+To run the local interactive demo:
+
+```bash
+npm run demo
+```
+
 - [GuideChimp Tour Examples](https://codepen.io/collection/DyPkzY) at CodePen
 - [NetLicensing Changelog](https://netlicensing.io/wiki/changelog) - Tour: Notable NetLicensing Features
 - [NetLicensing Licensing Models](https://netlicensing.io/licensing-models/?guidechimp=on&tour=licensing-models) - Sample Tour: Licensing Models

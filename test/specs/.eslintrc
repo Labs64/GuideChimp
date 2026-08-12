@@ -1,8 +1,6 @@
 {
-    "env": {
-        "jasmine": true
-    },
-    "plugins": [
-        "jasmine"
-    ]
+    "globals": {
+        "describe": "readonly",
+        "it": "readonly"
+    }
 }

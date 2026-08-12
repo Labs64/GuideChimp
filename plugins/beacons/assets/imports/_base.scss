@@ -1,6 +1,9 @@
+@use "sass:color";
+@use "variables" as *;
+
 .gc-beacon {
   position: absolute;
-  background: linear-gradient($primary, darken($primary, 10%));
+  background: linear-gradient($primary, color.adjust($primary, $lightness: -10%));
   height: 20px;
   width: 20px;
   border-radius: 50%;
@@ -17,7 +20,7 @@
     top: 0;
     background-color: transparent;
     border-radius: 50%;
-    box-shadow: 0px 0px 3px 3px lighten($wave, 15%);
+    box-shadow: 0px 0px 3px 3px color.adjust($wave, $lightness: 15%);
     -webkit-animation: active 2s infinite linear;
     animation: beacon 2s infinite linear;
   }

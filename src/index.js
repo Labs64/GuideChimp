@@ -28,4 +28,4 @@ guideChimp.extend = (plugin, ...args) => {
     return guideChimp;
 };
 
-module.exports = guideChimp;
+export default guideChimp;

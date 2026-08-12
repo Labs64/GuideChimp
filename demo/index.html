@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuideChimp — Local Demo</title>
+    <link rel="stylesheet" href="/dist/guidechimp.css">
+    <style>
+        :root {
+            color: #20252b;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f4f7fb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px clamp(24px, 6vw, 80px);
+            color: #ffffff;
+            background: #20252b;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .status {
+            padding: 6px 11px;
+            border-radius: 999px;
+            color: #a7f3d0;
+            background: rgba(16, 185, 129, 0.18);
+            font-size: 13px;
+        }
+
+        main {
+            width: min(1080px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 72px 0;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.35fr 0.65fr;
+            gap: 48px;
+            align-items: center;
+            margin-bottom: 64px;
+        }
+
+        h1 {
+            max-width: 720px;
+            margin: 0 0 18px;
+            font-size: clamp(38px, 6vw, 68px);
+            line-height: 1.02;
+        }
+
+        .lead {
+            max-width: 680px;
+            margin: 0 0 28px;
+            color: #667085;
+            font-size: 19px;
+            line-height: 1.65;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 13px 20px;
+            color: #ffffff;
+            background: #e14817;
+            box-shadow: 0 8px 22px rgba(225, 72, 23, 0.24);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #c83c10;
+        }
+
+        .mascot {
+            display: grid;
+            min-height: 250px;
+            place-items: center;
+            border: 1px solid #dce3ec;
+            border-radius: 28px;
+            background: linear-gradient(145deg, #ffffff, #fff1ec);
+            box-shadow: 0 24px 70px rgba(32, 37, 43, 0.08);
+            font-size: 92px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            min-height: 180px;
+            padding: 26px;
+            border: 1px solid #dce3ec;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 12px 34px rgba(32, 37, 43, 0.06);
+        }
+
+        .card span {
+            font-size: 28px;
+        }
+
+        .card h2 {
+            margin: 16px 0 8px;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 0;
+            color: #667085;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 760px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .mascot {
+                min-height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header id="demo-header">
+    <div class="brand">GuideChimp playground</div>
+    <div class="status">Vite build connected</div>
+</header>
+
+<main>
+    <section class="hero">
+        <div>
+            <h1 id="welcome-title">Try GuideChimp live</h1>
+            <p class="lead">
+                This simple local page lets you manually test navigation, tooltip positioning,
+                element highlighting, and closing the tour.
+            </p>
+            <button id="start-tour" type="button">Start the tour again</button>
+        </div>
+        <div id="chimp-card" class="mascot" aria-label="GuideChimp mascot">🐵</div>
+    </section>
+
+    <section id="feature-cards" class="features" aria-label="Features">
+        <article class="card">
+            <span>🎯</span>
+            <h2>Highlighting</h2>
+            <p>GuideChimp focuses the user's attention on the relevant interface element.</p>
+        </article>
+        <article class="card">
+            <span>⌨️</span>
+            <h2>Navigation</h2>
+            <p>Click the tooltip arrows or use the ←, →, and Escape keys.</p>
+        </article>
+        <article class="card">
+            <span>🧭</span>
+            <h2>Positioning</h2>
+            <p>Tooltips can appear above, below, or beside the target element.</p>
+        </article>
+    </section>
+</main>
+
+<script src="/dist/guidechimp.js"></script>
+<script>
+    const tourSteps = [
+        {
+            element: '#welcome-title',
+            title: 'Welcome to GuideChimp!',
+            description: 'This is the first step. Click the right arrow or press the → key.',
+            position: 'bottom',
+        },
+        {
+            element: '#chimp-card',
+            title: 'An element in focus',
+            description: 'The background is dimmed while the selected element remains visible and highlighted.',
+            position: 'left',
+        },
+        {
+            element: '#feature-cards',
+            title: 'A group of features',
+            description: 'The tour can guide users through any section of the page.',
+            position: 'top',
+        },
+        {
+            element: '#start-tour',
+            title: 'All done!',
+            description: 'Close the tour with the × button or Escape. Use this button to start it again.',
+            position: 'right',
+        },
+    ];
+
+    let activeTour;
+
+    async function startDemoTour() {
+        if (activeTour && activeTour.isDisplayed) {
+            await activeTour.stop();
+        }
+
+        activeTour = GuideChimp(tourSteps, {
+            scrollBehavior: 'smooth',
+            showNavigation: true,
+            showPagination: true,
+            showProgressbar: true,
+        });
+        await activeTour.start();
+    }
+
+    document.querySelector('#start-tour').addEventListener('click', startDemoTour);
+    window.addEventListener('load', startDemoTour);
+</script>
+</body>
+</html>

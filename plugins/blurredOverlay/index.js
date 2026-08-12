@@ -7,7 +7,7 @@
 
 import './assets/style.scss';
 
-module.exports = (cls) => {
+export default (cls) => {
     // eslint-disable-next-line no-param-reassign
     cls.getNotBlurredClass = () => 'gc-not-blurred';
 
