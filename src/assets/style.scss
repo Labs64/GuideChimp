@@ -5,14 +5,10 @@
  * located in the LICENSE file
  */
 
-// Variables, Mixins
-@import "src/assets/imports/variables";
-@import "src/assets/imports/mixins";
-
 // Theme Elements
-@import "src/assets/imports/base";
+@use "src/assets/imports/base";
 
 // Media query style
-@import "src/assets/imports/media";
+@use "src/assets/imports/media";
 
 // GuideChimp Skins

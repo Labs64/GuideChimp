@@ -7,7 +7,7 @@
 import Beacons from './Beacons';
 import './assets/style.scss';
 
-module.exports = (Class, factory) => {
+export default (Class, factory) => {
     // eslint-disable-next-line no-param-reassign
     factory.beacons = (beacons, options = {}) => new class extends Beacons {
         getDataBeacons(ids) {

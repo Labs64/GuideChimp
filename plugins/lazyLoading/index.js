@@ -11,7 +11,7 @@
  * @param {Object} factory GuideChimp factory
  * @param {Object} options the options object
  */
-module.exports = (cls, factory, options) => {
+export default (cls, factory, options) => {
     const opt = options || {};
 
     let { timeout = 5000 } = opt;

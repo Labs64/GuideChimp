@@ -11,7 +11,7 @@
  * @param {Object} factory GuideChimp factory
  * @param {Array} args optional arguments needed for the plugin; for instance, the options object
  */
-module.exports =  (cls, factory, ...args) => {
+export default (cls, factory, ...args) => {
     /**
      * Plugin dependency management.
      * In case your plugin depends on another plugin, you can use plugin dependency system.
