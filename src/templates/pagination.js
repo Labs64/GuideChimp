@@ -78,8 +78,6 @@ export default (data) => {
                         ul.append(render(`<li class="gc-pagination-dots">${numbersTheme.delimiter}</li>`).element);
 
                         i = (i < start) ? start : steps.length - 1;
-
-                        // eslint-disable-next-line no-continue
                         continue;
                     }
                 }
