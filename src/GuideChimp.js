@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 /**
  * Copyright (C) 2020 Labs64 GmbH
  *
@@ -662,9 +661,7 @@ export default class GuideChimp {
 
         parents.forEach((parent) => {
             if (parent !== document.body) {
-                // eslint-disable-next-line no-param-reassign
                 parent.scrollTop = el.offsetTop - parent.offsetTop - scrollPadding;
-                // eslint-disable-next-line no-param-reassign
                 parent.scrollLeft = el.offsetLeft - parent.offsetLeft - scrollPadding;
             }
         });

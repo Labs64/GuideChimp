@@ -57,24 +57,23 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test-for-travis": "vitest run",
-        "lint": "eslint --ext .js,.vue src test",
+        "lint": "eslint src test",
         "cdn-clear-cache": "node build/cdn.clear.cache.js"
     },
     "dependencies": {
         "lodash": "^4.17.21"
     },
     "devDependencies": {
-        "babel-eslint": "^10.1.0",
-        "eslint": "^7.32.0",
-        "eslint-config-airbnb-base": "^15.0.0",
-        "eslint-plugin-import": "^2.26.0",
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.13.0",
+        "globals": "^17.13.0",
         "happy-dom": "^21.0.4",
-        "sass": "^1.54.4",
-        "vite": "^8.2.1",
-        "vitest": "^4.1.10"
+        "sass": "^1.106.1",
+        "vite": "^8.3.5",
+        "vitest": "^5.0.5"
     },
     "plugins": {
-        "guidechimp-plugins": "1.15.1"
+        "guidechimp-plugins": "1.15.2"
     },
     "engines": {
         "node": "^22.23.4 || ^24.22.1 || >=26.12.1",
