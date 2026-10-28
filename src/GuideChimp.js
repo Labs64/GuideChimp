@@ -52,7 +52,8 @@ export default class GuideChimp {
 
         this.cache = new Map();
 
-        this.listeners = {};
+        // Event names are caller-controlled, so keep them out of Object.prototype.
+        this.listeners = Object.create(null);
 
         this.observers = {};
 
@@ -1534,7 +1535,7 @@ export default class GuideChimp {
 
         const e = event.trim();
 
-        this.listeners[e] = this.listeners[e] || {};
+        this.listeners[e] = this.listeners[e] || Object.create(null);
         this.listeners[e][priority] = this.listeners[e][priority] || [];
         this.listeners[e][priority].push(listener);
 
