@@ -2,163 +2,200 @@
 
 <p align="center">
 <a href="https://github.com/Labs64/GuideChimp/actions/workflows/guidechimp-ci.yml"><img src="https://github.com/Labs64/GuideChimp/actions/workflows/guidechimp-ci.yml/badge.svg" alt="Build Status"></a>
-<a href="https://badge.fury.io/js/guidechimp"><img src="https://badge.fury.io/js/guidechimp.svg" alt="GuideChimp @ npmjs"></a>
+<a href="https://www.npmjs.com/package/guidechimp"><img src="https://img.shields.io/npm/v/guidechimp?color=AB6543&label=npm" alt="GuideChimp @ npm"></a>
 <a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="GuideChimp @ jsDelivr"></a>
-<a href="https://github.com/Labs64/GuideChimp/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-EUPL--1.2-blue.svg" alt="European Union Public License, version 1.2"></a>
+<a href="https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng"><img src="https://img.shields.io/badge/chrome-extension-AB6543.svg" alt="GuideChimp @ Chrome Web Store"></a>
 <br>
-<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/Plugins-12-AB6543.svg" alt="GuideChimp Plugins"></a>
-<a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/📖%20Documentation-Wiki-AB6543.svg" alt="📖 Documentation"></a>
-<a href="https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng"><img src="https://img.shields.io/badge/🌐%20Chrome%20Extension-FFCD46.svg" alt="GuideChimp @ Chrome Extension"></a>
-<a href="https://www.labs64.com/guidechimp/"><img src="https://img.shields.io/badge/🌐%20GuideChimp-Website-AB6543.svg" alt="🌐 GuideChimp Website"></a>
-<a href="https://www.linkedin.com/showcase/guidechimp"><img src="https://img.shields.io/badge/GuideChimp-0077B5.svg?logo=LinkedIn" alt="GuideChimp @ LinkedIn"></a>
+<a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/docs-wiki-AB6543.svg" alt="Documentation"></a>
+<a href="https://www.labs64.com/guidechimp/"><img src="https://img.shields.io/badge/website-labs64.com-AB6543.svg" alt="GuideChimp Website"></a>
+<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/plugins-12-AB6543.svg" alt="GuideChimp Plugins"></a>
+<a href="https://github.com/Labs64/GuideChimp-tours"><img src="https://img.shields.io/badge/public-tours-AB6543.svg" alt="GuideChimp Public Tours"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-EUPL--1.2-AB6543.svg" alt="European Union Public License, version 1.2"></a>
 </p>
 
+# GuideChimp
 
-Deliver the perfect product experience, improve digital product adoption, boost adoption of new features and simplify user onboarding with step by step interactive walkthroughs.
+GuideChimp is a JavaScript library for step-by-step product tours. You describe the steps, either as plain objects or as `data-guidechimp-*` attributes in your HTML. GuideChimp then highlights each element in turn and shows a tooltip next to it.
 
-# What can you do with GuideChimp?
+It has no framework dependency, so it works on a plain web page as well as in single page apps built with Angular, Vue, React and similar tools. People use it to onboard new users, introduce new features, add in-product hints and train staff on internal tools.
 
-<a href="https://www.labs64.com/guidechimp/"><p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-stage-04-shadow.png"  alt="GuideChimp - Where To Use"></p></a>
+<p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/guidechimp-stage-04-shadow.png" alt="GuideChimp - Where To Use"></p>
 
-- <strong>User Experience:</strong> Implement engaging and personalised guides to walk users through your system.
-- <strong>User Onboarding:</strong> Successfully onboard your users from day one with an intuitive step by step walkthroughs.
-- <strong>Feature Adoption:</strong> Introduce and highlight new features with personalized guides.
-- <strong>In-product Messaging:</strong> Engage the right segment of your users at the right time and increase conversion.
-- <strong>Employee Training:</strong> Improve your employees' productivity by providing an efficient and interactive training system.
-
-The world's smartest companies using our GuideChimp to boost their user experience.
-
-# Features
-
-- Seamless integration with any web app.
-- Start guided tour on any website with [GuideChimp Chrome Extension](https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng) and... ZERO! code.
-- GuideChimp is simple and robust enough to provide results with minimal effort! Set up it in just 3 minutes!
-- Let GuideChimp look like an integral part of your software product by configuring its look & feel
-- GuideChimp works well with tools you already use (e.g. WordPress, Confluence, etc.).
-- [Beacons](https://github.com/Labs64/GuideChimp/wiki/Beacons-plugin) 🟠 Hotspots 🟠 Hints: Raise visitors attention by adding an additional description to any element on the web page.
-- Tours: Flows, Walkthroughs, Guides, Tutorials
-- Support of *Single Page Applications* build with Angular, Vue.js, React, etc.
-- Extendable using out-of-the-box and third-party [plugins](https://github.com/Labs64/GuideChimp/wiki/Plugins)
-- Dynamic [placeholders](https://github.com/Labs64/GuideChimp/wiki/Placeholders-plugin) in the tour definition
-- Detailed installation and configuration [documentation](https://github.com/Labs64/GuideChimp/wiki)
-- Tooltip auto-positioning on an element
-- Easy styling through SCSS and clean CSS
-- Tour steps can be defined in two ways: HTML elements data attributes and JavaScript object properties
-- Library installation possible through HTML and es6 import
-- Use multiple listeners on tour events
-- Internationalization / i18n [support](https://github.com/Labs64/GuideChimp/wiki/Examples)
-- Ability to add steps on-the-fly / programmatically
-- Enable tour on the lazy-loaded or delayed elements (post-rendering, route changing, etc.) in single-page applications using "onBeforeChange" event or [Lazy-loading plugin](https://github.com/Labs64/GuideChimp/wiki/Lazy-loading-plugin)
-- Ability to define custom action buttons
-- Flexibility and modularity; GuideChimp is designed as a JS class, so you can easily inherit from it and change / add custom methods
-- Improved usability - pagination, navigation and progress bar
-- HTML code can be also used in the tooltip text
-- Support of extra-large tooltip description texts
-- Ability to set callback ("onBeforeChange", "onAfterChange") functions for each step in the tour
-- Lightweight (*< 45KB*) and good performance
-- **Last But Not Least:** :point_up: Dual-Licensed - [EUPL-1.2](LICENSE) and [Commercial](https://www.labs64.com/guidechimp/#guidechimp-licensing) (including great support, maintenance and customized implementation)
-
-<p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/netlicensing-features-tour.gif"  alt="Labs64 NetLicensing - Features Tour"></p>
-
-
-# 📖 Documentation
-
-Visit GuideChimp [Wiki](https://github.com/Labs64/GuideChimp/wiki) for installation and configuration tips, customizations and plugins, as well as [examples](https://github.com/Labs64/GuideChimp/wiki/Examples) on how to use GuideChimp in the real-world scenarios.
-
-
-# How to Use
-
-In order to use GuideChimp, you must include the compiled and minified JavaScript file in your project. There are multiple options for including these pre-compiled files, also known as a distribution, in your website or application.
-
-
-## 1) Using from a CDN
-
-- jsDelivr - https://www.jsdelivr.com/package/npm/guidechimp
-
-
-## 2) Install as Node.js/npm Module
-
-GuideChimp is available on [npmjs](https://www.npmjs.com/package/guidechimp). Add the following to your `package.json` file and then run `npm install`:
-```json
-"dependencies": {
-    "guidechimp": "x.y.z"
-}
-```
-
-or execute following command in your Node.js environment:
-
-```bash
-$ npm install guidechimp
-```
-
-## 3) Install as ES6 Module
-
-If you are using ES6 modules, import the library and CSS file:
+# Quick start
 
 ```javascript
 import GuideChimp from 'guidechimp';
 import 'guidechimp/dist/guidechimp.min.css';
+
+GuideChimp([
+    { element: '#search', title: 'Search', description: 'Find anything from here.' },
+    { element: '#profile', title: 'Your profile', description: 'Change your settings here.' },
+    { title: 'All set', description: 'A step without an element is just a message.' },
+]).start();
 ```
 
-## 4) Manual Installation
+Prefer HTML? Put the attributes on the elements and start the tour by name:
 
-We strongly recommend that you use either a CDN or a package manager like npm. This will make it easier for you to deploy your project in different environments, and easily update GuideChimp when new versions are released. Nonetheless, if you prefer to integrate GuideChimp into your project manually, you can [download the release of your choice](https://github.com/Labs64/guidechimp/releases) from GitHub and copy the files from the `dist` directory into your project.
+```html
+<button id="search" data-guidechimp-tour="welcome"
+        data-guidechimp-title="Search"
+        data-guidechimp-description="Find anything from here.">Search</button>
+```
 
-Include the compiled files in your HTML page:
+```javascript
+GuideChimp('welcome').start();
+```
+
+# Features
+
+- Steps as JavaScript objects or as HTML data attributes.
+- Tooltips position themselves next to the highlighted element.
+- Pagination, previous and next buttons, a progress bar, and keyboard control (arrow keys, Enter, Space, Esc).
+- Custom action buttons. HTML is allowed in titles and descriptions and is sanitized with DOMPurify before it reaches the page.
+- Events and callbacks such as `onBeforeChange` and `onAfterChange`, with several listeners per event. Use them to load data or change the page before a step appears.
+- Single page app support: steps can wait for elements that render late or appear after a route change, with the lazy-loading plugin or your own `onBeforeChange` listener.
+- Look and feel: style it with the SCSS source or plain CSS. GuideChimp is a JavaScript class, so you can subclass it and change or add methods.
+- Internationalization: see the [examples](https://github.com/Labs64/GuideChimp/wiki/Examples).
+- Small: about 24 KB gzipped (75 KB minified).
+- Extensible with [plugins](#plugins), and it works with tools you already use, such as WordPress and Confluence.
+- Dual-licensed: [EUPL-1.2](LICENSE) or [Commercial](https://www.labs64.com/guidechimp/#guidechimp-licensing), which includes support, maintenance and customized implementation.
+
+<p align="center"><img src="https://io.labs64.com/GuideChimp/docs/img/netlicensing-features-tour.gif" alt="Labs64 NetLicensing - Features Tour"></p>
+
+# Plugins
+
+A plugin is a function you pass to `GuideChimp.extend()`:
+
+```javascript
+import GuideChimp from 'guidechimp';
+import lazyLoading from 'guidechimp/dist/plugins/lazyLoading';
+
+GuideChimp.extend(lazyLoading, { timeout: 2000 });
+```
+
+The first four plugins live in this repository and are free under the EUPL-1.2.
+
+| Plugin | What it does |
+|---|---|
+| [beacons](https://github.com/Labs64/GuideChimp/wiki/Beacons-plugin) | Hotspots and hints that draw attention to any element, and can open a tour when clicked. |
+| blurredOverlay | Blurs the page behind the highlighted element. |
+| [lazyLoading](https://github.com/Labs64/GuideChimp/wiki/Lazy-loading-plugin) | Waits for a step's element to appear (default timeout 5 seconds) before showing the step. |
+| vueRouter | Navigates your Vue Router to a step's `route` before the step is shown. |
+
+Eight more plugins come in the same `guidechimp` package. They check for a valid licence and show a "non-commercial version" notice without one. See [License](#license).
+
+| Plugin | What it does |
+|---|---|
+| [placeholders](https://github.com/Labs64/GuideChimp/wiki/Placeholders-plugin) | Fills `{*}`-style placeholders in step text with values you set at runtime. |
+| templating | Replaces the HTML templates for the tooltip, title, buttons and more. |
+| triggers | Runs tour logic when users click, or otherwise interact with, elements you choose. |
+| multiPage | Lets one tour span several pages and resumes where the user left off. |
+| iFrames | Lets steps target elements inside iframes. |
+| googleAnalytics | Sends tour events and timings to Google Analytics. |
+| removeAttribution | Removes the GuideChimp attribution from the tooltip. |
+| [licensing](https://github.com/Labs64/GuideChimp/wiki/Licensing-plugin) | Validates your licence with Labs64 NetLicensing. |
+
+All plugins are listed on the [plugins wiki page](https://github.com/Labs64/GuideChimp/wiki/Plugins).
+
+# Documentation
+
+The [Wiki](https://github.com/Labs64/GuideChimp/wiki) covers installation, configuration, customization and plugins, with [examples](https://github.com/Labs64/GuideChimp/wiki/Examples) for real-world scenarios.
+
+# Installation
+
+## From a CDN
+
+GuideChimp is on [jsDelivr](https://www.jsdelivr.com/package/npm/guidechimp):
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/guidechimp@5.0.5/dist/guidechimp.min.css">
+<script src="https://cdn.jsdelivr.net/npm/guidechimp@5.0.5/dist/guidechimp.min.js"></script>
+```
+
+Always pin an exact version. For production, also add `integrity` and `crossorigin="anonymous"` to both tags; jsDelivr shows the hash for each file on the package page.
+
+## With npm
+
+GuideChimp is on [npm](https://www.npmjs.com/package/guidechimp):
+
+```bash
+npm install guidechimp
+```
+
+Then import the library and its CSS as in the quick start above.
+
+## Manually
+
+Download a [release](https://github.com/Labs64/guidechimp/releases) from GitHub, copy the `dist` directory into your project and include the files:
+
 ```html
 <script src="guidechimp/dist/guidechimp.min.js"></script>
 <link rel="stylesheet" href="guidechimp/dist/guidechimp.min.css">
 ```
 
+We recommend a CDN or npm, because they make it easier to update.
 
 # Demo
 
-See GuideChimp in action in the product walkthrough, showcases and real-world examples below:
-
-To run the local interactive demo:
+To run the interactive demo locally:
 
 ```bash
 npm run demo
 ```
 
+More tours to look at:
+
 - [GuideChimp Tour Examples](https://codepen.io/collection/DyPkzY) at CodePen
-- [NetLicensing Changelog](https://netlicensing.io/wiki/changelog) - Tour: Notable NetLicensing Features
-- [NetLicensing Licensing Models](https://netlicensing.io/licensing-models/?guidechimp=on&tour=licensing-models) - Sample Tour: Licensing Models
-- [NetLicensing Features](https://netlicensing.io/features/?guidechimp=on&tour=features) - Sample Tour: NetLicensing Features
-- [NetLicensing Onboarding](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo) - NetLicensing UI: User Onboarding Tour
+- [NetLicensing Changelog](https://netlicensing.io/wiki/changelog): notable NetLicensing features
+- [NetLicensing Licensing Models](https://netlicensing.io/licensing-models/?guidechimp=on&tour=licensing-models) and [Features](https://netlicensing.io/features/?guidechimp=on&tour=features): sample tours
+- [NetLicensing Onboarding](https://ui.netlicensing.io/#/login?cr=ZGVtbzpkZW1v&utm_source=GitHub&utm_medium=website&utm_campaign=GuideChimp_demo&utm_content=demo): user onboarding tour in the NetLicensing UI
 - [React Example](https://209hg.csb.app) ([source](https://codesandbox.io/s/guidechimp-react-example-209hg)) at CodeSandbox by [@giubatt](https://github.com/giubatt)
 
+# Development
 
-# How to Contribute
+You need Node.js `^22.23.4`, `^24.22.1` or `>=26.12.1`.
 
-Everyone is welcome to contribute to this project!
-Feel free to [contribute](CONTRIBUTING.md) with pull requests, bug reports or enhancement suggestions.
+```bash
+npm ci
+npm run lint
+npm test        # Vitest, with a coverage gate
+npm run build   # writes dist/
+npm run dev     # rebuild on change
+```
 
----
+# Related projects
 
-GuideChimp is maintained by Labs64.
-[Contact](https://www.labs64.com/contact/) us for web app consulting, development, and training for your project or book a demo.
+| Project | What it is | Where to get it |
+|---|---|---|
+| GuideChimp | The core library (this repository). | [npm](https://www.npmjs.com/package/guidechimp), [jsDelivr](https://www.jsdelivr.com/package/npm/guidechimp) |
+| GuideChimp Plugins | Eight extra plugins, built into the `guidechimp` package under `dist/plugins`. | [Plugins wiki](https://github.com/Labs64/GuideChimp/wiki/Plugins) |
+| GuideChimp Chrome Extension | Runs public tours on any website without changing it. | [Chrome Web Store](https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng) |
+| GuideChimp Editor | Chrome extension for authoring tours. Early stage. | In development |
+| GuideChimp Public Tours | Community-maintained tours for popular websites. | [GitHub](https://github.com/Labs64/GuideChimp-tours) |
 
----
+# Contributing
 
-# Bugs and Feedback
+Everyone is welcome. Send pull requests, bug reports or ideas; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-For bugs, questions and discussions please use the [GitHub Issues](https://github.com/Labs64/guidechimp/issues).
+GuideChimp is maintained by Labs64. [Contact](https://www.labs64.com/contact/) us for web app consulting, development and training, or to book a demo.
 
+# Bugs and feedback
+
+For bugs, questions and discussions, please use [GitHub Issues](https://github.com/Labs64/guidechimp/issues).
 
 # License
 
-GuideChimp is made available under the [European Union Public License, version 1.2](LICENSE) or [Commercial License](https://www.labs64.com/guidechimp/#guidechimp-licensing).
-The Commercial License requires the payment of a fee for each designated commercial application.
-- If you choose not to pay a fee and use the *European Union Public License, version 1.2*, you are required to release the source code of any program that you distribute that uses GuideChimp.
-- If you choose to pay for a *Commercial License*, you are not required to disclose your source code.
+GuideChimp is available under the [European Union Public License, version 1.2](LICENSE) or a [Commercial License](https://www.labs64.com/guidechimp/#guidechimp-licensing). The Commercial License requires a fee for each designated commercial application.
 
-Commercial GuideChimp plugins require a [valid customer account](https://www.labs64.com/guidechimp/#guidechimp-licensing) with the assigned plan and [additional configuration](https://github.com/Labs64/GuideChimp/wiki/Licensing-plugin), which will be used to validate the availability of particular GuideChimp functions or plugins for the given customer account.
+- With the EUPL-1.2, you must release the source code of any program you distribute that uses GuideChimp.
+- With a Commercial License, you don't have to disclose your source code.
 
-# Privacy Policy
+Commercial GuideChimp plugins need a [valid customer account](https://www.labs64.com/guidechimp/#guidechimp-licensing) with the assigned plan and [additional configuration](https://github.com/Labs64/GuideChimp/wiki/Licensing-plugin). It is used to check which functions or plugins your account may use.
 
-The applicable data protection provisions may be retrieved under [Privacy Policy](privacy-policy.md).
+# Privacy policy
 
-# Star History
+The applicable data protection provisions are in the [Privacy Policy](privacy-policy.md).
+
+# Star history
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Labs64/GuideChimp&type=Date)](https://www.star-history.com/#Labs64/GuideChimp&Date)
