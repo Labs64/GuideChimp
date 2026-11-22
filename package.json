@@ -54,20 +54,23 @@
         "release": "npm run build && npm run test",
         "dev": "node build/build.mjs --watch",
         "demo": "npm run build && vite --open /demo/",
-        "test": "vitest run",
+        "test": "vitest run --coverage",
         "test:watch": "vitest",
         "test-for-travis": "vitest run",
         "lint": "eslint src test",
         "cdn-clear-cache": "node build/cdn.clear.cache.js"
     },
     "dependencies": {
+        "dompurify": "^3.4.18",
         "lodash": "^4.17.21"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@vitest/coverage-v8": "^5.1.1",
         "eslint": "^10.13.0",
         "globals": "^17.13.0",
         "happy-dom": "^21.0.4",
+        "jsdom": "^31.0.1",
         "sass": "^1.106.1",
         "vite": "^8.3.5",
         "vitest": "^5.0.5"

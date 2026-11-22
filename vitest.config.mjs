@@ -18,5 +18,17 @@ export default defineConfig({
             'test/specs/**/*.spec.js',
             'plugins/**/tests/**/*.spec.js',
         ],
+        coverage: {
+            provider: 'v8',
+            include: ['src/**/*.js'],
+            reporter: ['text-summary'],
+            // Ratchet: raise these as tests are added; new code is expected at 100%.
+            thresholds: {
+                statements: 5,
+                branches: 2,
+                functions: 7,
+                lines: 5,
+            },
+        },
     },
 });
