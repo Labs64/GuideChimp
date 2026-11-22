@@ -24,7 +24,7 @@ jobs:
     steps:
       # ── Checkout Repositories ───────────────────────────────────────────────
       - name: Checkout GuideChimp
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -38,7 +38,7 @@ jobs:
           echo "✅ Found plugin version: $PLUGINS_VER"
 
       - name: Checkout GuideChimp Plugins (v${{ steps.plugins_version.outputs.version }})
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: Labs64/GuideChimp-plugins
           path: guidechimp-plugins
@@ -46,7 +46,7 @@ jobs:
           token: ${{ secrets.GUIDECHIMP_PAT }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: 24.22.1
           cache: npm
@@ -132,7 +132,7 @@ jobs:
         run: npm publish --provenance --access public
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.bump.outputs.new_version }}
           name: ${{ steps.bump.outputs.new_version }}
