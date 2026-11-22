@@ -3,7 +3,7 @@ Contributions are welcome, and are accepted via pull requests. Please review the
 ## General Rules
 
 * As much as possible, try to follow the existing format of markdown and code.
-* Don't forget to run `npm run ci` and `npm test` before submitting pull requests.
+* Don't forget to run `npm run lint`, `npm test` and `npm run build` before submitting pull requests.
 * Make sure that 100% of your code is covered by tests.
 
 ## Contributing New Plugins

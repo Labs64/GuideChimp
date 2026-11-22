@@ -15,6 +15,7 @@ import _merge from 'lodash/merge';
 
 // utils
 import isHtmlElement from './utils/isHtmlElement';
+import sanitize from './utils/sanitize';
 
 // templates
 import overlayTmpl from './templates/overlay';
@@ -1384,7 +1385,11 @@ export default class GuideChimp {
 
     createTitleEl(data = {}) {
         const { title = '' } = this.currentStep;
-        return this.createEl('title', this.options.templates.title, { ...this.getDefaultTmplData(), title, ...data });
+        return this.createEl(
+            'title',
+            this.options.templates.title,
+            { ...this.getDefaultTmplData(), title: sanitize(title), ...data },
+        );
     }
 
     createDescriptionEl(data = {}) {
@@ -1392,7 +1397,7 @@ export default class GuideChimp {
         return this.createEl(
             'description',
             this.options.templates.description,
-            { ...this.getDefaultTmplData(), description, ...data },
+            { ...this.getDefaultTmplData(), description: sanitize(description), ...data },
         );
     }
 
@@ -1407,7 +1412,7 @@ export default class GuideChimp {
                     const { onClick, tagName = 'button', title = '', class: className } = button;
 
                     buttonEl = document.createElement(tagName);
-                    buttonEl.innerHTML = title;
+                    buttonEl.innerHTML = sanitize(title);
 
                     if (className) {
                         buttonEl.className = className;
