@@ -2,15 +2,15 @@
 
 <p align="center">
 <a href="https://github.com/Labs64/GuideChimp/actions/workflows/guidechimp-ci.yml"><img src="https://github.com/Labs64/GuideChimp/actions/workflows/guidechimp-ci.yml/badge.svg" alt="Build Status"></a>
-<a href="https://www.npmjs.com/package/guidechimp"><img src="https://img.shields.io/npm/v/guidechimp?color=AB6543&label=npm" alt="GuideChimp @ npm"></a>
-<a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://data.jsdelivr.com/v1/package/npm/guidechimp/badge" alt="GuideChimp @ jsDelivr"></a>
-<a href="https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng"><img src="https://img.shields.io/badge/chrome-extension-AB6543.svg" alt="GuideChimp @ Chrome Web Store"></a>
+<a href="https://www.npmjs.com/package/guidechimp"><img src="https://img.shields.io/npm/v/guidechimp?label=npm&color=CB3837&logo=npm&logoColor=white" alt="GuideChimp @ npm"></a>
+<a href="https://www.jsdelivr.com/package/npm/guidechimp"><img src="https://img.shields.io/jsdelivr/npm/hm/guidechimp?label=jsDelivr&color=E84D3D&logo=jsdelivr&logoColor=white" alt="GuideChimp @ jsDelivr"></a>
+<a href="https://chrome.google.com/webstore/detail/guidechimp-chrome-extensi/afecedbgkfoijeligfjflidfddndnjng"><img src="https://img.shields.io/badge/chrome-web%20store-4285F4.svg?logo=googlechrome&logoColor=white" alt="GuideChimp @ Chrome Web Store"></a>
 <br>
-<a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/docs-wiki-AB6543.svg" alt="Documentation"></a>
-<a href="https://www.labs64.com/guidechimp/"><img src="https://img.shields.io/badge/website-labs64.com-AB6543.svg" alt="GuideChimp Website"></a>
-<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/plugins-12-AB6543.svg" alt="GuideChimp Plugins"></a>
-<a href="https://github.com/Labs64/GuideChimp-tours"><img src="https://img.shields.io/badge/public-tours-AB6543.svg" alt="GuideChimp Public Tours"></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/license-EUPL--1.2-AB6543.svg" alt="European Union Public License, version 1.2"></a>
+<a href="https://github.com/Labs64/GuideChimp/wiki"><img src="https://img.shields.io/badge/docs-wiki-E14817.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IC01IDE1NSAxNTUiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zIDNoMTM5djEzOUgzWk02OSAzdjEzOWg3VjNaTTQzIDQzdjU5aDI2VjQzWk03NiA0M3Y1OWgyNlY0M1oiLz48cGF0aCBmaWxsPSIjYmJiIiBkPSJNNDkgNDloNDd2NDdINDlaIi8%2BPC9zdmc%2B" alt="Documentation"></a>
+<a href="https://www.labs64.com/guidechimp/"><img src="https://img.shields.io/badge/website-labs64.com-E14817.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IC01IDE1NSAxNTUiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zIDNoMTM5djEzOUgzWk02OSAzdjEzOWg3VjNaTTQzIDQzdjU5aDI2VjQzWk03NiA0M3Y1OWgyNlY0M1oiLz48cGF0aCBmaWxsPSIjYmJiIiBkPSJNNDkgNDloNDd2NDdINDlaIi8%2BPC9zdmc%2B" alt="GuideChimp Website"></a>
+<a href="https://github.com/Labs64/GuideChimp/wiki/Plugins"><img src="https://img.shields.io/badge/plugins-12-E14817.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IC01IDE1NSAxNTUiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zIDNoMTM5djEzOUgzWk02OSAzdjEzOWg3VjNaTTQzIDQzdjU5aDI2VjQzWk03NiA0M3Y1OWgyNlY0M1oiLz48cGF0aCBmaWxsPSIjYmJiIiBkPSJNNDkgNDloNDd2NDdINDlaIi8%2BPC9zdmc%2B" alt="GuideChimp Plugins"></a>
+<a href="https://github.com/Labs64/GuideChimp-tours"><img src="https://img.shields.io/badge/public-tours-E14817.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IC01IDE1NSAxNTUiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zIDNoMTM5djEzOUgzWk02OSAzdjEzOWg3VjNaTTQzIDQzdjU5aDI2VjQzWk03NiA0M3Y1OWgyNlY0M1oiLz48cGF0aCBmaWxsPSIjYmJiIiBkPSJNNDkgNDloNDd2NDdINDlaIi8%2BPC9zdmc%2B" alt="GuideChimp Public Tours"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-EUPL--1.2-E14817.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IC01IDE1NSAxNTUiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zIDNoMTM5djEzOUgzWk02OSAzdjEzOWg3VjNaTTQzIDQzdjU5aDI2VjQzWk03NiA0M3Y1OWgyNlY0M1oiLz48cGF0aCBmaWxsPSIjYmJiIiBkPSJNNDkgNDloNDd2NDdINDlaIi8%2BPC9zdmc%2B" alt="European Union Public License, version 1.2"></a>
 </p>
 
 # GuideChimp
